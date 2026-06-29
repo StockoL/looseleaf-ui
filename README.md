@@ -86,7 +86,98 @@ Before we configure our system architecture, we must assess where traditional ut
 
 ---
 
-## 4. <a name="architecture"></a> 🗺️ System Architecture
+## 4. <a name="architecture"></a> 🗺️ Tier 2: System Architecture, Axioms & Harmonics
+
+### Core Axioms & Harmonics
+
+Before we define individual layout primitives or components, LooseLeaf UI establishes a set of global, immutable rules. These ensure predictable sizing, readable text, and a mathematically harmonious layout scale.
+
+#### 1. Global Resets & The Measure Axiom
+
+**1. Conceptual Purpose**
+
+- **Problem:** Browsers ship with inconsistent default styles, and standard CSS box sizing makes width calculations mathematically frustrating. Furthermore, text that spans too wide is unreadable.
+- **Pattern Solution:** A strict set of universal resets that enforce `border-box` sizing globally, alongside a "Measure Axiom" that restricts line lengths for text.
+- **Contextual Rule:** These apply universally. We mentor the browser at the `:root` level so we don't have to micromanage individual components.
+
+**2. Logical Behaviour Map**
+
+- **Predictable Sizing:** Every element includes its padding and border in its total width calculation.
+- **The `60ch` Limit:** Any element designed to hold continuous flow text (paragraphs, headings, lists) is capped at 60 characters wide to maintain reading ergonomics.
+
+**3. Implementation Logic**
+
+```css
+/* --- Universal Sizing --- */
+* {
+  box-sizing: border-box;
+}
+
+/* --- Global Aesthetics --- */
+:root {
+  font-family: system-ui, sans-serif;
+}
+
+/* --- The Measure Axiom --- */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+figcaption {
+  max-inline-size: var(--measure, 60ch);
+}
+
+/* Exception: structural wrappers */
+html,
+body,
+div,
+header,
+nav,
+main,
+footer {
+  max-inline-size: none;
+}
+```
+
+#### 2. The Fluid Modular Scale
+
+**1. Conceptual Purpose**
+
+- **Problem:** Hardcoding font sizes and margins (e.g., 16px, 24px) leads to visual inconsistency and requires endless media queries to adjust for mobile screens.
+- **Pattern Solution:** A mathematical scale based on a fundamental base frequency (--s0) and a harmonic ratio (1.5). This dictates all spacing and typography in the system.
+- **Contextual Rule:** Never hardcode a rem or px value for padding, margin, or font-size. Always use a scale token (e.g., var(--s1)).
+
+**2. Logical Behaviour Map**
+
+- **Fluid Baseline:** The root step (--s0) uses a clamp() function tying it to the viewport width. As the screen shrinks, the base size shrinks natively.
+- **Harmonic Multipliers:** Every subsequent step is a calc() multiplication of the base. Because --s0 is fluid, the entire scale expands and contracts fluidly without a single breakpoint.
+
+**3. Implementation Logic**
+
+```css
+:root {
+  /* The Harmonic Ratio */
+  --scale-ratio: 1.5;
+
+  /* Fluid Baseline Tonic (--s0) */
+  --s0: clamp(1rem, 0.8rem + 1vw, 1.25rem);
+
+  /* The Expanding Scale */
+  --s1: calc(var(--s0) * var(--scale-ratio));
+  --s2: calc(var(--s1) * var(--scale-ratio));
+  --s3: calc(var(--s2) * var(--scale-ratio));
+  --s4: calc(var(--s3) * var(--scale-ratio));
+  --s5: calc(var(--s4) * var(--scale-ratio));
+
+  /* The Contracting Scale */
+  --s-1: calc(var(--s0) / var(--scale-ratio));
+  --s-2: calc(var(--s-1) / var(--scale-ratio));
+}
+```
 
 ### 📐 Universal Constraints
 
@@ -171,7 +262,7 @@ This design system rejects the fragile practice of hardcoding absolute pixel val
 
 Drafting the exact definitions for our first structural layout primitives, ensuring our documentation explicitly details _why_ a pattern exists rather than just listing its styles. It must demonstrate that every element exists to solve a specific structural problem, completely isolated from any parent environment.
 
-#### 🔍 Case Study: Let’s look at the Stack (l-stack)
+#### 🔍 Case Study: The Stack (l-stack)
 
 In standard utility frameworks such as Bootstrap, vertical spacing is often managed by adding top or bottom margins directly to individual components (e.g. `mb-3`). This breaks isolation because the component now carries assumptions about what sits next to it.
 
@@ -215,7 +306,7 @@ l-stack > * + * {
 
 <p align="right">(<a href="#top">Back to top</a>)</p>
 
-#### 🔍 Case Study: Let’s look at the Cluster (l-cluster)
+#### 🔍 Case Study: The Cluster (l-cluster)
 
 **Case Study: Let’s look at the Cluster (`<l-cluster>`)**
 
@@ -249,7 +340,7 @@ l-cluster {
 }
 ```
 
-#### 🔍 Case Study: Let’s look at the Sidebar (l-sidebar)
+#### 🔍 Case Study: The Sidebar (l-sidebar)
 
 The "Sidebar" layout isn't just for page navigation; it solves the ubiquitous "fixed element next to a fluid element" problem (e.g., an avatar next to a comment, or an icon next to an input).
 
@@ -290,7 +381,7 @@ l-sidebar > :last-child {
 }
 ```
 
-#### 🔍 Case Study: Let’s look at the Grid (l-grid)
+#### 🔍 Case Study: The Grid (l-grid)
 
 While traditional frameworks use 12-column extrinsic grids requiring classes like `.col-md-4` and `.col-sm-12`, our Grid is an intrinsic primitive that calculates its own column count based on available space.
 
@@ -321,7 +412,7 @@ l-grid {
 }
 ```
 
-#### 🔍 Case Study: Let’s look at the Reel (l-reel)
+#### 🔍 Case Study: The Reel (l-reel)
 
 When space is at a premium (especially on mobile), stacking elements vertically can create an endlessly long scroll. The Reel solves this by providing a robust, native horizontal scrolling experience without heavy JavaScript carousels.
 
@@ -358,7 +449,7 @@ l-reel > * {
 }
 ```
 
-#### 🔍 Case Study: Let’s look at the Switcher (l-switcher)
+#### 🔍 Case Study: The Switcher (l-switcher)
 
 When a horizontal row of items wraps naturally, it often creates awkward intermediate states (e.g., three items on the top row, one lonely item on the bottom row) before finally stacking on mobile screens.
 
@@ -429,7 +520,87 @@ While the layout primitives handle the invisible structure, Design Tokens handle
 }
 ```
 
-## 5. <a name="features"></a> ✨ Core Features & UI Overhauls
+## 5. <a name="atoms"></a> ✨ Tier 3: Functional Atoms
+
+Atoms are the smallest indivisible functional patterns in our interface. They handle their own intrinsic styling (padding, colours, interactive states) but **never** dictate their own external layout (margins or positioning).
+
+### The Button (`.c-button`)
+
+**1. Conceptual Purpose**
+
+- **Problem:** Inconsistent calls to action (CTAs) confuse users and dilute the brand. Hardcoded button sizes and colours lead to bloated CSS.
+- **Pattern Solution:** A single, robust `.c-button` class that handles standard interactive behaviours, modified by "Visual Loudness" data attributes for varying degrees of emphasis.
+- **Contextual Rule:** Buttons are for triggering actions. If an element navigates the user to a new URL, it should be marked up as an `<a>` (link), even if it is styled to look like a button.
+
+**2. Logical Behaviour Map (The Loudness Scale)**
+We classify our button variants by how loudly they need to speak to the user:
+
+- **Cheer (Primary):** The main call to action on a page (e.g., "Submit", "Sign Up"). High contrast background.
+- **Murmur (Secondary):** Alternative or less critical actions (e.g., "Cancel", "Read More"). Subdued, often outlined or using a secondary colour.
+- **Ghost (Tertiary):** Very quiet actions. Transparent background until hovered.
+
+**3. Implementation Logic (CSS)**
+Notice how we rely entirely on our previously defined CSS custom properties (design tokens) for padding, typography, and colour.
+
+```css
+/* Base Button Class (The shared DNA) */
+.c-button {
+  /* Box Sizing & Display */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Typography derived from our modular scale */
+  font-family: inherit;
+  font-size: var(--s0);
+  font-weight: 600;
+  text-decoration: none;
+
+  /* Intrinsic Spacing */
+  padding: var(--s-1) var(--s1);
+  border-radius: 4px;
+  border: 1px solid transparent;
+
+  /* Interaction setup */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Variant: Cheer (Primary / Loud) */
+.c-button[data-loudness="cheer"] {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+.c-button[data-loudness="cheer"]:hover,
+.c-button[data-loudness="cheer"]:focus {
+  background-color: var(--color-brand-primary-dark);
+}
+
+/* Variant: Murmur (Secondary / Quiet) */
+.c-button[data-loudness="murmur"] {
+  background-color: transparent;
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-base);
+}
+.c-button[data-loudness="murmur"]:hover,
+.c-button[data-loudness="murmur"]:focus {
+  background-color: var(--color-surface-hover);
+}
+```
+
+**4. HTML Usage**
+
+```HTML
+<!-- A loud action (Submit form) -->
+<button class="c-button" data-loudness="cheer" type="submit">
+  Save Changes
+</button>
+
+<!-- A quiet link acting as an action (Cancel) -->
+<a href="/" class="c-button" data-loudness="murmur">
+  Cancel
+</a>
+```
 
 <p align="right">(<a href="#top">Back to top</a>)</p>
 
