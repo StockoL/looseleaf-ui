@@ -11,8 +11,10 @@ To empower lean, agile engineering teams to compose intrinsically responsive, pe
 3. [🗺️ Tier 1: Core Axioms & Harmonics](#tier-1)
 4. [🧩 Tier 2: Layout Primitives](#tier-2)
 5. [✨ Tier 3: Functional Atoms](#tier-3)
-6. [🧪 Quality Assurance & Browser Matrix](#qa)
-7. [🏗️ Development Log & Credits](#dev-log)
+6. [🏗️ Tier 4: Macro-Compositions](#tier-4)
+7. [🔧 Tier 4: Utility Classes](#tier-4u)
+8. [🧪 Quality Assurance & Browser Matrix](#qa)
+9. [🏗️ Development Log & Credits](#dev-log)
 
 ---
 
@@ -283,9 +285,216 @@ Unified form classes that strip away browser defaults and rebuild the UI using o
 </l-stack>
 ```
 
+### The Badge (`.c-badge`)
+
+**1. Conceptual Purpose**
+
+- **Problem:** Status indicators (like "New", "Error", or item counts) often suffer from inconsistent vertical alignment when placed next to text, or rely on hardcoded pixel dimensions that break when the user scales their font size.
+- **Pattern Solution:** A compact, inline-flex element that perfectly centers its text and relies on our modular scale for proportional, fluid padding.
+- **Contextual Rule:** Badges are non-interactive read-only atoms. If a badge needs to be clicked, it should be marked up as a button or link with a specific variant.
+
+**2. Logical Behaviour Map**
+
+- **Inline Alignment:** Uses `inline-flex` to sit naturally alongside text in a paragraph or heading.
+- **Semantic Tints:** Relies on data attributes (`data-status="success" | "danger"`) to inherit specific semantic colour tokens.
+
+**3. Implementation Logic (CSS)**
+
+```css
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Inherit the parent font size, but scale it down one step */
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+
+  /* Proportional padding based on the text size */
+  padding: 0.25em 0.65em;
+  border-radius: 999px; /* Pill shape */
+
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-base);
+}
+
+/* Status Variants */
+.c-badge[data-status="danger"] {
+  background-color: #fee2e2; /* Example: map to semantic token */
+  color: #991b1b;
+}
+```
+
 ---
 
-## 6. <a name="qa"></a> 🧪 Quality Assurance & Browser Matrix
+## 6. <a name="tier-4"></a> 🏗️ Tier 4: Macro-Compositions (Organisms)
+
+Macro-compositions are complex UI patterns built by nesting Tier 3 Atoms inside Tier 2 Layout Primitives. Tier 4 components rarely declare their own layout CSS. They act purely as decorative shells (handling backgrounds, borders, and padding), delegating all structural flow to the primitives inside them.
+
+### The Card (`.c-card`)
+
+**1. Conceptual Purpose**
+
+- **Problem:** Developers frequently hardcode internal margins into Card components (.card-title { margin-bottom: 1rem; }), making it impossible to add or remove elements without breaking the design.
+- **Pattern Solution:** The Card is simply a decorative container. It relies entirely on a nested `<l-stack>` primitive to manage the vertical rhythm of the content inside it.
+
+**2. Logical Behaviour Map**
+
+- **The Decorative Shell:** The `.c-card` class applies the border, background, and internal padding.
+- **The Structural Core:** An `<l-stack>` manages the spacing between the image, title, text, and buttons.
+
+**3. HTML Composition**
+
+```html
+<article class="c-card">
+  <l-stack style="--space: var(--s1);">
+    <img src="thumbnail.jpg" alt="Description" class="c-card__media" />
+
+    <l-stack style="--space: var(--s-2);">
+      <h3>Card Title</h3>
+      <p>
+        This is the descriptive text. Notice how we don't need any margin
+        classes.
+      </p>
+    </l-stack>
+
+    <l-cluster>
+      <button class="c-button" data-loudness="cheer">Accept</button>
+      <button class="c-button" data-loudness="murmur">Decline</button>
+    </l-cluster>
+  </l-stack>
+</article>
+```
+
+**4. The CSS Requirement**
+
+```css
+.c-card {
+  background-color: var(--color-surface-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  padding: var(--s1);
+  overflow: hidden;
+}
+/* Media resets for cards */
+.c-card__media {
+  max-inline-size: 100%;
+  display: block;
+  /* Pull the image flush to the card edges by negating padding */
+  margin: calc(var(--s1) * -1) calc(var(--s1) * -1) 0;
+}
+```
+
+### The Native Modal (`.c-modal`)
+
+**1. Conceptual Purpose**
+
+- **Problem:** Creating accessible modals requires massive JavaScript overhead to handle focus trapping, backdrop clicking, and z-index wars.
+- **Pattern Solution:** We utilise the native HTML5 <dialog> element, styling it with our tokens and letting the browser handle accessibility and positioning natively.
+
+**2. Logical Behaviour Map**
+
+- **Top Layer:** The <dialog> element natively sits in the browser's top layer, bypassing z-index issues entirely.
+- **Intrinsic Centering:** The browser automatically centers the dialog. We only need to restrict its maximum width (max-inline-size: 60ch).
+
+**3. Implementation Logic (CSS & HTML)**
+
+```css
+.c-modal {
+  padding: var(--s2);
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-surface-base);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+  /* Restrict width using our measure axiom */
+  max-inline-size: var(--measure);
+  width: 90vw;
+}
+
+/* Style the native backdrop */
+.c-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+```
+
+```html
+<dialog class="c-modal" id="myModal">
+  <l-stack>
+    <h2>Confirm Action</h2>
+    <p>Are you sure you want to proceed? This cannot be undone.</p>
+
+    <l-cluster style="justify-content: flex-end;">
+      <button
+        class="c-button"
+        data-loudness="murmur"
+        onclick="window.myModal.close()"
+      >
+        Cancel
+      </button>
+      <button class="c-button" data-loudness="cheer">Confirm</button>
+    </l-cluster>
+  </l-stack>
+</dialog>
+```
+
+---
+
+## 7. <a name="tier-4u"></a> 🔧 Tier 4: Utility Classes
+
+Utilities are single-purpose classes used for final, granular adjustments that cannot be handled by the Layout Primitives or Functional Atoms.
+
+### The Golden Rules of Utility Classes
+
+1. **The Last Resort:** Only use a utility class if no layout primitive or component class can achieve the desired result.
+2. **Naming Convention:** All utility classes are prefixed with `u-` to explicitly signal that they are overrides.
+3. **Restricted Scope:** Utilities should **never** define structural layout (margins, flex-behavior). They should only handle visual states (visibility, text-alignment).
+
+### The Permitted Utility Library
+
+We only permit the following utilities to keep the system lean and maintainable.
+
+| Class                | Purpose             | Logic                                                             |
+| :------------------- | :------------------ | :---------------------------------------------------------------- |
+| `.u-visually-hidden` | Accessible hiding   | Removes element from visual flow but keeps it for screen readers. |
+| `.u-text-center`     | Text alignment      | Forces text-align: center.                                        |
+| `.u-text-uppercase`  | Text transformation | Forces uppercase styling.                                         |
+| `.u-truncate`        | Overflow handling   | Adds ellipsis to overflowing text.                                |
+
+**Implementation Logic:**
+
+```css
+/* Accessible screen-reader-only utility */
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.u-text-center {
+  text-align: center;
+}
+.u-text-uppercase {
+  text-transform: uppercase;
+}
+
+.u-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+```
+
+---
+
+## 8. <a name="qa"></a> 🧪 Quality Assurance & Browser Matrix
 
 This section outlines the holistic verification suite executed to guarantee the engineering integrity, mathematical precision, and cross-platform accessibility of the system.
 
@@ -298,7 +507,7 @@ This section outlines the holistic verification suite executed to guarantee the 
 
 ---
 
-## 7. <a name="dev-log"></a> 🏗️ Development Log & Credits
+## 9. <a name="dev-log"></a> 🏗️ Development Log & Credits
 
 ### Credits & Acknowledgements
 
