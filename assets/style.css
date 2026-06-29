@@ -1,0 +1,28 @@
+/* ==========================================================================
+   LOOSELEAF UI: REBOOT & SYSTEM TOKENS
+   ========================================================================== */
+
+:root {
+  /* --- The Harmonic Ratio (Perfect Fifth) --- */
+  --scale-ratio: 1.5;
+
+  /* --- Fluid Baseline Tonic (--s0) --- 
+     Mobile minimum: 1rem (16px)
+     Fluid scaling: 0.8rem + 1vw (grows gently with screen width)
+     Desktop maximum: 1.25rem (20px)
+  */
+  --s0: clamp(1rem, 0.8rem + 1vw, 1.25rem);
+
+  /* --- The Expanding Modular Scale (Multiplication) --- */
+  --s1: calc(var(--s0) * var(--scale-ratio)); /* 1.5x */
+  --s2: calc(var(--s1) * var(--scale-ratio)); /* 2.25x */
+  --s3: calc(var(--s2) * var(--scale-ratio)); /* 3.375x */
+  --s4: calc(var(--s3) * var(--scale-ratio)); /* 5.063x */
+
+  /* --- The Contracting Modular Scale (Division) --- */
+  --s-1: calc(var(--s0) / var(--scale-ratio));
+  --s-2: calc(var(--s-1) / var(--scale-ratio));
+
+  /* --- Universal Layout Constraints --- */
+  --measure: 60ch;
+}
