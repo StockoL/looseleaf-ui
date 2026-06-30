@@ -16,7 +16,7 @@ To empower lean, agile engineering teams to compose intrinsically responsive, pe
 8. [🧪 Quality Assurance & Browser Matrix](#qa)
 9. [🏗️ Development Log & Credits](#dev-log)
 
----
+## Link to GitHub Pages sandbox deployment: [https://stockol.github.io/looseleaf-ui/]
 
 ## 1. <a name="philosophy"></a> 📖 Project Philosophy & Principles
 
