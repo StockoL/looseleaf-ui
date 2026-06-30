@@ -1,0 +1,28 @@
+/* The Button */
+
+/* Form Inputs */
+
+/* The Badge */
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Inherit the parent font size, but scale it down one step */
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+
+  /* Proportional padding based on the text size */
+  padding: 0.25em 0.65em;
+  border-radius: 999px; /* Pill shape */
+
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-base);
+}
+
+/* Status Variants */
+.c-badge[data-status="danger"] {
+  background-color: #fee2e2; /* Example: map to semantic token */
+  color: #991b1b;
+}

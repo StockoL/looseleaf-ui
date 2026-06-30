@@ -1,0 +1,164 @@
+/* The Global Header */
+.c-site-header {
+  padding: var(--s1) var(--s2);
+  background-color: var(--color-surface-base);
+  border-bottom: 1px solid var(--color-border-subtle);
+  /* Ensure it sits on top if we ever make it sticky */
+  position: relative;
+  z-index: 10;
+}
+
+.c-brand {
+  font-weight: 700;
+  font-size: var(--s1);
+  text-decoration: none;
+  color: var(--color-text-base);
+}
+
+/* The Global Footer */
+.c-site-footer {
+  padding: var(--s4) var(--s2) var(--s2);
+  background-color: var(--color-surface-sunken);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.c-footer-heading {
+  font-size: var(--s0);
+  font-weight: 600;
+  color: var(--color-text-base);
+}
+
+.c-site-footer a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.c-site-footer a:hover {
+  color: var(--color-action-primary);
+}
+
+.c-site-footer__bottom {
+  padding-top: var(--s2);
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--s-1);
+  color: var(--color-text-muted);
+}
+
+/* The Split Hero Banner */
+.c-hero {
+  padding: var(--s4) var(--s2);
+  background-color: var(--color-surface-base);
+}
+
+.c-hero__title {
+  /* Using clamp for massive, fluid hero text */
+  font-size: clamp(var(--s2), 5vw, var(--s4));
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.c-hero__lead {
+  font-size: var(--s1);
+  color: var(--color-text-muted);
+  max-inline-size: 45ch; /* Slightly shorter measure for punchy copy */
+}
+
+.c-hero__media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* The Card */
+.c-card {
+  background-color: var(--color-surface-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  padding: var(--s1);
+  overflow: hidden;
+}
+/* Media resets for cards */
+.c-card__media {
+  max-inline-size: 100%;
+  display: block;
+  /* Pull the image flush to the card edges by negating padding */
+  margin: calc(var(--s1) * -1) calc(var(--s1) * -1) 0;
+}
+
+/* The Native Modal */
+.c-modal {
+  padding: var(--s2);
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-surface-base);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+  /* Restrict width using our measure axiom */
+  max-inline-size: var(--measure);
+  width: 90vw;
+}
+
+/* Style the native backdrop */
+.c-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* The Structured Form */
+.c-form__section {
+  border: none;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--s2);
+}
+
+.c-form__legend {
+  font-weight: 700;
+  font-size: var(--s1);
+  color: var(--color-text-base);
+  padding-bottom: var(--s1);
+}
+
+/* The Article/Prose Content */
+.c-prose {
+  /* Enforce the measure axiom */
+  max-inline-size: var(--measure, 60ch);
+  /* Center the article within its parent if the parent is wider */
+  margin-inline: auto;
+}
+
+/* Establish vertical rhythm for raw HTML elements */
+.c-prose > * + * {
+  margin-block-start: var(--s1);
+}
+
+/* Give headings a little extra breathing room from the text above them */
+.c-prose > * + h2,
+.c-prose > * + h3 {
+  margin-block-start: var(--s3);
+}
+
+/* Scale standard headings */
+.c-prose h1 {
+  font-size: var(--s3);
+  line-height: 1.1;
+}
+.c-prose h2 {
+  font-size: var(--s2);
+  line-height: 1.2;
+}
+
+/* The Media Object */
+.c-media-object {
+  padding: var(--s1);
+  background-color: var(--color-surface-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+}
+
+.c-media-object__avatar {
+  width: 100%; /* Fills the 4rem assigned by the l-sidebar */
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+}

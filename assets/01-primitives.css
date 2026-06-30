@@ -1,0 +1,68 @@
+/* The Stack */
+l-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+l-stack > * + * {
+  margin-block-start: var(--space, var(--s1));
+}
+
+/* The Cluster */
+l-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space, var(--s1));
+  justify-content: flex-start;
+  align-items: var(--cluster-align, center);
+}
+
+/* The Sidebar */
+l-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space, var(--s1));
+}
+l-sidebar > :first-child {
+  flex-basis: var(--side-width, 15rem);
+  flex-grow: 1;
+}
+l-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: var(--main-min-width, 50%);
+}
+
+/* The Grid */
+l-grid {
+  display: grid;
+  gap: var(--space, var(--s1));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--grid-min, 15rem), 100%), 1fr)
+  );
+}
+
+/* The Reel */
+l-reel {
+  display: flex;
+  gap: var(--space, var(--s1));
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  padding-block-end: 1rem;
+}
+l-reel > * {
+  scroll-snap-align: start;
+}
+
+/* The Switcher */
+l-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space, var(--s1));
+}
+l-switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((var(--threshold, 40rem) - 100%) * 999);
+}

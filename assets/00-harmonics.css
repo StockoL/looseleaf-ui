@@ -2,6 +2,35 @@
    LOOSELEAF UI: REBOOT & SYSTEM TOKENS
    ========================================================================== */
 
+/* 1. Global Box Model & Margin Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin-block: 0;
+}
+
+/* 2. Document Level Constraints */
+html,
+body {
+  min-inline-size: 100%;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text-base);
+}
+
+/* 3. Typographic Measure with Inverted Control */
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  max-inline-size: var(--element-measure, 60ch);
+}
+
 :root {
   /* --- The Harmonic Ratio (Perfect Fifth) --- */
   --scale-ratio: 1.5;
@@ -25,4 +54,21 @@
 
   /* --- Universal Layout Constraints --- */
   --measure: 60ch;
+
+  /* --- Semantic Colour Tokens --- */
+  --color-surface-base: #ffffff;
+  --color-surface-sunken: #f4f4f5;
+  --color-text-base: #18181b;
+  --color-action-primary: #0070f3;
+  --color-border-subtle: #e4e4e7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface-base: #18181b;
+    --color-surface-sunken: #27272a;
+    --color-text-base: #ffffff;
+    --color-action-primary: #0070f3;
+    --color-border-subtle: #3f3f46;
+  }
 }

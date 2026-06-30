@@ -59,6 +59,7 @@ LooseLeaf UI is designed to be a drop-in toolkit rather than a heavy compiled fr
    - `00-harmonics.css` (Resets, Tokens, and Modular Scale)
    - `01-primitives.css` (Stack, Cluster, Sidebar, Grid, Switcher, Reel)
    - `02-atoms.css` (Buttons, Inputs)
+   - `03-organisms.css` (Navigation, Footer)
 
 ---
 
@@ -123,6 +124,13 @@ Hardcoding font sizes and margins (e.g., 16px, 24px) leads to visual inconsisten
   /* The Contracting Scale */
   --s-1: calc(var(--s0) / var(--scale-ratio));
   --s-2: calc(var(--s-1) / var(--scale-ratio));
+
+  /* --- The Contracting Modular Scale (Division) --- */
+  --s-1: calc(var(--s0) / var(--scale-ratio));
+  --s-2: calc(var(--s-1) / var(--scale-ratio));
+
+  /* --- Universal Layout Constraints --- */
+  --measure: 60ch;
 }
 ```
 
