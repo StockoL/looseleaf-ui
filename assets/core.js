@@ -92,3 +92,74 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ==========================================================================
+// [T4-11] THE ALERT DISMISS LOGIC
+// ==========================================================================
+const dismissBtn = event.target.closest('[data-ll-dismiss="alert"]');
+
+if (dismissBtn) {
+  const targetAlert = dismissBtn.closest(".c-alert");
+  if (targetAlert) {
+    // Add class for CSS animation
+    targetAlert.classList.add("is-removing");
+    // Wait for the animation to finish before removing from DOM
+    setTimeout(() => {
+      targetAlert.remove();
+    }, 300); // Matches the 0.3s transition in CSS
+  }
+}
+
+// ==========================================================================
+// [T4-06] & [T4-12] NATIVE DIALOG ENGINE (Modals & Offcanvas)
+// ==========================================================================
+
+// 1. Open Dialog
+const dialogToggle = event.target.closest('[data-ll-toggle="dialog"]');
+if (dialogToggle) {
+  const targetId = dialogToggle.getAttribute("aria-controls");
+  const dialog = document.getElementById(targetId);
+  if (dialog && typeof dialog.showModal === "function") {
+    dialog.showModal();
+  }
+}
+
+// 2. Dismiss Dialog (Close Button)
+const dialogDismiss = event.target.closest('[data-ll-dismiss="dialog"]');
+if (dialogDismiss) {
+  const dialog = dialogDismiss.closest("dialog");
+  if (dialog) dialog.close();
+}
+
+// 3. Click-Outside Backdrop to Close
+// Because the <dialog> spans the screen, clicking its ::backdrop targets the dialog itself.
+if (event.target.tagName === "DIALOG") {
+  const rect = event.target.getBoundingClientRect();
+  const isInDialog =
+    rect.top <= event.clientY &&
+    event.clientY <= rect.top + rect.height &&
+    rect.left <= event.clientX &&
+    event.clientX <= rect.left + rect.width;
+  if (!isInDialog) {
+    event.target.close();
+  }
+}
+
+// ==========================================================================
+// [T5-04] INTERACTIVE BACKGROUND TRACKING
+// ==========================================================================
+
+const glowContainers = document.querySelectorAll(".u-bg-glow");
+
+glowContainers.forEach((container) => {
+  container.addEventListener("mousemove", (e) => {
+    // Calculate the mouse position relative to the container
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Inject those coordinates directly into the container's CSS variables
+    container.style.setProperty("--mouse-x", `${x}px`);
+    container.style.setProperty("--mouse-y", `${y}px`);
+  });
+});

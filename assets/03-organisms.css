@@ -220,3 +220,330 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+/* --- [T4-10] THE INPUT GROUP --- */
+
+.c-input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Ensure the input takes up the remaining space, while buttons/text stay fixed */
+.c-input-group > .c-input {
+  flex-grow: 1;
+  min-inline-size: 0; /* Prevents text overflow from blowing out the flex container */
+}
+
+.c-input-group > .c-button,
+.c-input-group > .c-input-group__text {
+  flex-shrink: 0;
+}
+
+/* --- The Fusion Logic --- */
+
+/* Anything that is NOT the first child loses its left radius and overlaps the left border */
+.c-input-group > *:not(:first-child) {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  margin-inline-start: -1px;
+}
+
+/* Anything that is NOT the last child loses its right radius */
+.c-input-group > *:not(:last-child) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* The Focus Z-Index Fix: Brings the active element to the top of the stack */
+.c-input-group > *:focus,
+.c-input-group > *:focus-within {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- The Add-on Text Atom --- */
+.c-input-group__text {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--s0);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-subtle);
+  color: var(
+    --color-text-muted
+  ); /* You might need to define this token if you haven't! Default: #71717a */
+  font-size: var(--s0);
+  font-weight: 500;
+}
+
+/* Ensure the Add-on Text respects the outer border radiuses if it sits on the edges */
+.c-input-group > .c-input-group__text:first-child {
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
+}
+.c-input-group > .c-input-group__text:last-child {
+  border-start-end-radius: 4px;
+  border-end-end-radius: 4px;
+}
+
+/* ==========================================================================
+   [T4-11] THE ALERT
+   ========================================================================== */
+
+.c-alert {
+  padding: var(--s0);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-base);
+  color: var(--color-text-base);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Status Tints */
+.c-alert[data-status="info"] {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.c-alert[data-status="success"] {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.c-alert[data-status="warning"] {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.c-alert[data-status="danger"] {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* Close Button Override */
+.c-alert__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: var(--s-2);
+  border-radius: 4px;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
+}
+
+.c-alert__close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* State for the JS removal animation */
+.c-alert.is-removing {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   [T4-12] THE OFFCANVAS
+   ========================================================================== */
+
+.c-offcanvas {
+  margin: 0;
+  margin-inline-start: auto; /* Aligns to the right edge by default */
+  height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  max-inline-size: 24rem; /* Caps width on desktop to 384px */
+  border: none;
+  background-color: var(--color-surface-base);
+  padding: var(--s2);
+  box-shadow: -10px 0 25px rgba(0, 0, 0, 0.1);
+  color: var(--color-text-base);
+
+  /* Slide-in Animation */
+  transform: translateX(100%);
+  transition: transform var(--dur-base) var(--spring-smooth);
+}
+
+/* Open State */
+.c-offcanvas[open] {
+  transform: translateX(0);
+}
+
+.c-offcanvas::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Optional Left Alignment Variant */
+.c-offcanvas[data-position="left"] {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+  transform: translateX(-100%);
+  box-shadow: 10px 0 25px rgba(0, 0, 0, 0.1);
+}
+
+.c-offcanvas[data-position="left"][open] {
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   [T4-13] THE BREADCRUMB
+   ========================================================================== */
+
+.c-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.c-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  color: var(--color-text-muted);
+  font-size: var(--s-1);
+  font-weight: 500;
+}
+
+.c-breadcrumb__item a {
+  color: var(--color-text-base);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.c-breadcrumb__item a:hover,
+.c-breadcrumb__item a:focus {
+  color: var(--color-action-primary);
+}
+
+/* The Algorithmic Separator */
+.c-breadcrumb__item:not(:last-child)::after {
+  content: "/";
+  color: var(--color-border-subtle);
+}
+
+/* ==========================================================================
+   [T4-14] THE TABLE
+   ========================================================================== */
+
+/* The Responsive Wrapper */
+.c-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  background-color: var(--color-surface-base);
+}
+
+.c-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--s-1);
+}
+
+.c-table th,
+.c-table td {
+  padding: var(--s0) var(--s1);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-base);
+}
+
+.c-table tr:last-child td {
+  border-bottom: none;
+}
+
+.c-table th {
+  font-weight: 600;
+  background-color: var(--color-surface-sunken);
+}
+
+/* Modifier: Hover Rows */
+.c-table--hover tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.c-table--hover tbody tr:hover {
+  background-color: var(--color-surface-sunken);
+}
+
+/* Modifier: Striped Rows */
+.c-table--striped tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02); /* Extremely subtle tint */
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-table--striped tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+/* ==========================================================================
+   [T4-15] THE LIST GROUP
+   ========================================================================== */
+
+.c-list-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  background-color: var(--color-surface-base);
+  overflow: hidden;
+}
+
+.c-list-group__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--s0) var(--s1);
+  border: none;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-base);
+  background-color: transparent;
+  font-size: var(--s0);
+  text-decoration: none;
+}
+
+.c-list-group__item:last-child {
+  border-bottom: none;
+}
+
+/* Interactive States */
+a.c-list-group__item,
+button.c-list-group__item {
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+a.c-list-group__item:hover,
+button.c-list-group__item:hover,
+a.c-list-group__item:focus,
+button.c-list-group__item:focus {
+  background-color: var(--color-surface-sunken);
+  outline: none;
+}
+
+/* Active Selection */
+.c-list-group__item.is-active {
+  background-color: var(--color-action-primary);
+  color: var(--color-surface-base);
+  border-color: var(--color-action-primary);
+}

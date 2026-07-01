@@ -196,3 +196,165 @@
   border-top: 1px solid var(--color-border-subtle);
   margin-block: var(--s-2);
 }
+
+/* ==========================================================================
+   [T3-06] FORM VALIDATION STATES
+   ========================================================================== */
+
+/* Hook into the native ARIA attribute */
+.c-input[aria-invalid="true"] {
+  border-color: #dc2626; /* Standard Danger Red */
+  background-color: #fef2f2;
+}
+
+.c-input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+/* The Error Message Atom */
+.c-field-error {
+  display: block;
+  color: #dc2626;
+  font-size: var(--s-1);
+  font-weight: 500;
+  margin-block-start: var(--s-2);
+}
+
+/* ==========================================================================
+   [T3-07] CUSTOM CONTROLS (CHECKBOX & RADIO)
+   ========================================================================== */
+
+.c-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  cursor: pointer;
+  font-size: var(--s0);
+  color: var(--color-text-base);
+}
+
+/* Visually hide the native input, but keep it accessible to keyboards */
+.c-control__input {
+  appearance: none;
+  background-color: var(--color-surface-base);
+  margin: 0;
+  font: inherit;
+  width: 1.15em;
+  height: 1.15em;
+  border: 1px solid var(--color-border-subtle);
+  display: grid;
+  place-content: center;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+  cursor: pointer;
+}
+
+/* Distinct shapes */
+.c-control__input[type="checkbox"] {
+  border-radius: 4px;
+}
+.c-control__input[type="radio"] {
+  border-radius: 50%;
+}
+
+/* The inner checkmark / dot */
+.c-control__input::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform var(--spring-snappy);
+  box-shadow: inset 1em 1em var(--color-surface-base); /* Inherit background color */
+}
+
+/* The Radio Dot */
+.c-control__input[type="radio"]::before {
+  border-radius: 50%;
+  background-color: var(--color-surface-base);
+}
+
+/* The Checkbox Tick (Drawn using a clip-path polygon) */
+.c-control__input[type="checkbox"]::before {
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+/* Checked State */
+.c-control__input:checked {
+  background-color: var(--color-action-primary);
+  border-color: var(--color-action-primary);
+}
+
+.c-control__input:checked::before {
+  transform: scale(1);
+}
+
+/* Accessible Focus State */
+.c-control__input:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   [T3-08] THE SPINNER
+   ========================================================================== */
+
+.c-spinner {
+  display: inline-block;
+  width: 1em; /* Inherits the size of its parent text automatically! */
+  height: 1em;
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ll-spin 0.75s linear infinite;
+}
+
+@keyframes ll-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   [T3-09] THE CSS-ONLY TOOLTIP
+   ========================================================================== */
+
+[data-ll-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-ll-tooltip]::after {
+  content: attr(data-ll-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(var(--s-2));
+
+  /* Aesthetics */
+  background-color: var(--color-text-base);
+  color: var(--color-surface-base);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none; /* Prevents the tooltip itself from triggering hovers */
+
+  /* Josh Comeau Spring Physics */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-fast) var(--spring-smooth),
+    transform var(--dur-fast) var(--spring-snappy),
+    visibility var(--dur-fast);
+  z-index: 100;
+}
+
+[data-ll-tooltip]:hover::after,
+[data-ll-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(calc(var(--s-2) * -1));
+}

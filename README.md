@@ -432,6 +432,117 @@ A contextual overlay for displaying lists of links or actions, triggered by a us
 </div>
 ```
 
+### Form Validation (`aria-invalid`)
+
+**1. Architectural Overview**
+Validation styling is applied using the semantic `aria-invalid` hook, ensuring developers have programmatic control over when errors display while maintaining strict screen-reader compliance.
+
+- **Primitives Used:** `<l-stack>` (to stack the input and the error message).
+- **JS Required:** **No** (Core library). The parent application is responsible for toggling `aria-invalid="true"`.
+
+**2. Accessibility (a11y) Advisories**
+
+- The input must use `aria-errormessage="error-id"` pointing to the ID of the `.c-field-error` paragraph.
+
+**3. Implementation (HTML Structure)**
+
+```html
+<l-stack style="--space: var(--s-2);">
+  <label class="c-label" for="username">Username</label>
+  <input
+    type="text"
+    id="username"
+    class="c-input"
+    aria-invalid="true"
+    aria-errormessage="username-error"
+  />
+  <span class="c-field-error" id="username-error"
+    >This username is already taken.</span
+  >
+</l-stack>
+```
+
+### Custom Controls (`.c-control`)
+
+**1. Architectural Overview**
+Fully custom, CSS-only checkboxes and radio buttons that scale fluidly with typography and share our global colour tokens.
+
+- **Primitives Used:** None (Atom).
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- Do not use `display: none` on the native input. We use `appearance: none` so it remains perfectly focusable via the `Tab` key.
+
+**3. Implementation (HTML Structure)**
+
+```html
+<label class="c-control">
+  <input type="checkbox" class="c-control__input" name="terms" />
+  <span>I accept the terms and conditions</span>
+</label>
+
+<label class="c-control">
+  <input
+    type="radio"
+    class="c-control__input"
+    name="plan"
+    value="pro"
+    checked
+  />
+  <span>Pro Plan ($10/mo)</span>
+</label>
+```
+
+### The Spinner (`.c-spinner`)
+
+**1. Architectural Overview**
+A purely CSS-driven loading indicator. It uses `em` units for its dimensions, meaning it will automatically scale to match the font size of whatever container or button it is placed inside.
+
+- **Primitives Used:** None (Atom).
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- If replacing text with a spinner (e.g., inside a button), ensure there is visually hidden text (e.g., `<span class="u-visually-hidden">Loading...</span>`) for screen readers.
+
+**3. Implementation (HTML Structure)**
+
+```html
+<button class="c-button" data-loudness="murmur" disabled>
+  <span
+    class="c-spinner"
+    aria-hidden="true"
+    style="margin-inline-end: var(--s-2);"
+  ></span>
+  Processing...
+</button>
+```
+
+### The Tooltip (`[data-ll-tooltip]`)
+
+**1. Architectural Overview**
+A zero-JavaScript tooltip that reveals contextual information on hover or keyboard focus. It uses the `attr()` CSS function to extract its content directly from the data attribute.
+
+- **Primitives Used:** None (Atom).
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- Tooltips should be used for _supplementary_ information only. Critical information must be visible on the screen without interaction.
+
+**3. Implementation (HTML Structure)**
+
+```html
+<p>
+  Our architecture relies heavily on
+  <strong data-ll-tooltip="A mathematical framework for spacing"
+    >Harmonic Scales</strong
+  >
+  to maintain visual consistency.
+</p>
+```
+
 ---
 
 ## 6. <a name="tier-4"></a> 🏗️ Tier 4: Macro-Compositions (Organisms)
@@ -703,6 +814,323 @@ A fixed-width anchor (like an avatar) situated next to fluid, descriptive text.
       </l-stack>
     </div>
   </l-sidebar>
+</div>
+```
+
+### The Input Group (`.c-input-group`)
+
+**1. Architectural Overview**
+A flex-based fusion wrapper that visually combines Tier 3 Form Inputs, Buttons, and Add-on Text elements into a single, continuous interactive row.
+
+- **Primitives Used:** None (Custom Flex Wrapper).
+- **JS Required:** **No**.
+- **Dark Mode Implications:** The `.c-input-group__text` atom maps to `--color-surface-sunken` to create visual separation from the active input.
+
+**2. Accessibility (a11y) Advisories**
+
+- The group itself does not require ARIA labels, but the `.c-input` inside it must still have an associated `<label>` (either visually present or visually hidden).
+- If using a button with just an icon inside the group, ensure the button has a descriptive `aria-label`.
+
+**3. Variables Available**
+
+- Inherits standard radii (`4px`) and spacing from its child atoms.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<l-stack style="--space: var(--s-2);">
+  <label class="c-label" for="website">Website Profile</label>
+  <div class="c-input-group">
+    <span class="c-input-group__text">https://</span>
+    <input
+      type="text"
+      id="website"
+      class="c-input"
+      placeholder="looseleaf.ui"
+    />
+  </div>
+</l-stack>
+
+<l-stack style="--space: var(--s-2);">
+  <label class="c-label" for="promo">Discount Code</label>
+  <div class="c-input-group">
+    <input type="text" id="promo" class="c-input" placeholder="Enter code" />
+    <button type="button" class="c-button" data-loudness="murmur">Apply</button>
+  </div>
+</l-stack>
+```
+
+### The Alert (`.c-alert`)
+
+**1. Architectural Overview**
+Contextual feedback messages for typical user actions. They act as decorative shells mapping to semantic status colors, utilizing the `<l-cluster>` primitive to space icons, text, and close buttons.
+
+- **Primitives Used:** `<l-cluster>`.
+- **JS Required:** **Yes** (Only if using the `data-ll-dismiss` hook).
+
+**2. Accessibility (a11y) Advisories**
+
+- If the alert is dynamically injected into the page after an action, wrap it in a container with `role="status"` or `role="alert"` so screen readers announce it immediately.
+
+**3. Variables Available**
+
+- Status tints: `info`, `success`, `warning`, `danger`.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<div class="c-alert" data-status="success" role="status">
+  <l-cluster style="justify-content: space-between;">
+    <l-cluster style="--space: var(--s-1);">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"></svg>
+      <strong>Profile Updated!</strong>
+      <span>Your changes have been saved successfully.</span>
+    </l-cluster>
+
+    <button
+      class="c-alert__close"
+      data-ll-dismiss="alert"
+      aria-label="Close alert"
+    >
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"></svg>
+    </button>
+  </l-cluster>
+</div>
+```
+
+### The Native Modal (`.c-modal`)
+
+**1. Architectural Overview**
+A high-priority disruption requiring user interaction before returning to the main application flow.
+
+- **Primitives Used:** `<l-stack>` (for internal content spacing).
+- **JS Required:** **Yes** (Via the `data-ll-toggle="dialog"` engine).
+
+**2. Accessibility (a11y) Advisories**
+
+- Utilises the HTML5 `<dialog>` element to natively handle focus trapping and top-layer rendering.
+
+**3. Variables Available**
+
+- Restricts max-width using `--measure` (60ch).
+
+**4. Implementation (HTML Structure)**
+
+```html
+<button
+  class="c-button"
+  data-loudness="cheer"
+  data-ll-toggle="dialog"
+  aria-controls="myModal"
+>
+  Open Modal
+</button>
+
+<dialog class="c-modal" id="myModal">
+  <l-stack>
+    <h2>Confirm Action</h2>
+    <p>Are you sure you want to proceed?</p>
+    <l-cluster style="justify-content: flex-end;">
+      <button class="c-button" data-loudness="murmur" data-ll-dismiss="dialog">
+        Cancel
+      </button>
+      <button class="c-button" data-loudness="cheer">Confirm</button>
+    </l-cluster>
+  </l-stack>
+</dialog>
+```
+
+### The Offcanvas (`.c-offcanvas`)
+
+**1. Architectural Overview**
+A slide-out panel primarily used for mobile navigation menus or dense settings/filter panels. It relies on the identical HTML5 `<dialog>` engine as the Modal, but styled to anchor to the screen's edge.
+
+- **Primitives Used:** Relies on internal primitives (e.g., `<l-stack>`) to structure its contents.
+- **JS Required:** **Yes** (Via the `data-ll-toggle="dialog"` engine).
+- **Dark Mode Implications:** Because it sits atop the main layout, it relies heavily on `--color-surface-base` and its box-shadow to maintain visual hierarchy.
+
+**2. Accessibility (a11y) Advisories**
+
+- Always include a visible close button (`data-ll-dismiss="dialog"`) inside the offcanvas for mobile users.
+
+**3. Variables Available**
+
+- Use `data-position="left"` to reverse the slide direction from right to left.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<button
+  class="c-button"
+  data-loudness="murmur"
+  data-ll-toggle="dialog"
+  aria-controls="mobile-menu"
+>
+  Open Menu
+</button>
+
+<dialog class="c-offcanvas" id="mobile-menu">
+  <l-stack style="--space: var(--s2);">
+    <l-cluster style="justify-content: space-between;">
+      <h2>Navigation</h2>
+      <button class="c-button" data-loudness="murmur" data-ll-dismiss="dialog">
+        Close
+      </button>
+    </l-cluster>
+
+    <nav>
+      <l-stack style="--space: var(--s-1);">
+        <a href="#">Dashboard</a>
+        <a href="#">Settings</a>
+        <a href="#">Log Out</a>
+      </l-stack>
+    </nav>
+  </l-stack>
+</dialog>
+```
+
+### The Breadcrumb (`.c-breadcrumb`)
+
+**1. Architectural Overview**
+A navigational aid indicating the user's current location within a hierarchical structure.
+
+- **Primitives Used:** Decorative list (acts similar to a cluster but specifically for inline text strings).
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- Must be wrapped in a `<nav aria-label="Breadcrumb">`.
+- The current (active) page link should have `aria-current="page"`.
+
+**3. Variables Available**
+
+- Inherits fluid spacing (`--s-1`) to determine the gaps between levels.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<nav aria-label="Breadcrumb">
+  <ol class="c-breadcrumb">
+    <li class="c-breadcrumb__item"><a href="/">Home</a></li>
+    <li class="c-breadcrumb__item"><a href="/products">Products</a></li>
+    <li class="c-breadcrumb__item">
+      <a href="/products/software" aria-current="page">LooseLeaf UI</a>
+    </li>
+  </ol>
+</nav>
+```
+
+### The Data Table (`.c-table`)
+
+**1. Architectural Overview**
+A highly legible, fluid data table. To prevent massive tables from breaking page layouts on mobile devices, the table _must_ be wrapped in `.c-table-wrapper`, which handles intrinsic horizontal scrolling.
+
+- **Primitives Used:** None (Relies entirely on native HTML `table` behavior).
+- **JS Required:** **No**.
+- **Dark Mode Implications:** The `--striped` modifier uses an opacity-based black/white tint rather than a hardcoded hex color, ensuring it scales elegantly across light and dark themes.
+
+**2. Accessibility (a11y) Advisories**
+
+- Always use `<th>` tags for column or row headers, and include a `scope="col"` or `scope="row"` attribute so screen readers understand the data relationship.
+
+**3. Variables Available**
+
+- Modifiers available: `.c-table--hover` and `.c-table--striped` (applied to the `<table>` element).
+
+**4. Implementation (HTML Structure)**
+
+```html
+<div class="c-table-wrapper">
+  <table class="c-table c-table--hover">
+    <thead>
+      <tr>
+        <th scope="col">Invoice ID</th>
+        <th scope="col">Client</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>#INV-001</td>
+        <td>Acme Corp</td>
+        <td>$1,200.00</td>
+        <td><span class="c-badge" data-status="success">Paid</span></td>
+      </tr>
+      <tr>
+        <td>#INV-002</td>
+        <td>Globex</td>
+        <td>$450.00</td>
+        <td><span class="c-badge">Pending</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### The List Group (`.c-list-group`)
+
+**1. Architectural Overview**
+A flexible vertical list component ideal for displaying dense data, settings menus, or complex navigational structures.
+
+- **Primitives Used:** None (Custom Flex column).
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- Can be used as a structural `<ul>` list containing non-interactive data, or as a group of stacked `<a>` or `<button>` tags.
+- Do not wrap interactive `<a>` tags inside `<li>` tags if applying the `.c-list-group__item` class directly to the interactive elements—apply it directly to the anchor/button.
+
+**3. Variables Available**
+
+- Use the `.is-active` class to programmatically denote the currently selected item.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<div class="c-list-group">
+  <a href="#profile" class="c-list-group__item is-active" aria-current="page"
+    >Profile Settings</a
+  >
+  <a href="#billing" class="c-list-group__item">Billing & Subscriptions</a>
+  <a href="#security" class="c-list-group__item">Security & Privacy</a>
+
+  <button class="c-list-group__item">
+    <l-cluster style="justify-content: space-between;">
+      <span>Delete Account</span>
+      <svg aria-hidden="true" width="16" height="16"></svg>
+    </l-cluster>
+  </button>
+</div>
+```
+
+## 8. <a name="tier-5"></a> Animations
+
+### Background Animations (`.u-bg-mesh`, `.u-bg-glow`)
+
+**1. Architectural Overview**
+Hardware-accelerated, performant background effects designed to add depth to landing pages or hero sections without relying on heavy WebGL libraries.
+
+- **Primitives Used:** None (Utility classes applied to structural containers).
+- **JS Required:** **Yes** (Only for `.u-bg-glow` to track cursor coordinates).
+- **Dark Mode Implications:** The gradients use low-opacity RGBA values, allowing them to subtly tint dark mode surfaces without overpowering text contrast.
+
+**2. Accessibility (a11y) Advisories**
+
+- These animations are purely decorative. They must sit behind content (`z-index: -1`) and must have `pointer-events: none` applied to their pseudo-elements so they don't block users from clicking links.
+- Automatically disabled by the global `prefers-reduced-motion` utility.
+
+**3. Implementation (HTML Structure)**
+
+```html
+<section class="c-hero u-bg-glow">
+  <l-stack>
+    <h1>This section reacts to your cursor.</h1>
+  </l-stack>
+</section>
+
+<div class="u-bg-mesh">
+  <p>This container has a slow-moving, pure CSS ambient gradient behind it.</p>
 </div>
 ```
 
