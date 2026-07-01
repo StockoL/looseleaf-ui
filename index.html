@@ -3,102 +3,462 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LooseLeaf UI | Sandbox</title>
+    <title>LooseLeaf UI | Kitchen Sink</title>
 
     <link rel="stylesheet" href="assets/00-harmonics.css" />
     <link rel="stylesheet" href="assets/01-primitives.css" />
     <link rel="stylesheet" href="assets/02-atoms.css" />
     <link rel="stylesheet" href="assets/03-organisms.css" />
+    <link rel="stylesheet" href="assets/04-animations.css" />
+    <link rel="stylesheet" href="assets/05-utilities.css" />
     <link rel="stylesheet" href="assets/sandbox.css" />
   </head>
   <body>
-    <header class="c-site-header">
+    <nav class="c-navbar" aria-label="Primary Navigation">
       <l-cluster style="justify-content: space-between">
-        <a href="/" class="c-brand">LooseLeaf</a>
-        <nav aria-label="Primary Navigation">
+        <a href="/" class="c-navbar__brand"
+          >LooseLeaf <span class="c-badge" data-status="danger">v1.0</span></a
+        >
+
+        <button
+          class="c-navbar__toggle u-anim-lift"
+          data-ll-toggle="collapse"
+          aria-expanded="false"
+          aria-controls="primary-menu"
+          aria-label="Toggle navigation"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="c-navbar__menu" id="primary-menu">
           <l-cluster>
-            <a href="#docs">Docs</a>
-            <a href="#pricing">Pricing</a>
-            <button class="c-button" data-loudness="cheer">Log In</button>
+            <a href="#components" class="c-navbar__link">Components</a>
+            <a href="#layout" class="c-navbar__link">Layout</a>
+
+            <div class="c-dropdown-wrapper">
+              <button
+                class="c-navbar__link"
+                data-ll-toggle="dropdown"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Overlays ▾
+              </button>
+              <div class="c-dropdown" role="menu">
+                <l-stack style="--space: var(--s-2)">
+                  <button
+                    class="c-dropdown__item u-anim-lift"
+                    data-ll-toggle="dialog"
+                    aria-controls="demo-modal"
+                    role="menuitem"
+                  >
+                    Open Modal
+                  </button>
+                  <button
+                    class="c-dropdown__item u-anim-lift"
+                    data-ll-toggle="dialog"
+                    aria-controls="demo-offcanvas"
+                    role="menuitem"
+                  >
+                    Open Offcanvas
+                  </button>
+                </l-stack>
+              </div>
+            </div>
+
+            <button class="c-button u-anim-lift" data-loudness="cheer">
+              Download
+            </button>
           </l-cluster>
-        </nav>
+        </div>
       </l-cluster>
-    </header>
+    </nav>
 
     <main>
-      <l-stack style="--space: var(--s5)">
-        <section class="c-hero">
+      <section class="c-hero u-bg-mesh">
+        <l-center style="--max-width: 70rem">
           <l-switcher style="--threshold: 45rem; align-items: center">
             <l-stack style="--space: var(--s1)">
-              <h1 class="c-hero__title">Build interfaces faster than ever.</h1>
+              <nav aria-label="Breadcrumb">
+                <ol class="c-breadcrumb">
+                  <li class="c-breadcrumb__item"><a href="#">Home</a></li>
+                  <li class="c-breadcrumb__item"><a href="#">Library</a></li>
+                  <li class="c-breadcrumb__item">
+                    <a href="#" aria-current="page">Kitchen Sink</a>
+                  </li>
+                </ol>
+              </nav>
+
+              <h1 class="c-hero__title">The Kitchen Sink.</h1>
               <p class="c-hero__lead">
-                A composable layout system that respects typography and
-                eliminates manual overrides.
+                Every primitive, atom, and organism rendered on a single page to
+                stress-test the architectural integrity of
+                <strong data-ll-tooltip="A fluid, mathematical CSS framework"
+                  >LooseLeaf UI</strong
+                >.
               </p>
+
               <l-cluster>
                 <button class="c-button" data-loudness="cheer">
-                  Get Started
+                  <span
+                    class="c-spinner"
+                    aria-hidden="true"
+                    style="margin-inline-end: var(--s-2)"
+                  ></span>
+                  Loading...
                 </button>
                 <button class="c-button" data-loudness="murmur">
-                  Read Docs
+                  View Source
                 </button>
               </l-cluster>
             </l-stack>
 
             <div class="c-hero__media">
               <img
-                src="https://placehold.co/600x400/f4f4f5/a1a1aa?text=Hero+Graphic"
+                src="https://placehold.co/800x600/f4f4f5/a1a1aa?text=Intrinsic+Layouts"
                 alt="Placeholder illustration"
+                style="
+                  border-radius: 8px;
+                  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                "
               />
             </div>
           </l-switcher>
+        </l-center>
+      </section>
+
+      <l-stack style="--space: 0">
+        <section class="c-section">
+          <l-center>
+            <l-stack style="--space: var(--s2)">
+              <h2>Grid & Cards</h2>
+              <l-grid style="--grid-min: 18rem">
+                <article class="c-card u-anim-lift">
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-2)">
+                      <l-cluster style="justify-content: space-between">
+                        <h3>Fluid Scaling</h3>
+                        <span class="c-badge" data-status="success"
+                          >Active</span
+                        >
+                      </l-cluster>
+                      <p class="u-text-muted">
+                        Cards manage their own internal rhythm using the Stack
+                        primitive.
+                      </p>
+                    </l-stack>
+                  </l-stack>
+                </article>
+
+                <article class="c-card u-anim-lift">
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-2)">
+                      <l-cluster style="justify-content: space-between">
+                        <h3>Media Object</h3>
+                        <span class="c-badge">Component</span>
+                      </l-cluster>
+                      <div class="c-media-object">
+                        <l-sidebar
+                          style="--side-width: 3rem; --space: var(--s0)"
+                        >
+                          <img
+                            src="https://placehold.co/100x100/e4e4e7/71717a?text=A"
+                            alt="Avatar"
+                            class="c-media-object__avatar"
+                          />
+                          <div class="c-media-object__content">
+                            <l-stack style="--space: 0">
+                              <strong>Ada Lovelace</strong>
+                              <span
+                                class="u-text-muted u-truncate"
+                                style="font-size: var(--s-1)"
+                                >Software Engineer</span
+                              >
+                            </l-stack>
+                          </div>
+                        </l-sidebar>
+                      </div>
+                    </l-stack>
+                  </l-stack>
+                </article>
+
+                <article class="c-card u-anim-lift">
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-2)">
+                      <l-cluster style="justify-content: space-between">
+                        <h3>Accordions</h3>
+                        <span class="c-badge" data-status="danger"
+                          >Interactive</span
+                        >
+                      </l-cluster>
+                      <div class="c-accordion" data-ll-accordion>
+                        <l-stack style="--space: 0">
+                          <div class="c-accordion__item">
+                            <button
+                              class="c-accordion__trigger"
+                              aria-expanded="false"
+                              aria-controls="panel-1"
+                            >
+                              <span>More Info</span>
+                              <svg
+                                class="c-accordion__icon"
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                              >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                              </svg>
+                            </button>
+                            <div class="c-accordion__panel" id="panel-1">
+                              <div class="c-accordion__content">
+                                <p style="font-size: var(--s-1)">
+                                  Utilises modern CSS grid transitions to
+                                  animate height perfectly without JS
+                                  measurements.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </l-stack>
+                      </div>
+                    </l-stack>
+                  </l-stack>
+                </article>
+              </l-grid>
+            </l-stack>
+          </l-center>
+        </section>
+
+        <section
+          class="c-section"
+          style="background-color: var(--color-surface-base)"
+        >
+          <l-center>
+            <l-stack style="--space: var(--s2)">
+              <div class="c-alert" data-status="info" role="status">
+                <l-cluster style="justify-content: space-between">
+                  <l-cluster style="--space: var(--s-1)">
+                    <strong>System Update:</strong>
+                    <span
+                      >The data tables now feature intrinsic horizontal
+                      scrolling on mobile devices.</span
+                    >
+                  </l-cluster>
+                  <button
+                    class="c-alert__close"
+                    data-ll-dismiss="alert"
+                    aria-label="Close alert"
+                  >
+                    ✕
+                  </button>
+                </l-cluster>
+              </div>
+
+              <h2>Data Display</h2>
+
+              <l-switcher style="--threshold: 50rem">
+                <div class="c-table-wrapper">
+                  <table class="c-table c-table--hover c-table--striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Component</th>
+                        <th scope="col">Tier</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Cluster</td>
+                        <td>2 (Primitive)</td>
+                        <td>
+                          <span class="c-badge" data-status="success"
+                            >Stable</span
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Input Group</td>
+                        <td>4 (Organism)</td>
+                        <td>
+                          <span class="c-badge" data-status="success"
+                            >Stable</span
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Tooltip</td>
+                        <td>3 (Atom)</td>
+                        <td>
+                          <span class="c-badge" data-status="danger"
+                            >CSS Only</span
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div>
+                  <div class="c-list-group">
+                    <a
+                      href="#"
+                      class="c-list-group__item is-active"
+                      aria-current="page"
+                      >View Documentation</a
+                    >
+                    <a href="#" class="c-list-group__item"
+                      >Download Source Code</a
+                    >
+                    <button class="c-list-group__item u-text-danger">
+                      Delete Environment
+                    </button>
+                  </div>
+                </div>
+              </l-switcher>
+            </l-stack>
+          </l-center>
         </section>
 
         <section class="c-section">
+          <l-center>
+            <l-stack style="--space: var(--s2)">
+              <article class="c-prose u-text-center">
+                <h2>The Horizontal Reel</h2>
+                <p>
+                  Native CSS scroll-snapping allows for robust horizontal
+                  carousels without the need for bloated slider plugins.
+                </p>
+              </article>
+
+              <l-reel style="--space: var(--s1)">
+                <img
+                  src="https://placehold.co/300x200/0070f3/ffffff?text=1"
+                  alt=""
+                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                />
+                <img
+                  src="https://placehold.co/300x200/0070f3/ffffff?text=2"
+                  alt=""
+                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                />
+                <img
+                  src="https://placehold.co/300x200/0070f3/ffffff?text=3"
+                  alt=""
+                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                />
+                <img
+                  src="https://placehold.co/300x200/0070f3/ffffff?text=4"
+                  alt=""
+                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                />
+                <img
+                  src="https://placehold.co/300x200/0070f3/ffffff?text=5"
+                  alt=""
+                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                />
+              </l-reel>
+            </l-stack>
+          </l-center>
+        </section>
+
+        <section
+          class="c-section"
+          style="background-color: var(--color-surface-base)"
+        >
           <l-center style="--max-width: 45rem">
             <l-stack style="--space: var(--s2)">
               <div>
-                <h2>Create your account</h2>
+                <h2>Complex Forms</h2>
                 <p class="u-text-muted">
-                  Experience the power of intrinsic design.
+                  Combining input groups, validation, and custom controls.
                 </p>
               </div>
 
               <form class="c-form">
                 <l-stack style="--space: var(--s3)">
                   <fieldset class="c-form__section">
-                    <legend class="c-form__legend">Personal Details</legend>
+                    <legend class="c-form__legend">Account Setup</legend>
                     <l-stack style="--space: var(--s1)">
-                      <l-grid style="--grid-min: 15rem">
-                        <div>
-                          <label class="c-label" for="fname">First Name</label>
+                      <div>
+                        <label class="c-label" for="website"
+                          >Portfolio Website</label
+                        >
+                        <div class="c-input-group">
+                          <span class="c-input-group__text">https://</span>
                           <input
                             type="text"
-                            id="fname"
+                            id="website"
                             class="c-input"
-                            placeholder="Ada"
+                            placeholder="looseleaf.ui"
                           />
                         </div>
-                        <div>
-                          <label class="c-label" for="lname">Last Name</label>
-                          <input
-                            type="text"
-                            id="lname"
-                            class="c-input"
-                            placeholder="Lovelace"
-                          />
-                        </div>
-                      </l-grid>
+                      </div>
 
                       <div>
-                        <label class="c-label" for="email">Email Address</label>
+                        <label class="c-label" for="username">Username</label>
                         <input
-                          type="email"
-                          id="email"
+                          type="text"
+                          id="username"
                           class="c-input"
-                          placeholder="ada@example.com"
+                          aria-invalid="true"
+                          aria-errormessage="username-error"
+                          value="admin"
                         />
+                        <span class="c-field-error" id="username-error"
+                          >This username is reserved.</span
+                        >
                       </div>
+                    </l-stack>
+                  </fieldset>
+
+                  <fieldset class="c-form__section">
+                    <legend class="c-form__legend">Preferences</legend>
+                    <l-stack style="--space: var(--s1)">
+                      <l-cluster>
+                        <label class="c-control">
+                          <input
+                            type="radio"
+                            class="c-control__input"
+                            name="theme"
+                            value="light"
+                            checked
+                          />
+                          <span>Light Mode</span>
+                        </label>
+                        <label class="c-control">
+                          <input
+                            type="radio"
+                            class="c-control__input"
+                            name="theme"
+                            value="dark"
+                          />
+                          <span>Dark Mode</span>
+                        </label>
+                      </l-cluster>
+
+                      <label class="c-control">
+                        <input
+                          type="checkbox"
+                          class="c-control__input"
+                          name="terms"
+                          required
+                        />
+                        <span>I accept the Terms and Conditions</span>
+                      </label>
                     </l-stack>
                   </fieldset>
 
@@ -108,14 +468,14 @@
                       class="c-button"
                       data-loudness="murmur"
                     >
-                      Cancel
+                      Reset
                     </button>
                     <button
                       type="submit"
                       class="c-button"
                       data-loudness="cheer"
                     >
-                      Complete Setup
+                      Save Preferences
                     </button>
                   </l-cluster>
                 </l-stack>
@@ -127,31 +487,78 @@
     </main>
 
     <footer class="c-site-footer">
-      <l-stack style="--space: var(--s3)">
-        <l-grid style="--grid-min: 10rem">
-          <l-stack style="--space: var(--s-1)">
-            <h3 class="c-footer-heading">Product</h3>
-            <a href="#">Features</a>
-            <a href="#">Pricing</a>
-          </l-stack>
-
-          <l-stack style="--space: var(--s-1)">
-            <h3 class="c-footer-heading">Company</h3>
-            <a href="#">About Us</a>
-            <a href="#">Careers</a>
-          </l-stack>
-        </l-grid>
-
-        <div class="c-site-footer__bottom">
-          <l-cluster style="justify-content: space-between">
-            <p>&copy; 2026 LooseLeaf UI. All rights reserved.</p>
-            <l-cluster>
-              <a href="#">Twitter</a>
+      <l-center>
+        <l-stack style="--space: var(--s3)">
+          <l-grid style="--grid-min: 10rem">
+            <l-stack style="--space: var(--s-1)">
+              <h3 class="c-footer-heading">Resources</h3>
+              <a href="#">Documentation</a>
+              <a href="#">Components</a>
+            </l-stack>
+            <l-stack style="--space: var(--s-1)">
+              <h3 class="c-footer-heading">Ecosystem</h3>
               <a href="#">GitHub</a>
+              <a href="#">NPM Package</a>
+            </l-stack>
+          </l-grid>
+
+          <div class="c-site-footer__bottom">
+            <l-cluster style="justify-content: space-between">
+              <p>&copy; 2026 LooseLeaf UI. Intrinsic by design.</p>
             </l-cluster>
-          </l-cluster>
-        </div>
-      </l-stack>
+          </div>
+        </l-stack>
+      </l-center>
     </footer>
+
+    <dialog class="c-modal" id="demo-modal">
+      <l-stack>
+        <h2>Confirm Action</h2>
+        <p>
+          This modal sits natively in the browser's top layer. The focus
+          trapping and backdrop clicking are handled intrinsically.
+        </p>
+        <l-cluster style="justify-content: flex-end">
+          <button
+            class="c-button"
+            data-loudness="murmur"
+            data-ll-dismiss="dialog"
+          >
+            Cancel
+          </button>
+          <button
+            class="c-button"
+            data-loudness="cheer"
+            data-ll-dismiss="dialog"
+          >
+            Understood
+          </button>
+        </l-cluster>
+      </l-stack>
+    </dialog>
+
+    <dialog class="c-offcanvas" id="demo-offcanvas" data-position="right">
+      <l-stack style="--space: var(--s2)">
+        <l-cluster style="justify-content: space-between">
+          <h2>Navigation Menu</h2>
+          <button
+            class="c-button"
+            data-loudness="murmur"
+            data-ll-dismiss="dialog"
+          >
+            ✕
+          </button>
+        </l-cluster>
+        <nav>
+          <div class="c-list-group">
+            <a href="#" class="c-list-group__item is-active">Dashboard</a>
+            <a href="#" class="c-list-group__item">Account Settings</a>
+            <a href="#" class="c-list-group__item u-text-danger">Sign Out</a>
+          </div>
+        </nav>
+      </l-stack>
+    </dialog>
+
+    <script src="assets/core.js"></script>
   </body>
 </html>
