@@ -29,6 +29,12 @@
 
 /* --- [T6-03] Text Colors --- */
 /* (Fallback hex codes align with zinc/red palettes, overriding defaults safely) */
+
+/* Add to Text Colors */
+.u-text-primary {
+  color: var(--color-action-primary) !important;
+}
+
 .u-text-muted {
   color: #71717a !important;
 }
@@ -43,4 +49,44 @@
   .u-text-danger {
     color: #f87171 !important;
   }
+}
+
+/* --- [T6-04] Constraints --- */
+.u-max-measure {
+  max-inline-size: 50ch;
+  margin-inline: auto;
+}
+
+/* Add to Constraints */
+.u-min-h-screen {
+  min-height: 100dvh !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* --- [T6-05] Layout Utilities --- */
+.u-flex-between {
+  justify-content: space-between !important;
+}
+.u-flex-center {
+  justify-content: center !important;
+  align-items: center !important;
+}
+.u-flex-end {
+  justify-content: flex-end !important;
+}
+.u-h-100 {
+  height: 100% !important;
+}
+
+/* --- [T6-06] Surface Colors --- */
+.u-surface-base {
+  background-color: var(--color-surface-base) !important;
+}
+.u-text-sm {
+  font-size: var(--s-1) !important;
+}
+.u-font-semibold {
+  font-weight: 600 !important;
 }

@@ -16,11 +16,37 @@ To empower lean, agile engineering teams to compose intrinsically responsive, pe
 8. [🧪 Quality Assurance & Browser Matrix](#qa)
 9. [🏗️ Development Log & Credits](#dev-log)
 
-Link to GitHub Pages sandbox deployment: [https://stockol.github.io/looseleaf-ui/]
+### Link to sandbox (example) deployment on GitHub Pages: [https://stockol.github.io/looseleaf-ui/]
 
 ## 1. <a name="philosophy"></a> 📖 Project Philosophy & Principles
 
 To establish a system that scales successfully, we must document for whom we are building and for why. A shared language is fundamental to collaboration, ensuring the system image bridges the gap to the user's mental model.
+
+## 📖 The Philosophy of Separation: Technology vs. Component
+
+A core pillar of LooseLeaf UI is its approach to the "Separation of Concerns." Traditional web development taught us to strictly separate HTML (content), CSS (presentation), and JS (behaviour). However, modern application design favors **Separation by Component**—coupling the logic, structure, and style of a unit together.
+
+### 1. The Data-Passing API
+
+LooseLeaf UI embraces both paradigms. It remains technologically separated (pure CSS files, pure HTML), but it utilises **CSS Custom Properties** as a **Data-Passing API** for layout primitives.
+
+When you see this:
+
+```html
+<l-center style="--max-width: 45rem;">...</l-center>
+```
+
+You are not violating the separation of concerns. You are passing a configuration parameter (prop) to a layout function.
+
+### Handling Both Paradigms
+
+LooseLeaf UI is designed to be philosophically flexible:
+
+The Component-Driven Way: Pass variables inline (style="--space: var(--s2)") for rapid composition, treating primitives like functional components.
+
+The Strict Technology-Driven Way: Keep your HTML entirely clean and inject variables from your CSS via contextual classes (e.g., .demo-faq-section l-center { --max-width: 45rem; }).
+
+This framework is built on the belief that a robust architecture should support both workflows without sacrificing mathematical integrity.
 
 ### 🎯 System Core Purpose:
 
@@ -1116,6 +1142,130 @@ A flexible vertical list component ideal for displaying dense data, settings men
     </l-cluster>
   </button>
 </div>
+```
+
+### The Bento Grid (`.c-bento`)
+
+**1. Architectural Overview**
+A highly versatile, asymmetric grid layout designed for dashboards, feature highlights, and mixed-media displays. It utilizes `grid-auto-flow: dense` to automatically pack smaller items into visual gaps, creating a seamless "puzzle-piece" aesthetic.
+
+- **Primitives Used:** Relies on native CSS Grid with the Stack primitive (`<l-stack>`) typically used inside the cards.
+- **JS Required:** **No**.
+
+**2. Accessibility (a11y) Advisories**
+
+- Because `dense` packing can visually reorder elements in a way that differs from the DOM order, ensure that the logical reading order of your HTML still makes sense for screen reader users and keyboard navigation.
+
+**3. Variables & Modifiers Available**
+
+- **`--bento-cols`**: Adjusts the base number of columns (Defaults to `4`). Can be overridden inline (e.g., `style="--bento-cols: 6;"`).
+- **`.c-bento__col-2`, `.c-bento__col-3`, `.c-bento__col-full`**: Explicit column spans.
+- **`.c-bento__row-2`, `.c-bento__row-3`**: Explicit row spans.
+
+**4. Implementation (HTML Structure)**
+
+```html
+<div class="c-bento" style="--bento-cols: 4;">
+  <article class="c-card c-bento__col-full">
+    <l-stack>
+      <h3>Hero Content</h3>
+    </l-stack>
+  </article>
+
+  <article class="c-card c-bento__col-3">
+    <l-stack>
+      <h3>Primary Feature</h3>
+    </l-stack>
+  </article>
+
+  <article class="c-card">
+    <l-stack>
+      <h3>Stat</h3>
+    </l-stack>
+  </article>
+</div>
+```
+
+### The FAQ Template (`.c-accordion` composition)
+
+**1. Architectural Overview**
+A scan-friendly, vertical accordion layout. It uses `<l-center>` to constrain the prose measure to `45rem`, ensuring optimal readability, and nests items within `<l-stack>` for consistent vertical rhythm.
+
+**2. Implementation**
+
+```html
+<section class="c-section">
+  <l-center style="--max-width: 45rem;">
+    <l-stack>
+      <div class="c-accordion" data-ll-accordion>
+        <l-stack style="--space: 0;">
+          <div class="c-accordion__item">
+            <button
+              class="c-accordion__trigger"
+              aria-expanded="false"
+              aria-controls="faq-1"
+            >
+              <span>Is there a free trial?</span>
+            </button>
+            <div class="c-accordion__panel" id="faq-1">
+              <div class="c-accordion__content">
+                <p>Yes, 30 days free.</p>
+              </div>
+            </div>
+          </div>
+        </l-stack>
+      </div>
+    </l-stack>
+  </l-center>
+</section>
+```
+
+### The Authentication Portal
+
+**1. Architectural Overview**
+A focused, constrained input environment. It utilises a naked .c-form (inheriting .c-card styles) constrained by `<l-center>` to create a high-focus login experience.
+
+**2. Implementation**
+
+```html
+<section class="c-section">
+  <l-center style="--max-width: 26rem;">
+    <form class="c-form u-anim-lift">
+      <l-stack style="--space: var(--s2)">
+        <div>
+          <label class="c-label" for="email">Email</label>
+          <input type="email" id="email" class="c-input" />
+        </div>
+        <button
+          type="submit"
+          class="c-button c-button--block"
+          data-loudness="cheer"
+        >
+          Sign In
+        </button>
+      </l-stack>
+    </form>
+  </l-center>
+</section>
+```
+
+### The 404 Error Screen
+
+**1. Architectural Overview**
+A full-viewport state composition utilizing .u-min-h-screen and the ambient background animations. It is designed to be visually engaging while guiding the user back to the primary navigation.
+
+**2. Implementation**
+
+```html
+<section class="c-section u-bg-mesh u-min-h-screen">
+  <l-center style="--max-width: 45rem;">
+    <l-stack class="u-text-center u-flex-center">
+      <h1>Page not found</h1>
+      <p>Sorry, the page you are looking for doesn't exist.</p>
+      <button class="c-button" data-loudness="cheer">Take me home</button>
+    </l-stack>
+  </l-center>
+</section>
 ```
 
 ## 8. <a name="tier-5"></a> Animations

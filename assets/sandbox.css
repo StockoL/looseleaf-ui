@@ -89,3 +89,19 @@ a:focus {
 main {
   padding-block-end: var(--s5);
 }
+
+/* --- 5. Kitchen Sink Demo Specifics --- */
+.demo-hero-img {
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.demo-reel-img {
+  width: 300px;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+
+.demo-bento-title {
+  margin-top: var(--s-1);
+}

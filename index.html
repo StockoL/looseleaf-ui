@@ -15,7 +15,7 @@
   </head>
   <body>
     <nav class="c-navbar" aria-label="Primary Navigation">
-      <l-cluster style="justify-content: space-between">
+      <l-cluster class="u-flex-between">
         <a href="/" class="c-navbar__brand"
           >LooseLeaf <span class="c-badge" data-status="danger">v1.0</span></a
         >
@@ -89,7 +89,7 @@
     <main>
       <section class="c-hero u-bg-mesh">
         <l-center style="--max-width: 70rem">
-          <l-switcher style="--threshold: 45rem; align-items: center">
+          <l-switcher style="--threshold: 45rem" class="u-flex-center">
             <l-stack style="--space: var(--s1)">
               <nav aria-label="Breadcrumb">
                 <ol class="c-breadcrumb">
@@ -112,11 +112,7 @@
 
               <l-cluster>
                 <button class="c-button" data-loudness="cheer">
-                  <span
-                    class="c-spinner"
-                    aria-hidden="true"
-                    style="margin-inline-end: var(--s-2)"
-                  ></span>
+                  <span class="c-spinner" aria-hidden="true"></span>
                   Loading...
                 </button>
                 <button class="c-button" data-loudness="murmur">
@@ -129,10 +125,7 @@
               <img
                 src="https://placehold.co/800x600/f4f4f5/a1a1aa?text=Intrinsic+Layouts"
                 alt="Placeholder illustration"
-                style="
-                  border-radius: 8px;
-                  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-                "
+                class="demo-hero-img"
               />
             </div>
           </l-switcher>
@@ -148,7 +141,7 @@
                 <article class="c-card u-anim-lift">
                   <l-stack style="--space: var(--s1)">
                     <l-stack style="--space: var(--s-2)">
-                      <l-cluster style="justify-content: space-between">
+                      <l-cluster class="u-flex-between">
                         <h3>Fluid Scaling</h3>
                         <span class="c-badge" data-status="success"
                           >Active</span
@@ -165,7 +158,7 @@
                 <article class="c-card u-anim-lift">
                   <l-stack style="--space: var(--s1)">
                     <l-stack style="--space: var(--s-2)">
-                      <l-cluster style="justify-content: space-between">
+                      <l-cluster class="u-flex-between">
                         <h3>Media Object</h3>
                         <span class="c-badge">Component</span>
                       </l-cluster>
@@ -181,9 +174,7 @@
                           <div class="c-media-object__content">
                             <l-stack style="--space: 0">
                               <strong>Ada Lovelace</strong>
-                              <span
-                                class="u-text-muted u-truncate"
-                                style="font-size: var(--s-1)"
+                              <span class="u-text-muted u-truncate u-text-sm"
                                 >Software Engineer</span
                               >
                             </l-stack>
@@ -197,7 +188,7 @@
                 <article class="c-card u-anim-lift">
                   <l-stack style="--space: var(--s1)">
                     <l-stack style="--space: var(--s-2)">
-                      <l-cluster style="justify-content: space-between">
+                      <l-cluster class="u-flex-between">
                         <h3>Accordions</h3>
                         <span class="c-badge" data-status="danger"
                           >Interactive</span
@@ -225,7 +216,7 @@
                             </button>
                             <div class="c-accordion__panel" id="panel-1">
                               <div class="c-accordion__content">
-                                <p style="font-size: var(--s-1)">
+                                <p class="u-text-sm">
                                   Utilises modern CSS grid transitions to
                                   animate height perfectly without JS
                                   measurements.
@@ -243,14 +234,256 @@
           </l-center>
         </section>
 
-        <section
-          class="c-section"
-          style="background-color: var(--color-surface-base)"
-        >
+        <section class="c-section">
+          <l-center style="--max-width: 75rem">
+            <l-stack style="--space: var(--s2)">
+              <div>
+                <h2>Features Workspace</h2>
+                <p class="u-text-muted">
+                  A modern bento layout composed using our native structural
+                  layers.
+                </p>
+              </div>
+
+              <div class="c-bento">
+                <article
+                  class="c-card c-bento__col-full u-anim-lift u-surface-base"
+                >
+                  <l-stack style="--space: var(--s2)">
+                    <div>
+                      <span class="c-badge" data-status="danger"
+                        >Core Tech</span
+                      >
+                      <h3 class="demo-bento-title">Intrinsic Engine</h3>
+                    </div>
+                    <p class="u-text-muted">
+                      By letting content define its boundaries, layouts never
+                      collapse.
+                    </p>
+                  </l-stack>
+                </article>
+
+                <article
+                  class="c-card c-bento__col-3 u-anim-lift u-surface-base"
+                >
+                  <l-stack
+                    class="u-flex-between u-h-100"
+                    style="--space: var(--s1)"
+                  >
+                    <h3>Seamless Input Fusion</h3>
+                    <p class="u-text-muted">
+                      Takes up 75% of the width on desktop.
+                    </p>
+                  </l-stack>
+                </article>
+
+                <article class="c-card u-anim-lift u-surface-base">
+                  <l-stack
+                    class="u-flex-center u-text-center u-h-100"
+                    style="--space: var(--s1)"
+                  >
+                    <h3>A11y</h3>
+                    <p class="u-text-muted">25% width.</p>
+                  </l-stack>
+                </article>
+
+                <article
+                  class="c-card c-bento__col-2 u-anim-lift u-surface-base"
+                >
+                  <l-stack style="--space: var(--s1)">
+                    <h3>Fluid Baseline</h3>
+                    <p class="u-text-muted">Takes up 50% of the width.</p>
+                  </l-stack>
+                </article>
+
+                <article
+                  class="c-card c-bento__col-2 u-anim-lift u-surface-base"
+                >
+                  <l-stack style="--space: var(--s1)">
+                    <h3>Hardware Fast</h3>
+                    <p class="u-text-muted">Takes up the other 50%.</p>
+                  </l-stack>
+                </article>
+              </div>
+            </l-stack>
+          </l-center>
+        </section>
+
+        <section class="c-section">
+          <l-center style="--max-width: 65rem">
+            <l-stack style="--space: var(--s4)">
+              <div class="u-text-center">
+                <l-stack style="--space: var(--s-1)">
+                  <span class="u-text-danger u-font-semibold">Pricing</span>
+                  <h2>Pricing that grows with you</h2>
+                  <p class="u-text-muted u-max-measure">
+                    Choose an affordable plan that’s packed with the best
+                    features for engaging your audience and driving sales.
+                  </p>
+                </l-stack>
+              </div>
+
+              <l-switcher
+                class="c-pricing-grid"
+                style="--threshold: 60rem; --space: var(--s2)"
+              >
+                <article class="c-card">
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-1)">
+                      <h3>Starter</h3>
+                      <p class="u-text-muted u-text-sm">
+                        The essentials to provide your best work.
+                      </p>
+                      <div class="c-pricing-amount">
+                        $19<span class="c-pricing-period">/month</span>
+                      </div>
+                    </l-stack>
+
+                    <button
+                      class="c-button c-button--block"
+                      data-loudness="murmur"
+                    >
+                      Buy plan
+                    </button>
+
+                    <ul class="c-feature-list">
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        5 products
+                      </li>
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Up to 1,000 subscribers
+                      </li>
+                    </ul>
+                  </l-stack>
+                </article>
+
+                <article class="c-card c-card--featured">
+                  <span class="c-badge c-badge--floating" data-status="info"
+                    >Most popular</span
+                  >
+
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-1)">
+                      <h3 class="u-text-danger">Growth</h3>
+                      <p class="u-text-muted u-text-sm">
+                        A plan that scales with your rapidly growing business.
+                      </p>
+                      <div class="c-pricing-amount">
+                        $49<span class="c-pricing-period">/month</span>
+                      </div>
+                    </l-stack>
+
+                    <button
+                      class="c-button c-button--block"
+                      data-loudness="cheer"
+                    >
+                      Buy plan
+                    </button>
+
+                    <ul class="c-feature-list">
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        25 products
+                      </li>
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Up to 10,000 subscribers
+                      </li>
+                    </ul>
+                  </l-stack>
+                </article>
+
+                <article class="c-card">
+                  <l-stack style="--space: var(--s1)">
+                    <l-stack style="--space: var(--s-1)">
+                      <h3>Scale</h3>
+                      <p class="u-text-muted u-text-sm">
+                        Dedicated support and infrastructure.
+                      </p>
+                      <div class="c-pricing-amount">
+                        $99<span class="c-pricing-period">/month</span>
+                      </div>
+                    </l-stack>
+
+                    <button
+                      class="c-button c-button--block"
+                      data-loudness="murmur"
+                    >
+                      Buy plan
+                    </button>
+
+                    <ul class="c-feature-list">
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Unlimited products
+                      </li>
+                      <li>
+                        <svg
+                          class="c-feature-list__icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Unlimited subscribers
+                      </li>
+                    </ul>
+                  </l-stack>
+                </article>
+              </l-switcher>
+            </l-stack>
+          </l-center>
+        </section>
+
+        <section class="c-section u-surface-base">
           <l-center>
             <l-stack style="--space: var(--s2)">
               <div class="c-alert" data-status="info" role="status">
-                <l-cluster style="justify-content: space-between">
+                <l-cluster class="u-flex-between">
                   <l-cluster style="--space: var(--s-1)">
                     <strong>System Update:</strong>
                     <span
@@ -348,37 +581,34 @@
                 <img
                   src="https://placehold.co/300x200/0070f3/ffffff?text=1"
                   alt=""
-                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                  class="demo-reel-img"
                 />
                 <img
                   src="https://placehold.co/300x200/0070f3/ffffff?text=2"
                   alt=""
-                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                  class="demo-reel-img"
                 />
                 <img
                   src="https://placehold.co/300x200/0070f3/ffffff?text=3"
                   alt=""
-                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                  class="demo-reel-img"
                 />
                 <img
                   src="https://placehold.co/300x200/0070f3/ffffff?text=4"
                   alt=""
-                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                  class="demo-reel-img"
                 />
                 <img
                   src="https://placehold.co/300x200/0070f3/ffffff?text=5"
                   alt=""
-                  style="width: 300px; flex-shrink: 0; border-radius: 8px"
+                  class="demo-reel-img"
                 />
               </l-reel>
             </l-stack>
           </l-center>
         </section>
 
-        <section
-          class="c-section"
-          style="background-color: var(--color-surface-base)"
-        >
+        <section class="c-section u-surface-base">
           <l-center style="--max-width: 45rem">
             <l-stack style="--space: var(--s2)">
               <div>
@@ -462,7 +692,7 @@
                     </l-stack>
                   </fieldset>
 
-                  <l-cluster style="justify-content: flex-end">
+                  <l-cluster class="u-flex-end">
                     <button
                       type="button"
                       class="c-button"
@@ -486,6 +716,109 @@
       </l-stack>
     </main>
 
+    <section class="c-section u-surface-base">
+      <l-center style="--max-width: 26rem">
+        <l-stack style="--space: var(--s2)">
+          <div class="u-text-center">
+            <l-stack style="--space: var(--s-1)">
+              <h2>Welcome back</h2>
+              <p class="u-text-muted">Please enter your details to sign in.</p>
+            </l-stack>
+          </div>
+
+          <form class="c-form u-anim-lift">
+            <l-stack style="--space: var(--s2)">
+              <l-stack style="--space: var(--s1)">
+                <div>
+                  <label class="c-label" for="auth-email">Email</label>
+                  <input
+                    type="email"
+                    id="auth-email"
+                    class="c-input"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="c-label" for="auth-pass">Password</label>
+                  <input
+                    type="password"
+                    id="auth-pass"
+                    class="c-input"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+              </l-stack>
+
+              <l-stack style="--space: var(--s1)">
+                <l-cluster class="u-flex-between">
+                  <label class="c-control">
+                    <input
+                      type="checkbox"
+                      class="c-control__input"
+                      name="remember"
+                    />
+                    <span class="u-text-sm">Remember me</span>
+                  </label>
+                  <a href="#" class="u-text-sm u-font-semibold u-text-primary"
+                    >Forgot password?</a
+                  >
+                </l-cluster>
+
+                <button
+                  type="submit"
+                  class="c-button c-button--block"
+                  data-loudness="cheer"
+                >
+                  Sign In
+                </button>
+              </l-stack>
+            </l-stack>
+          </form>
+
+          <p class="u-text-center u-text-sm u-text-muted">
+            Don't have an account?
+            <a href="#" class="u-font-semibold u-text-primary">Sign up</a>
+          </p>
+        </l-stack>
+      </l-center>
+    </section>
+
+    <section class="c-section u-bg-mesh u-min-h-screen">
+      <l-center style="--max-width: 45rem">
+        <l-stack class="u-text-center u-flex-center" style="--space: var(--s2)">
+          <l-stack style="--space: var(--s-1)">
+            <span class="u-font-semibold u-text-primary">404 Error</span>
+
+            <h1>Page not found</h1>
+
+            <p class="u-text-muted u-max-measure">
+              Sorry, the page you are looking for doesn't exist or has been
+              moved. Here are some helpful links instead.
+            </p>
+          </l-stack>
+
+          <l-cluster class="u-flex-center">
+            <button class="c-button" data-loudness="murmur">
+              <svg
+                class="c-button__icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Go back
+            </button>
+            <button class="c-button" data-loudness="cheer">Take me home</button>
+          </l-cluster>
+        </l-stack>
+      </l-center>
+    </section>
+
     <footer class="c-site-footer">
       <l-center>
         <l-stack style="--space: var(--s3)">
@@ -503,7 +836,7 @@
           </l-grid>
 
           <div class="c-site-footer__bottom">
-            <l-cluster style="justify-content: space-between">
+            <l-cluster class="u-flex-between">
               <p>&copy; 2026 LooseLeaf UI. Intrinsic by design.</p>
             </l-cluster>
           </div>
@@ -518,7 +851,7 @@
           This modal sits natively in the browser's top layer. The focus
           trapping and backdrop clicking are handled intrinsically.
         </p>
-        <l-cluster style="justify-content: flex-end">
+        <l-cluster class="u-flex-end">
           <button
             class="c-button"
             data-loudness="murmur"
@@ -539,7 +872,7 @@
 
     <dialog class="c-offcanvas" id="demo-offcanvas" data-position="right">
       <l-stack style="--space: var(--s2)">
-        <l-cluster style="justify-content: space-between">
+        <l-cluster class="u-flex-between">
           <h2>Navigation Menu</h2>
           <button
             class="c-button"

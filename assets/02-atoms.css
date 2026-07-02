@@ -35,6 +35,11 @@
   background-color: var(--color-surface-sunken);
 }
 
+/* Button Modifier: Block Level */
+.c-button--block {
+  width: 100%;
+}
+
 /* --- [T3-02] Form Inputs --- */
 .c-label {
   display: block;
@@ -83,6 +88,16 @@
 .c-badge[data-status="danger"] {
   background-color: #fee2e2;
   color: #991b1b;
+}
+
+/* Badge Modifier: Floating */
+/* Uses translate(-50%, -50%) so it perfectly straddles the top border mathematically */
+.c-badge--floating {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
 }
 
 /* --- [T3-04] The Accordion --- */
@@ -314,6 +329,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Automatically space spinners when inside buttons */
+.c-button .c-spinner {
+  margin-inline-end: var(--s-2);
+}
+
+/* Standardized Button Icons */
+.c-button__icon {
+  width: 1.25em;
+  height: 1.25em;
+  margin-inline-end: var(--s-2);
 }
 
 /* ==========================================================================

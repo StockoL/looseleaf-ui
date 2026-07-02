@@ -141,6 +141,15 @@
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Add a class for items inside the Reel */
+.c-reel-item {
+  width: 300px;
+  flex-shrink: 0;
+  border-radius: 8px;
 }
 
 /* --- [T4-05] The Card --- */
@@ -552,4 +561,123 @@ button.c-list-group__item:focus {
 .c-section {
   padding-block: var(--s4); /* Large vertical breathing room (top and bottom) */
   padding-inline: var(--s2); /* Standard horizontal edge spacing */
+}
+
+/* ==========================================================================
+   [T4-17] TEMPLATE SECTIONS: BENTO GRID
+   ========================================================================== */
+
+.c-bento {
+  /* Mobile default: 1 single column */
+  --bento-cols: 1;
+
+  display: grid;
+  gap: var(--space, var(--s1));
+  grid-template-columns: repeat(var(--bento-cols), 1fr);
+  grid-auto-rows: minmax(12rem, auto);
+  grid-auto-flow: dense;
+}
+
+@media (min-width: 45rem) {
+  .c-bento {
+    /* * BENTO GRID CONFIGURATION:
+     * Defaults to a 4-column grid for chunky, uneven layouts (e.g., 3+1 or 2+2 spans).
+     * To change this to a 6-column or 12-column grid for more granularity, override 
+     * this variable inline in your HTML: <div class="c-bento" style="--bento-cols: 6;">
+     */
+    --bento-cols: 4;
+  }
+
+  /* Column Modifiers */
+  .c-bento__col-2 {
+    grid-column: span 2;
+  }
+  .c-bento__col-3 {
+    grid-column: span 3;
+  }
+  .c-bento__col-full {
+    grid-column: 1 / -1;
+  } /* Spans absolute full width regardless of col count */
+
+  /* Row Modifiers */
+  .c-bento__row-2 {
+    grid-row: span 2;
+  }
+  .c-bento__row-3 {
+    grid-row: span 3;
+  }
+}
+
+/* ==========================================================================
+   [T4-18] TEMPLATE SECTIONS: PRICING
+   ========================================================================== */
+
+/* The Feature List (Checkmarks) */
+.c-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.c-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-1);
+  padding-block: var(--s-2);
+  color: var(--color-text-base);
+  font-size: var(--s-1);
+}
+
+.c-feature-list__icon {
+  flex-shrink: 0;
+  color: var(--color-action-primary);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* The Featured Card Modifier */
+.c-card--featured {
+  border: 2px solid var(--color-action-primary);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  padding: var(--s2);
+  overflow: visible;
+}
+
+/* Force the featured card to the top when the switcher collapses */
+@media (max-width: 59.99rem) {
+  .c-card--featured {
+    order: -1;
+  }
+}
+
+/* Table overrides for the Comparison Matrix */
+.c-pricing-table th,
+.c-pricing-table td {
+  text-align: center;
+}
+
+/* Keep the first column (Feature names) left-aligned */
+.c-pricing-table th:first-child,
+.c-pricing-table td:first-child {
+  text-align: left;
+}
+
+/* Pricing Typography */
+.c-pricing-amount {
+  font-size: var(--s3);
+  font-weight: 700;
+  margin-block: var(--s0);
+}
+
+.c-pricing-period {
+  font-size: var(--s0);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+/* Pricing Grid Alignment */
+.c-pricing-grid {
+  align-items: center; /* Ensures the side cards vertically center against the tall featured card */
 }
