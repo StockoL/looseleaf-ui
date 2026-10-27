@@ -243,7 +243,7 @@ HTML Structure:
 ```HTML
 <article class="card">
   <img src="thumbnail.jpg" alt="Media thumbnail" />
-  <div class="flow">
+  <div class="card__body flow">
     <h3>Card Title</h3>
     <p>Card description governed by vertical flow.</p>
   </div>

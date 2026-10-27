@@ -141,21 +141,21 @@ A fixed-width sidebar navigation running alongside a fluid main content region. 
     <!-- 2. GRID: Auto-filling card layout inside main area -->
     <div class="grid" style="--grid-min-item-size: 18rem;">
       <article class="card">
-        <div class="flow">
+        <div class="card__body flow">
           <h3>Total Revenue</h3>
           <p class="text-step-2">$42,850</p>
         </div>
       </article>
 
       <article class="card">
-        <div class="flow">
+        <div class="card__body flow">
           <h3>Active Users</h3>
           <p class="text-step-2">1,240</p>
         </div>
       </article>
 
       <article class="card">
-        <div class="flow">
+        <div class="card__body flow">
           <h3>Conversion Rate</h3>
           <p class="text-step-2">3.4%</p>
         </div>
@@ -268,7 +268,7 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 <div class="grid" style="--grid-min-item-size: 20rem;">
   <!-- HERO BENTO ITEM (Spans full width via local utility/style) -->
   <article class="card" style="grid-column: 1 / -1;">
-    <div class="flow">
+    <div class="card__body flow">
       <span class="badge" data-status="info">Featured</span>
       <h2>Next-Gen Token Compiler</h2>
       <p>
@@ -280,7 +280,7 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 
   <!-- SECONDARY BENTO ITEM -->
   <article class="card">
-    <div class="flow">
+    <div class="card__body flow">
       <h3>Zero Dependencies</h3>
       <p>Shipped with plain ES6 and native browser standards.</p>
     </div>
@@ -288,7 +288,7 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 
   <!-- TERTIARY BENTO ITEM -->
   <article class="card">
-    <div class="flow">
+    <div class="card__body flow">
       <h3>CUBE CSS Architecture</h3>
       <p>Flat specificity layers using CSS @layer boundaries.</p>
     </div>
@@ -316,7 +316,7 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 ```html
 <article class="card">
   <div
-    class="sidebar"
+    class="card__body sidebar"
     style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
   >
     <!-- FIXED AVATAR ANCHOR -->

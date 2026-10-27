@@ -250,7 +250,7 @@
             <h3>Sidebar — Media Object (Case Study 6)</h3>
             <article class="card">
               <div
-                class="sidebar"
+                class="card__body sidebar"
                 style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
               >
                 <div
@@ -276,7 +276,7 @@
             <h3>Bento Grid (Case Study 5)</h3>
             <div class="bento">
               <article class="card" data-span="2">
-                <div class="flow">
+                <div class="card__body flow">
                   <span class="badge" data-status="info">Featured</span>
                   <h4>Next-Gen Token Compiler</h4>
                   <p>
@@ -286,13 +286,13 @@
                 </div>
               </article>
               <article class="card">
-                <div class="flow">
+                <div class="card__body flow">
                   <h4>Zero Dependencies</h4>
                   <p>Shipped with plain ES6 and native browser standards.</p>
                 </div>
               </article>
               <article class="card">
-                <div class="flow">
+                <div class="card__body flow">
                   <h4>CUBE CSS Architecture</h4>
                   <p>Flat specificity layers using CSS @layer boundaries.</p>
                 </div>
@@ -304,16 +304,16 @@
             <h3>Reel — Horizontal Scroll Snap</h3>
             <div class="reel">
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card One</h4><p>Snaps into place.</p></div>
+                <div class="card__body flow"><h4>Card One</h4><p>Snaps into place.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Two</h4><p>Scroll horizontally.</p></div>
+                <div class="card__body flow"><h4>Card Two</h4><p>Scroll horizontally.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Three</h4><p>Touch or trackpad.</p></div>
+                <div class="card__body flow"><h4>Card Three</h4><p>Touch or trackpad.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Four</h4><p>No JS required.</p></div>
+                <div class="card__body flow"><h4>Card Four</h4><p>No JS required.</p></div>
               </article>
             </div>
           </div>
@@ -330,7 +330,7 @@
           <div class="grid" style="--grid-min-item-size: 20rem;">
             <!-- Card + Input -->
             <article class="card">
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Sign up</h3>
                 <div class="flow" style="--flow-space: 0.4em;">
                   <label class="label" for="email">Email address</label>
@@ -352,7 +352,7 @@
 
             <!-- Accordion -->
             <article class="card">
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Accordion</h3>
                 <div class="accordion">
                   <div class="accordion__item">
@@ -393,7 +393,7 @@
 
             <!-- Dropdown -->
             <article class="card">
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Dropdown</h3>
                 <div class="dropdown-wrapper">
                   <button class="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -411,7 +411,7 @@
 
             <!-- Badges -->
             <article class="card">
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Badges</h3>
                 <div class="cluster">
                   <span class="badge">Default</span>
@@ -423,21 +423,22 @@
               </div>
             </article>
 
-            <!-- Card with full-bleed media -->
+            <!-- Card with full-bleed media and a floating badge -->
             <article class="card">
+              <span class="badge" data-status="success" data-placement="floating">New</span>
               <img
                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230070f3'/%3E%3Cstop offset='1' stop-color='%2318181b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='225' fill='url(%23g)'/%3E%3C/svg%3E"
                 alt="Placeholder gradient"
               />
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Full-bleed Media</h3>
-                <p>The card's first child image clips to the border radius.</p>
+                <p>Media placed directly in the card sits flush; .card__body carries the padding.</p>
               </div>
             </article>
 
             <!-- Modal + Offcanvas triggers -->
             <article class="card">
-              <div class="flow">
+              <div class="card__body flow">
                 <h3>Overlays</h3>
                 <div class="cluster">
                   <button class="button" data-open-dialog="demo-modal">
@@ -492,21 +493,23 @@
 
           <div class="grid" style="--grid-min-item-size: 14rem;">
             <article class="card anim-lift">
-              <div class="flow">
+              <div class="card__body flow">
                 <h4>.anim-lift</h4>
                 <p class="text-muted">Hover this card.</p>
               </div>
             </article>
             <article class="card indent" style="--indent-color: var(--color-action);">
-              <div class="flow">
+              <div class="card__body flow">
                 <h4>.indent</h4>
                 <p class="text-muted">Decorative edge accent.</p>
               </div>
             </article>
             <article class="card">
-              <p class="text-center">.text-center</p>
-              <p class="text-uppercase">.text-uppercase</p>
-              <p class="truncate" style="max-width: 10ch;">.truncate a long sentence</p>
+              <div class="card__body">
+                <p class="text-center">.text-center</p>
+                <p class="text-uppercase">.text-uppercase</p>
+                <p class="truncate" style="max-width: 10ch;">.truncate a long sentence</p>
+              </div>
             </article>
           </div>
 
