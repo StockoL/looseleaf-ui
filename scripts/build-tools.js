@@ -43,7 +43,8 @@ function wrapModule(file, source, available) {
 function bundle() {
   const available = new Set();
   const wrapped = MODULES.map((file) => {
-    const source = fs.readFileSync(path.join(__dirname, file), "utf8");
+    // Git may check sources out with CRLF or LF; the bundle is always LF.
+    const source = fs.readFileSync(path.join(__dirname, file), "utf8").replace(/\r\n/g, "\n");
     const result = wrapModule(file, source, available);
     available.add(file);
     return result;

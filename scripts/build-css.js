@@ -28,12 +28,17 @@ function stripComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//g, "");
 }
 
+// Git may check sources out with CRLF or LF; outputs are always LF so they are byte-identical everywhere.
+function readSource(file) {
+  return fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+}
+
 try {
   if (!fs.existsSync(entryPath)) {
     throw new Error(`Entry file missing at: ${entryPath}`);
   }
 
-  const entryContent = fs.readFileSync(entryPath, "utf8");
+  const entryContent = readSource(entryPath);
 
   const unlayered = (stripComments(entryContent).match(anyImport) || []).filter(
     (statement) => !new RegExp(layeredImport.source).test(statement),
@@ -49,7 +54,7 @@ try {
       throw new Error(`Imported file missing at: ${resolvedPath} (referenced as "${importPath}")`);
     }
 
-    const partial = fs.readFileSync(resolvedPath, "utf8").trim();
+    const partial = readSource(resolvedPath).trim();
     return `@layer ${layerName} {\n${partial}\n}\n`;
   });
 
@@ -64,7 +69,7 @@ try {
   fs.writeFileSync(cssOutputPath, header + bundled, "utf8");
 
   for (const { from, to } of SCRIPTS) {
-    fs.copyFileSync(path.join(srcDir, "scripts", from), path.join(distDir, to));
+    fs.writeFileSync(path.join(distDir, to), readSource(path.join(srcDir, "scripts", from)), "utf8");
   }
 
   console.log("✨ LooseLeaf UI bundled dist/looseleaf.css and copied dist/looseleaf.js, dist/theme.js");
