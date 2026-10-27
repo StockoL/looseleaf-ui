@@ -1046,8 +1046,8 @@ a:not([class]) {
 }
 
 .card:has(.badge[data-placement="floating"]) > :is(img, picture, video):first-child {
-  border-start-start-radius: calc(var(--radius-surface) - 1px);
-  border-start-end-radius: calc(var(--radius-surface) - 1px);
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
 }
 }
 
