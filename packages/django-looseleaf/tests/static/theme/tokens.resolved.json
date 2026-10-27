@@ -1,0 +1,13 @@
+{
+  "$version": "2.0.0",
+  "$generated": "2026-10-27T12:00:00.000Z",
+  "color.surface": {
+    "name": "--color-surface",
+    "tier": 2,
+    "light": "#fdf6e3",
+    "dark": "#002b36",
+    "themed": true,
+    "overridden": false,
+    "purpose": null
+  }
+}

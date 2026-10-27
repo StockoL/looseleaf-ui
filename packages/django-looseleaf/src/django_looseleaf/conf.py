@@ -18,3 +18,9 @@ DEFAULT_WIDGET_CLASSES = {
 
 def widget_classes():
     return {**DEFAULT_WIDGET_CLASSES, **getattr(settings, "LOOSELEAF_WIDGET_CLASSES", {})}
+
+
+def theme_prefix():
+    """LOOSELEAF_THEME: the static path prefix a theme bundle was unzipped into (e.g. "theme"), or None."""
+    prefix = (getattr(settings, "LOOSELEAF_THEME", None) or "").strip("/")
+    return prefix or None

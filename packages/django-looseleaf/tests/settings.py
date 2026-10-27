@@ -1,3 +1,5 @@
+from pathlib import Path
+
 SECRET_KEY = "django-looseleaf-tests"
 USE_TZ = True
 ROOT_URLCONF = "tests.urls"
@@ -35,4 +37,5 @@ TEMPLATES = [
 ]
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [Path(__file__).resolve().parent / "static"]  # theme fixtures
 FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"

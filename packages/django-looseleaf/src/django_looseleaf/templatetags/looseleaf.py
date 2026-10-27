@@ -8,7 +8,7 @@ from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 
-from .. import controls, tokens
+from .. import controls, theme, tokens
 
 register = template.Library()
 
@@ -20,7 +20,16 @@ STATIC_DIR = Path(__file__).resolve().parent.parent / "static" / "looseleaf"
 # ---------------------------------------------------------------------------
 @register.simple_tag
 def looseleaf_css():
-    return format_html('<link rel="stylesheet" href="{}">', static("looseleaf/looseleaf.css"))
+    """The LooseLeaf stylesheet, then the project theme's tokens (LOOSELEAF_THEME).
+
+    The theme's tokens sit in the same cascade layer as the defaults, so loading
+    them second is the whole override mechanism.
+    """
+    links = [format_html('<link rel="stylesheet" href="{}">', static("looseleaf/looseleaf.css"))]
+    theme_css = theme.static_path(theme.STYLESHEET)
+    if theme_css:
+        links.append(format_html('<link rel="stylesheet" href="{}">', static(theme_css)))
+    return mark_safe("\n".join(links))
 
 
 @register.simple_tag
