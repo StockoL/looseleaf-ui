@@ -9,6 +9,7 @@
   --button-border: var(--button-default-border);
 
   display: inline-flex;
+  min-block-size: var(--target-min);
   align-items: center;
   justify-content: center;
   gap: var(--space-2xs); /* For icons */
@@ -25,6 +26,8 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   transition:
     filter var(--duration-base) ease,
     background-color var(--duration-base) ease;
@@ -52,4 +55,10 @@
   --button-bg: var(--color-action);
   --button-text: var(--color-action-text);
   --button-border: var(--color-action);
+}
+
+/* CUBE Exception: icon-only buttons are square and still meet the target size */
+.button[data-icon-only] {
+  min-inline-size: var(--target-min);
+  padding-inline: 0;
 }

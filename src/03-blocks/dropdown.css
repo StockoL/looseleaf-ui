@@ -41,7 +41,10 @@
 }
 
 .dropdown__item {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  touch-action: manipulation;
   padding: var(--inset-control);
   color: var(--color-text);
   text-decoration: none;

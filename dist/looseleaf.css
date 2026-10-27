@@ -405,6 +405,11 @@ textarea:not([rows]) {
   --safe-left: env(safe-area-inset-left, 0px);
 }
 
+/* Interactive blocks draw their own pressed and focus states */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--text-body);
@@ -719,6 +724,7 @@ a:not([class]) {
   --button-border: var(--button-default-border);
 
   display: inline-flex;
+  min-block-size: var(--target-min);
   align-items: center;
   justify-content: center;
   gap: var(--space-2xs); /* For icons */
@@ -735,6 +741,8 @@ a:not([class]) {
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   transition:
     filter var(--duration-base) ease,
     background-color var(--duration-base) ease;
@@ -763,6 +771,12 @@ a:not([class]) {
   --button-text: var(--color-action-text);
   --button-border: var(--color-action);
 }
+
+/* CUBE Exception: icon-only buttons are square and still meet the target size */
+.button[data-icon-only] {
+  min-inline-size: var(--target-min);
+  padding-inline: 0;
+}
 }
 
 @layer blocks {
@@ -780,6 +794,7 @@ a:not([class]) {
 
 .input {
   width: 100%; /* Allows layout compositions to dictate actual width */
+  min-block-size: var(--target-min);
   font-family: inherit;
   font-size: var(--text-body);
   line-height: var(--leading-tight);
@@ -891,7 +906,10 @@ a:not([class]) {
   color: var(--color-text);
   font-weight: 600;
   font-size: var(--text-body);
+  min-block-size: var(--target-min);
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   transition: background-color var(--duration-quick) ease;
 }
 
@@ -981,7 +999,10 @@ a:not([class]) {
 }
 
 .dropdown__item {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  touch-action: manipulation;
   padding: var(--inset-control);
   color: var(--color-text);
   text-decoration: none;
@@ -1085,6 +1106,9 @@ a:not([class]) {
 }
 
 .navbar__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
   color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 500;
@@ -1094,6 +1118,7 @@ a:not([class]) {
   background: transparent;
   border: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     color var(--duration-quick) ease,
     background-color var(--duration-quick) ease;
@@ -1139,6 +1164,10 @@ a:not([class]) {
     color: var(--color-text);
     cursor: pointer;
     padding: var(--space-2xs);
+    min-block-size: var(--target-min);
+    min-inline-size: var(--target-min);
+    touch-action: manipulation;
+    user-select: none;
   }
 }
 
@@ -1344,7 +1373,13 @@ a:not([class]) {
   border: none;
   color: inherit;
   opacity: 0.7;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   padding: var(--space-2xs);
   border-radius: var(--radius-control);
   transition:

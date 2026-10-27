@@ -28,7 +28,10 @@
   color: var(--color-text);
   font-weight: 600;
   font-size: var(--text-body);
+  min-block-size: var(--target-min);
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   transition: background-color var(--duration-quick) ease;
 }
 

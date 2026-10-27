@@ -22,6 +22,9 @@
 }
 
 .navbar__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
   color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 500;
@@ -31,6 +34,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     color var(--duration-quick) ease,
     background-color var(--duration-quick) ease;
@@ -76,6 +80,10 @@
     color: var(--color-text);
     cursor: pointer;
     padding: var(--space-2xs);
+    min-block-size: var(--target-min);
+    min-inline-size: var(--target-min);
+    touch-action: manipulation;
+    user-select: none;
   }
 }
 

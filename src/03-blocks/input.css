@@ -12,6 +12,7 @@
 
 .input {
   width: 100%; /* Allows layout compositions to dictate actual width */
+  min-block-size: var(--target-min);
   font-family: inherit;
   font-size: var(--text-body);
   line-height: var(--leading-tight);

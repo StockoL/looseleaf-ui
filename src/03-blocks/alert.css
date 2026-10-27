@@ -51,7 +51,13 @@
   border: none;
   color: inherit;
   opacity: 0.7;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   padding: var(--space-2xs);
   border-radius: var(--radius-control);
   transition:
