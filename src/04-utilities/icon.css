@@ -1,0 +1,28 @@
+/* ==========================================================================
+   UTILITY: ICON
+   Inline SVG only, drawn in currentColor and sized to the surrounding text.
+   No icon library ships with LooseLeaf: paste the SVG paths you need, or
+   keep a <symbol> sheet in the page and <use href="#icon-name">.
+   ========================================================================== */
+
+.icon {
+  inline-size: 1em;
+  block-size: 1em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.125em; /* sit on the text baseline when inline */
+}
+
+.icon[data-size="s"] {
+  inline-size: 0.75em;
+  block-size: 0.75em;
+}
+
+.icon[data-size="l"] {
+  inline-size: 1.5em;
+  block-size: 1.5em;
+}

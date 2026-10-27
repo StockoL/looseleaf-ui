@@ -57,6 +57,7 @@
    LAYER 4: UTILITIES (Single-Purpose Overrides)
    -------------------------------------------------------------------------- */
 @import "04-utilities/accessibility.css" layer(utilities);
+@import "04-utilities/icon.css" layer(utilities);
 @import "04-utilities/indent.css" layer(utilities);
 @import "04-utilities/text.css" layer(utilities);
 @import "04-utilities/colors.css" layer(utilities);
