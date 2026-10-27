@@ -397,19 +397,56 @@ textarea:not([rows]) {
 @layer global {
 /* ==========================================================================
    GLOBAL STYLES & BASE TYPOGRAPHY
+   Element defaults from Tier 2 tokens. Blocks build on these; they never
+   remove the focus ring.
    ========================================================================== */
 
-html,
 body {
-  min-height: 100%; /* Better support than min-inline-size */
   font-family: var(--font-body);
-  line-height: 1.5;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
   color: var(--color-text);
   background-color: var(--color-surface);
   overflow-wrap: break-word;
 }
 
-/* Unstyled anchors: link colour, decoration from tokens */
+/* The one focus style. No block may set outline: none. */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --- Headings --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--heading-1);
+}
+h2 {
+  font-size: var(--heading-2);
+}
+h3 {
+  font-size: var(--heading-3);
+}
+h4 {
+  font-size: var(--heading-4);
+}
+h5,
+h6 {
+  font-size: var(--text-body);
+}
+
+/* --- Links: colour and decoration from tokens --- */
 a:not([class]) {
   color: var(--color-link);
   text-decoration-line: var(--link-decoration);
@@ -422,42 +459,17 @@ a:not([class]) {
   }
 }
 
-/* 
- * Typographic Measure 
- * Restricts the line length of text elements to an optimal reading width.
+::selection {
+  background-color: color-mix(in oklch, var(--color-action) 25%, transparent);
+}
+
+/*
+ * Typographic measure
+ * Caps line length for running text inside .prose and .flow only, so
+ * text in navbars, tables and grids is never squeezed by accident.
  */
-p,
-li,
-dl,
-figcaption,
-blockquote {
-  max-width: var(--measure);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  max-width: var(--measure);
-  line-height: 1.2; /* Tighter line height for headings */
-  text-wrap: balance; /* Modern CSS to prevent awkward single-word widows */
-}
-
-/* Map heading tags to the fluid scale */
-h1 {
-  font-size: var(--heading-1);
-}
-h2 {
-  font-size: var(--heading-2);
-}
-h3 {
-  font-size: var(--heading-3);
-}
-h4 {
-  font-size: var(--heading-4);
+:where(.prose, .flow) :where(p, li, dl, figcaption, blockquote) {
+  max-inline-size: var(--measure);
 }
 }
 
