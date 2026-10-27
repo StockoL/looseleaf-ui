@@ -1,0 +1,20 @@
+"""Settings for django-looseleaf, read with the LOOSELEAF_ prefix."""
+
+from django.conf import settings
+
+# Widget class name -> CSS classes added to the rendered control. The widget's
+# MRO is searched in order, so a subclass maps like its parent unless listed.
+# Extend or override with LOOSELEAF_WIDGET_CLASSES; an empty string adds nothing.
+DEFAULT_WIDGET_CLASSES = {
+    "HiddenInput": "",
+    "CheckboxInput": "choice__input",
+    "RadioSelect": "choice-group",
+    "CheckboxSelectMultiple": "choice-group",
+    "Select": "select",
+    "Textarea": "textarea",
+    "Input": "input",
+}
+
+
+def widget_classes():
+    return {**DEFAULT_WIDGET_CLASSES, **getattr(settings, "LOOSELEAF_WIDGET_CLASSES", {})}
