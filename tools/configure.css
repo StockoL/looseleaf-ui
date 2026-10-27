@@ -13,11 +13,6 @@
     min-block-size: 100dvh;
   }
 
-  /* Blocks set display (e.g. .badge, .button), which beats the UA [hidden] rule */
-  [hidden] {
-    display: none;
-  }
-
   .configurator__toolbar {
     padding-block: var(--space-2xs);
   }
