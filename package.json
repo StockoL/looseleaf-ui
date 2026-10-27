@@ -19,7 +19,9 @@
   "scripts": {
     "build:tokens": "node scripts/build-tokens.js",
     "build:css": "node scripts/build-css.js",
-    "build": "npm run build:tokens && npm run build:css"
+    "build:django": "node scripts/build-django.js",
+    "check": "node scripts/check.js",
+    "build": "npm run build:tokens && npm run build:css && npm run build:django && npm run check"
   },
   "keywords": [
     "css",
