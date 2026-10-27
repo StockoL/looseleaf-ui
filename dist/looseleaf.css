@@ -610,14 +610,16 @@ a:not([class]) {
    COMPOSITION: CLUSTER
    ========================================================================== */
 
-/* 
+/*
  * The Cluster
  * Groups elements together with horizontal and vertical spacing.
+ * --cluster-space sets the gap for one cluster without leaking into
+ * nested compositions the way overriding --gutter would.
  */
 .cluster {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gutter, 1rem);
+  gap: var(--cluster-space, var(--gutter));
   justify-content: var(--cluster-justify, flex-start);
   align-items: var(--cluster-align, center);
 }
