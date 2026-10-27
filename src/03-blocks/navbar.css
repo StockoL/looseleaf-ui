@@ -37,8 +37,8 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    color var(--duration-quick) ease,
-    background-color var(--duration-quick) ease;
+    color var(--duration-quick) var(--ease-standard),
+    background-color var(--duration-quick) var(--ease-standard);
 }
 
 .navbar__link:focus-visible {

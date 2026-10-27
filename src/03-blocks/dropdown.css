@@ -52,8 +52,8 @@
   font-size: var(--text-body);
   font-weight: var(--weight-medium);
   transition:
-    background-color var(--duration-quick) ease,
-    color var(--duration-quick) ease;
+    background-color var(--duration-quick) var(--ease-standard),
+    color var(--duration-quick) var(--ease-standard);
 }
 
 .dropdown__item:focus-visible {
