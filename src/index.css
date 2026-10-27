@@ -24,6 +24,7 @@
 @import "02-compositions/grid.css" layer(compositions);
 @import "02-compositions/reel.css" layer(compositions);
 @import "02-compositions/switcher.css" layer(compositions);
+@import "02-compositions/frame.css" layer(compositions);
 
 /* --------------------------------------------------------------------------
    LAYER 3: CUBE BLOCKS (Encapsulated Component Styling)

@@ -718,6 +718,28 @@ a:not([class]) {
 }
 }
 
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: FRAME
+   ========================================================================== */
+
+/*
+ * The Frame
+ * Holds media (or anything) at a fixed aspect ratio, cropping rather than
+ * distorting. Set --frame-ratio for anything other than 16:9.
+ */
+.frame {
+  aspect-ratio: var(--frame-ratio, 16 / 9);
+  overflow: hidden;
+}
+
+.frame > :is(img, video) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+}
+
 
 /* --------------------------------------------------------------------------
    LAYER 3: CUBE BLOCKS (Encapsulated Component Styling)
