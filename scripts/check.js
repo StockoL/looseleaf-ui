@@ -21,7 +21,7 @@ const ALLOWED_MEDIA = [/^\(\s*hover\s*:\s*hover\s*\)$/, /^\(\s*prefers-reduced-m
 const violations = [];
 
 function report(file, line, rule, snippet) {
-  violations.push({ file: path.relative(rootDir, file).replace(/\\/g, "/"), line, rule, snippet: snippet.trim().slice(0, 100) });
+  violations.push({ file: path.relative(rootDir, file).replace(/\\/g, "/"), line, rule, snippet: snippet.replace(/\s+/g, " ").trim().slice(0, 100) });
 }
 
 function walk(dir, ext) {
