@@ -1454,6 +1454,9 @@ a:not([class]) {
 @layer blocks {
 /* ==========================================================================
    BLOCK: DROPDOWN
+   Hooks (set on the dropdown or any ancestor):
+     --dropdown-width   minimum menu width (default 12rem)
+     --dropdown-offset  gap between trigger and menu (default --space-2xs)
    ========================================================================== */
 
 .dropdown-wrapper {
@@ -1462,14 +1465,11 @@ a:not([class]) {
 }
 
 .dropdown {
-  --dropdown-width: 12rem;
-  --dropdown-offset: var(--space-2xs);
-
   position: absolute;
-  top: calc(100% + var(--dropdown-offset));
-  left: 0;
+  inset-block-start: calc(100% + var(--dropdown-offset, var(--space-2xs)));
+  inset-inline-start: 0;
   z-index: var(--layer-popover);
-  min-inline-size: var(--dropdown-width);
+  min-inline-size: var(--dropdown-width, 12rem);
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-surface);
@@ -1487,7 +1487,13 @@ a:not([class]) {
   will-change: transform, opacity;
 }
 
-/* CUBE Exception */
+/* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
+.dropdown[data-align="end"] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* CUBE Exception: open */
 .dropdown-wrapper[data-state="open"] .dropdown {
   opacity: 1;
   visibility: visible;
