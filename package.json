@@ -37,10 +37,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LooseLeafApplications/looseleaf-ui.git"
+    "url": "git+https://github.com/StockoL/looseleaf-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/LooseLeafApplications/looseleaf-ui/issues"
+    "url": "https://github.com/StockoL/looseleaf-ui/issues"
   },
-  "homepage": "https://github.com/LooseLeafApplications/looseleaf-ui#readme"
+  "homepage": "https://github.com/StockoL/looseleaf-ui#readme"
 }

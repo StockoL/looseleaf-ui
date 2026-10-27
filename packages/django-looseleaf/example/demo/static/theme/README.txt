@@ -15,5 +15,5 @@ Django
   {% looseleaf_css %} then loads this theme after the base stylesheet.
 
 Plain HTML
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v2.0.0/dist/looseleaf.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css">
   <link rel="stylesheet" href="looseleaf-tokens.css">

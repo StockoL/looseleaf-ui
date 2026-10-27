@@ -1,6 +1,6 @@
 # django-looseleaf
 
-[LooseLeaf UI](https://github.com/LooseLeafApplications/looseleaf-ui) for Django: the CUBE CSS design system's stylesheet and scripts, template tags for the page head, theme, pagination and messages, and a form renderer that turns a plain `{{ form }}` into accessible LooseLeaf markup.
+[LooseLeaf UI](https://github.com/StockoL/looseleaf-ui) for Django: the CUBE CSS design system's stylesheet and scripts, template tags for the page head, theme, pagination and messages, and a form renderer that turns a plain `{{ form }}` into accessible LooseLeaf markup.
 
 Supports Django 4.2 and later on Python 3.10 and later.
 
@@ -43,13 +43,13 @@ FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"
 </html>
 ```
 
-That is the whole setup. Every class in the [LooseLeaf README](https://github.com/LooseLeafApplications/looseleaf-ui#readme) is now available to your templates.
+That is the whole setup. Every class in the [LooseLeaf README](https://github.com/StockoL/looseleaf-ui#readme) is now available to your templates.
 
 ## Theming
 
 Give the project its own colours, type scale, spacing, fonts and shapes without a build step:
 
-1. Open the [LooseLeaf configurator](https://looseleafapplications.github.io/looseleaf-ui/) and adjust the tokens against the live preview.
+1. Open the [LooseLeaf configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against the live preview.
 2. Choose **Export → Theme bundle**.
 3. Unzip `looseleaf-theme.zip` into an app's `static/theme/` folder (or any `STATICFILES_DIRS` entry).
 4. Set `LOOSELEAF_THEME = "theme"` in settings.

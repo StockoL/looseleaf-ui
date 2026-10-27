@@ -704,7 +704,7 @@
       "  {% looseleaf_css %} then loads this theme after the base stylesheet.",
       "",
       "Plain HTML",
-      `  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v${meta.$version}/dist/looseleaf.css">`,
+      `  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v${meta.$version}/dist/looseleaf.css">`,
       '  <link rel="stylesheet" href="looseleaf-tokens.css">',
       ...(families.length
         ? ["", `Web fonts: ${families.join(", ")}. looseleaf-tokens.css imports them from Google Fonts.`]

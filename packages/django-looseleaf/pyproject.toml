@@ -26,9 +26,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/LooseLeafApplications/looseleaf-ui"
-Repository = "https://github.com/LooseLeafApplications/looseleaf-ui"
-Issues = "https://github.com/LooseLeafApplications/looseleaf-ui/issues"
+Homepage = "https://github.com/StockoL/looseleaf-ui"
+Repository = "https://github.com/StockoL/looseleaf-ui"
+Issues = "https://github.com/StockoL/looseleaf-ui/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=8", "pytest-django>=4.8"]
