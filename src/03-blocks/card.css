@@ -3,10 +3,10 @@
    ========================================================================== */
 
 .card {
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: var(--spacing-md);
+  padding: var(--inset-surface);
   position: relative;
   overflow: hidden; /* Automatically clips child images to the border-radius */
 }
@@ -14,11 +14,11 @@
 /* If a card contains an image that should sit flush to the edges */
 .card > img:first-child {
   /* Reset the padding constraint for edge-to-edge media */
-  margin-block-start: calc(var(--spacing-md) * -1);
-  margin-inline: calc(var(--spacing-md) * -1);
-  max-width: calc(100% + (var(--spacing-md) * 2));
-  width: calc(100% + (var(--spacing-md) * 2));
+  margin-block-start: calc(var(--inset-surface) * -1);
+  margin-inline: calc(var(--inset-surface) * -1);
+  max-width: calc(100% + (var(--inset-surface) * 2));
+  width: calc(100% + (var(--inset-surface) * 2));
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  margin-block-end: var(--spacing-md);
+  margin-block-end: var(--inset-surface);
 }

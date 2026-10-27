@@ -5,10 +5,10 @@
 html,
 body {
   min-height: 100%; /* Better support than min-inline-size */
-  font-family: var(--fonts-body);
+  font-family: var(--font-body);
   line-height: 1.5;
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-base);
+  color: var(--color-text);
+  background-color: var(--color-surface);
   overflow-wrap: break-word;
 }
 
@@ -21,7 +21,7 @@ li,
 dl,
 figcaption,
 blockquote {
-  max-width: var(--layout-measure);
+  max-width: var(--measure);
 }
 
 h1,
@@ -30,22 +30,22 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--fonts-heading);
-  max-width: var(--layout-measure);
+  font-family: var(--font-heading);
+  max-width: var(--measure);
   line-height: 1.2; /* Tighter line height for headings */
   text-wrap: balance; /* Modern CSS to prevent awkward single-word widows */
 }
 
 /* Map heading tags to the fluid scale */
 h1 {
-  font-size: var(--typography-step-4);
+  font-size: var(--heading-1);
 }
 h2 {
-  font-size: var(--typography-step-3);
+  font-size: var(--heading-2);
 }
 h3 {
-  font-size: var(--typography-step-2);
+  font-size: var(--heading-3);
 }
 h4 {
-  font-size: var(--typography-step-1);
+  font-size: var(--heading-4);
 }

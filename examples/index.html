@@ -8,18 +8,18 @@
     <style>
       /* Demo-only scaffolding — not part of the shipped library */
       .demo-section {
-        padding-block: var(--spacing-xl);
-        border-bottom: 1px solid var(--colors-border-subtle);
+        padding-block: var(--space-xl);
+        border-bottom: 1px solid var(--color-border);
       }
       .demo-section:nth-of-type(odd) {
-        background-color: var(--colors-surface-sunken);
+        background-color: var(--color-surface-sunken);
       }
       .demo-label {
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: var(--colors-text-muted);
+        color: var(--color-text-muted);
       }
       .swatch {
         display: flex;
@@ -27,8 +27,8 @@
         justify-content: flex-end;
         block-size: 5rem;
         border-radius: 8px;
-        border: 1px solid var(--colors-border-subtle);
-        padding: var(--spacing-xs);
+        border: 1px solid var(--color-border);
+        padding: var(--space-2xs);
         font-size: 0.75rem;
         font-weight: 600;
       }
@@ -38,7 +38,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 8px;
-        color: var(--colors-text-on-action);
+        color: var(--color-action-text);
         font-weight: 700;
       }
     </style>
@@ -99,7 +99,7 @@
             </div>
             <div
               class="placeholder-media bg-mesh"
-              style="background-color: var(--colors-action-primary);"
+              style="background-color: var(--color-action);"
             >
               <span>Media Slot</span>
             </div>
@@ -126,67 +126,67 @@
             <div class="grid" style="--grid-min-item-size: 6rem;">
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-0); color: var(--colors-neutral-900);"
+                style="background-color: var(--neutral-0); color: var(--neutral-900);"
               >
                 neutral-0
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-100); color: var(--colors-neutral-900);"
+                style="background-color: var(--neutral-100); color: var(--neutral-900);"
               >
                 neutral-100
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-200); color: var(--colors-neutral-900);"
+                style="background-color: var(--neutral-200); color: var(--neutral-900);"
               >
                 neutral-200
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-300); color: var(--colors-neutral-900);"
+                style="background-color: var(--neutral-300); color: var(--neutral-900);"
               >
                 neutral-300
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-400); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-400); color: var(--neutral-0);"
               >
                 neutral-400
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-500); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-500); color: var(--neutral-0);"
               >
                 neutral-500
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-600); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-600); color: var(--neutral-0);"
               >
                 neutral-600
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-700); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-700); color: var(--neutral-0);"
               >
                 neutral-700
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-800); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-800); color: var(--neutral-0);"
               >
                 neutral-800
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-900); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-900); color: var(--neutral-0);"
               >
                 neutral-900
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-neutral-950); color: var(--colors-neutral-0);"
+                style="background-color: var(--neutral-950); color: var(--neutral-0);"
               >
                 neutral-950
               </div>
@@ -198,25 +198,25 @@
             <div class="grid" style="--grid-min-item-size: 14rem;">
               <div
                 class="swatch"
-                style="background-color: var(--colors-success-bg); border-color: var(--colors-success-border); color: var(--colors-success-text);"
+                style="background-color: var(--color-status-success-surface); border-color: var(--color-status-success-border); color: var(--color-status-success-text);"
               >
                 success
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-warning-bg); border-color: var(--colors-warning-border); color: var(--colors-warning-text);"
+                style="background-color: var(--color-status-warning-surface); border-color: var(--color-status-warning-border); color: var(--color-status-warning-text);"
               >
                 warning
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-danger-bg); border-color: var(--colors-danger-border); color: var(--colors-danger-text);"
+                style="background-color: var(--color-status-danger-surface); border-color: var(--color-status-danger-border); color: var(--color-status-danger-text);"
               >
                 danger
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-info-bg); border-color: var(--colors-info-border); color: var(--colors-info-text);"
+                style="background-color: var(--color-status-info-surface); border-color: var(--color-status-info-border); color: var(--color-status-info-text);"
               >
                 info
               </div>
@@ -237,11 +237,11 @@
             <article class="card">
               <div
                 class="sidebar"
-                style="--sidebar-target-width: 4rem; --sidebar-space: var(--spacing-md);"
+                style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
               >
                 <div
                   class="placeholder-media"
-                  style="block-size: 4rem; inline-size: 4rem; border-radius: 999px; background-color: var(--colors-action-primary);"
+                  style="block-size: 4rem; inline-size: 4rem; border-radius: 999px; background-color: var(--color-action);"
                 >
                   AL
                 </div>
@@ -439,7 +439,7 @@
 
           <div class="flow">
             <h3>Alerts</h3>
-            <div class="flow" style="--flow-space: var(--spacing-sm);">
+            <div class="flow" style="--flow-space: var(--space-xs);">
               <div class="alert" data-status="info">
                 <div class="cluster" style="--cluster-justify: space-between;">
                   <p>Heads up — this is an informational alert.</p>
@@ -483,7 +483,7 @@
                 <p class="text-muted">Hover this card.</p>
               </div>
             </article>
-            <article class="card indent" style="--indent-color: var(--colors-action-primary);">
+            <article class="card indent" style="--indent-color: var(--color-action);">
               <div class="flow">
                 <h4>.indent</h4>
                 <p class="text-muted">Decorative edge accent.</p>

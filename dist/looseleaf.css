@@ -136,85 +136,260 @@ textarea:not([rows]) {
 :root {
   color-scheme: light;
 
-  /* --- colors --- */
-  --colors-neutral-0: #ffffff;
-  --colors-neutral-50: #fafafa;
-  --colors-neutral-100: #f4f4f5;
-  --colors-neutral-200: #e4e4e7;
-  --colors-neutral-300: #d4d4d8;
-  --colors-neutral-400: #a1a1aa;
-  --colors-neutral-500: #71717a;
-  --colors-neutral-600: #52525b;
-  --colors-neutral-700: #3f3f46;
-  --colors-neutral-800: #27272a;
-  --colors-neutral-900: #18181b;
-  --colors-neutral-950: #09090b;
-  --colors-action-primary: #0070f3;
-  --colors-surface-base: var(--colors-neutral-0);
-  --colors-surface-sunken: var(--colors-neutral-100);
-  --colors-text-base: var(--colors-neutral-900);
-  --colors-text-muted: var(--colors-neutral-500);
-  --colors-text-on-action: var(--colors-neutral-0);
-  --colors-border-subtle: var(--colors-neutral-200);
-  --colors-border-strong: var(--colors-neutral-300);
-  --colors-success: #16a34a;
-  --colors-success-bg: #f0fdf4;
-  --colors-success-border: #bbf7d0;
-  --colors-success-text: #166534;
-  --colors-warning: #d97706;
-  --colors-warning-bg: #fffbeb;
-  --colors-warning-border: #fde68a;
-  --colors-warning-text: #92400e;
-  --colors-danger: #dc2626;
-  --colors-danger-bg: #fef2f2;
-  --colors-danger-border: #fecaca;
-  --colors-danger-text: #991b1b;
-  --colors-info: #0284c7;
-  --colors-info-bg: #eff6ff;
-  --colors-info-border: #bfdbfe;
-  --colors-info-text: #1e3a8a;
+  /* --- neutral: Raw grayscale ramp, derived from $palette.neutral. Never used directly by blocks. --- */
+  --neutral-0: #ffffff;
+  --neutral-50: #f9f9ff;
+  --neutral-100: #f4f4fc;
+  --neutral-200: #e4e4eb;
+  --neutral-300: #d3d3db;
+  --neutral-400: #a1a1a8;
+  --neutral-500: #74747a;
+  --neutral-600: #525258;
+  --neutral-700: #3f3f45;
+  --neutral-800: #26262b;
+  --neutral-900: #18181d;
+  --neutral-950: #07070b;
 
-  /* --- spacing --- */
-  --spacing-xs: clamp(0.50rem, 0.45rem + 0.25vw, 0.63rem);
-  --spacing-sm: clamp(0.75rem, 0.65rem + 0.50vw, 1.00rem);
-  --spacing-md: clamp(1.13rem, 0.98rem + 0.75vw, 1.50rem);
-  --spacing-lg: clamp(1.50rem, 1.30rem + 1.00vw, 2.00rem);
-  --spacing-xl: clamp(2.00rem, 1.75rem + 1.25vw, 2.75rem);
+  /* --- action: Raw action hue (500 and its 600 hover step), derived from $palette.action. --- */
+  --action-500: #0072dd;
+  --action-600: #0051a0;
 
-  /* --- typography --- */
-  --typography-step-0: clamp(1.00rem, 0.93rem + 0.36vw, 1.20rem);
-  --typography-step-1: clamp(1.20rem, 1.07rem + 0.63vw, 1.55rem);
-  --typography-step-2: clamp(1.44rem, 1.24rem + 1.02vw, 2.01rem);
-  --typography-step-3: clamp(1.73rem, 1.42rem + 1.53vw, 2.59rem);
-  --typography-step-4: clamp(2.07rem, 1.63rem + 2.21vw, 3.33rem);
+  /* --- accent: Raw accent hue (500 and its 600 hover step), derived from $palette.accent. --- */
+  --accent-500: #894ed6;
+  --accent-600: #6724ad;
 
-  /* --- transitions --- */
-  --transitions-spring-snappy: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --transitions-spring-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --transitions-dur-fast: 150ms;
-  --transitions-dur-base: 250ms;
+  /* --- success: Raw success status colours for both schemes, derived from $palette.status.success. --- */
+  --success-base: #278733;
+  --success-surface-light: #e6fce6;
+  --success-border-light: #b9e5b9;
+  --success-text-light: #00480e;
+  --success-base-dark: #5bb661;
+  --success-surface-dark: #0f1f0f;
+  --success-border-dark: #1e4420;
+  --success-text-dark: #9be39d;
 
-  /* --- layout --- */
-  --layout-measure: 60ch;
-  --layout-wrapper-max-width: 80rem;
+  /* --- warning: Raw warning status colours for both schemes, derived from $palette.status.warning. --- */
+  --warning-base: #9d6300;
+  --warning-surface-light: #fff3e6;
+  --warning-border-light: #f8d0a2;
+  --warning-text-light: #533200;
+  --warning-base-dark: #d98b09;
+  --warning-surface-dark: #261706;
+  --warning-border-dark: #533201;
+  --warning-text-dark: #ffc075;
 
-  /* --- fonts --- */
-  --fonts-heading: system-ui, sans-serif;
-  --fonts-body: system-ui, sans-serif;
+  /* --- danger: Raw danger status colours for both schemes, derived from $palette.status.danger. --- */
+  --danger-base: #b94642;
+  --danger-surface-light: #fff2f0;
+  --danger-border-light: #ffc8c3;
+  --danger-text-light: #6c1517;
+  --danger-base-dark: #ed756e;
+  --danger-surface-dark: #2a1312;
+  --danger-border-dark: #5c2926;
+  --danger-text-dark: #ffbab3;
+
+  /* --- info: Raw info status colours for both schemes, derived from $palette.status.info. --- */
+  --info-base: #0079b3;
+  --info-surface-light: #ecf7ff;
+  --info-border-light: #b1deff;
+  --info-text-light: #003f60;
+  --info-base-dark: #26a9f1;
+  --info-surface-dark: #081d2a;
+  --info-border-dark: #083f5d;
+  --info-text-dark: #9cd6ff;
+
+  /* --- step: Raw Utopia fluid type steps, derived from $utopia.type. --- */
+  --step--1: clamp(0.83rem, 0.81rem + 0.12vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --step-1: clamp(1.2rem, 1.13rem + 0.36vw, 1.41rem);
+  --step-2: clamp(1.44rem, 1.33rem + 0.55vw, 1.76rem);
+  --step-3: clamp(1.73rem, 1.56rem + 0.82vw, 2.2rem);
+  --step-4: clamp(2.07rem, 1.84rem + 1.17vw, 2.75rem);
+  --step-5: clamp(2.49rem, 2.16rem + 1.64vw, 3.43rem);
+
+  /* --- space: Raw Utopia fluid space scale and one-up pairs, derived from $utopia.space. --- */
+  --space-3xs: clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem);
+  --space-2xs: clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem);
+  --space-xs: clamp(0.75rem, 0.72rem + 0.16vw, 0.84rem);
+  --space-s: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --space-m: clamp(1.5rem, 1.43rem + 0.33vw, 1.69rem);
+  --space-l: clamp(2rem, 1.91rem + 0.43vw, 2.25rem);
+  --space-xl: clamp(3rem, 2.87rem + 0.65vw, 3.38rem);
+  --space-2xl: clamp(4rem, 3.83rem + 0.87vw, 4.5rem);
+  --space-3xl: clamp(6rem, 5.74rem + 1.3vw, 6.75rem);
+  --space-s-m: clamp(1rem, 0.76rem + 1.2vw, 1.69rem);
+  --space-m-l: clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem);
+  --space-l-xl: clamp(2rem, 1.52rem + 2.39vw, 3.38rem);
+
+  /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+  --color-surface: var(--neutral-0);
+  --color-surface-raised: var(--neutral-0);
+  --color-surface-sunken: var(--neutral-100);
+  --color-text: var(--neutral-900);
+  --color-text-muted: var(--neutral-500);
+  --color-text-inverse: var(--neutral-0);
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+  --color-link: var(--color-action);
+  --color-action: var(--action-500);
+  --color-action-hover: var(--action-600);
+  --color-action-text: var(--neutral-0);
+  --color-accent: var(--accent-500);
+  --color-focus: var(--color-action);
+  --color-backdrop: rgb(0 0 0 / 0.5);
+  --color-status-success: var(--success-base);
+  --color-status-success-surface: var(--success-surface-light);
+  --color-status-success-border: var(--success-border-light);
+  --color-status-success-text: var(--success-text-light);
+  --color-status-warning: var(--warning-base);
+  --color-status-warning-surface: var(--warning-surface-light);
+  --color-status-warning-border: var(--warning-border-light);
+  --color-status-warning-text: var(--warning-text-light);
+  --color-status-danger: var(--danger-base);
+  --color-status-danger-surface: var(--danger-surface-light);
+  --color-status-danger-border: var(--danger-border-light);
+  --color-status-danger-text: var(--danger-text-light);
+  --color-status-info: var(--info-base);
+  --color-status-info-surface: var(--info-surface-light);
+  --color-status-info-border: var(--info-border-light);
+  --color-status-info-text: var(--info-text-light);
+
+  /* --- gutter: Default gap inside compositions. --- */
+  --gutter: var(--space-s);
+
+  /* --- region-space: Vertical padding of a page section. --- */
+  --region-space: var(--space-xl);
+
+  /* --- flow-space: Default rhythm in .flow; scales with the local font size. --- */
+  --flow-space: 1em;
+
+  /* --- inset: Padding inside blocks. --- */
+  --inset-control: var(--space-2xs) var(--space-s);
+  --inset-surface: var(--space-m);
+
+  /* --- text: Body text sizes. --- */
+  --text-body: var(--step-0);
+  --text-small: var(--step--1);
+  --text-lead: var(--step-1);
+
+  /* --- heading: Heading sizes; h5 and h6 reuse --text-body. --- */
+  --heading-1: var(--step-5);
+  --heading-2: var(--step-4);
+  --heading-3: var(--step-3);
+  --heading-4: var(--step-2);
+
+  /* --- font: Font family stacks. Brand-neutral placeholders; override per project. --- */
+  --font-body: system-ui, sans-serif;
+  --font-heading: system-ui, sans-serif;
+
+  /* --- weight: Font weights. --- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- leading: Line heights. --- */
+  --leading-tight: 1.1;
+  --leading-body: 1.5;
+
+  /* --- radius: Corner radii by what is being rounded. --- */
+  --radius-control: 4px;
+  --radius-surface: 8px;
+  --radius-pill: 999px;
+
+  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
+
+  /* --- duration: Motion durations. --- */
+  --duration-quick: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+
+  /* --- ease: Motion easing curves. --- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* --- layer: Stacking order. Dialogs use the top layer and need no token. --- */
+  --layer-raised: 10;
+  --layer-nav: 50;
+  --layer-popover: 100;
+
+  /* --- measure: Typographic reading width (.center, prose). --- */
+  --measure: 60ch;
+
+  /* --- wrapper-max: Site-wide page section width (.wrapper). --- */
+  --wrapper-max: 80rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
+    /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+    --color-surface: var(--neutral-950);
+    --color-surface-raised: var(--neutral-900);
+    --color-surface-sunken: var(--neutral-800);
+    --color-text: var(--neutral-100);
+    --color-text-muted: var(--neutral-400);
+    --color-text-inverse: var(--neutral-950);
+    --color-border: var(--neutral-800);
+    --color-border-strong: var(--neutral-700);
+    --color-status-success: var(--success-base-dark);
+    --color-status-success-surface: var(--success-surface-dark);
+    --color-status-success-border: var(--success-border-dark);
+    --color-status-success-text: var(--success-text-dark);
+    --color-status-warning: var(--warning-base-dark);
+    --color-status-warning-surface: var(--warning-surface-dark);
+    --color-status-warning-border: var(--warning-border-dark);
+    --color-status-warning-text: var(--warning-text-dark);
+    --color-status-danger: var(--danger-base-dark);
+    --color-status-danger-surface: var(--danger-surface-dark);
+    --color-status-danger-border: var(--danger-border-dark);
+    --color-status-danger-text: var(--danger-text-dark);
+    --color-status-info: var(--info-base-dark);
+    --color-status-info-surface: var(--info-surface-dark);
+    --color-status-info-border: var(--info-border-dark);
+    --color-status-info-text: var(--info-text-dark);
 
+    /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+    --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
+    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
+  /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+  --color-surface: var(--neutral-950);
+  --color-surface-raised: var(--neutral-900);
+  --color-surface-sunken: var(--neutral-800);
+  --color-text: var(--neutral-100);
+  --color-text-muted: var(--neutral-400);
+  --color-text-inverse: var(--neutral-950);
+  --color-border: var(--neutral-800);
+  --color-border-strong: var(--neutral-700);
+  --color-status-success: var(--success-base-dark);
+  --color-status-success-surface: var(--success-surface-dark);
+  --color-status-success-border: var(--success-border-dark);
+  --color-status-success-text: var(--success-text-dark);
+  --color-status-warning: var(--warning-base-dark);
+  --color-status-warning-surface: var(--warning-surface-dark);
+  --color-status-warning-border: var(--warning-border-dark);
+  --color-status-warning-text: var(--warning-text-dark);
+  --color-status-danger: var(--danger-base-dark);
+  --color-status-danger-surface: var(--danger-surface-dark);
+  --color-status-danger-border: var(--danger-border-dark);
+  --color-status-danger-text: var(--danger-text-dark);
+  --color-status-info: var(--info-base-dark);
+  --color-status-info-surface: var(--info-surface-dark);
+  --color-status-info-border: var(--info-border-dark);
+  --color-status-info-text: var(--info-text-dark);
 
+  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
 }
 }
 
@@ -226,10 +401,10 @@ textarea:not([rows]) {
 html,
 body {
   min-height: 100%; /* Better support than min-inline-size */
-  font-family: var(--fonts-body);
+  font-family: var(--font-body);
   line-height: 1.5;
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-base);
+  color: var(--color-text);
+  background-color: var(--color-surface);
   overflow-wrap: break-word;
 }
 
@@ -242,7 +417,7 @@ li,
 dl,
 figcaption,
 blockquote {
-  max-width: var(--layout-measure);
+  max-width: var(--measure);
 }
 
 h1,
@@ -251,24 +426,24 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--fonts-heading);
-  max-width: var(--layout-measure);
+  font-family: var(--font-heading);
+  max-width: var(--measure);
   line-height: 1.2; /* Tighter line height for headings */
   text-wrap: balance; /* Modern CSS to prevent awkward single-word widows */
 }
 
 /* Map heading tags to the fluid scale */
 h1 {
-  font-size: var(--typography-step-4);
+  font-size: var(--heading-1);
 }
 h2 {
-  font-size: var(--typography-step-3);
+  font-size: var(--heading-2);
 }
 h3 {
-  font-size: var(--typography-step-2);
+  font-size: var(--heading-3);
 }
 h4 {
-  font-size: var(--typography-step-1);
+  font-size: var(--heading-4);
 }
 }
 
@@ -288,7 +463,7 @@ h4 {
  * plain border-box (padding counts toward the cap, same as the reset default).
  *
  * This is deliberately NOT the same job as .center (see center.css):
- * - Wrapper caps to a wide site max-width (--layout-wrapper-max-width),
+ * - Wrapper caps to a wide site max-width (--wrapper-max),
  *   not the narrower typographic reading measure.
  * - Wrapper has no content-box gutter trick and no alignment exceptions —
  *   it is a single-purpose outer shell, applied once per section.
@@ -298,9 +473,9 @@ h4 {
  *   leak into any .wrapper nested inside it and silently change its padding.
  */
 .wrapper {
-  max-inline-size: var(--wrapper-max-width, var(--layout-wrapper-max-width, 80rem));
+  max-inline-size: var(--wrapper-max-width, var(--wrapper-max, 80rem));
   margin-inline: auto;
-  padding-inline: var(--wrapper-gutters, var(--spacing-md, 1.5rem));
+  padding-inline: var(--wrapper-gutters, var(--space-m, 1.5rem));
 }
 }
 
@@ -312,7 +487,7 @@ h4 {
 /*
  * The Center
  * A content primitive: caps a box to the typographic reading measure
- * (--layout-measure) and centers it, with content-box sizing so that
+ * (--measure) and centers it, with content-box sizing so that
  * padding is guaranteed extra gutter space rather than eating into the
  * measure cap. Also offers intrinsic centering exceptions for its children.
  *
@@ -324,9 +499,9 @@ h4 {
 .center {
   box-sizing: content-box; /* Crucial: padding doesn't subtract from our max-inline-size */
   display: block;
-  max-inline-size: var(--center-max-width, var(--layout-measure, 60ch));
+  max-inline-size: var(--center-max-width, var(--measure, 60ch));
   margin-inline: auto;
-  padding-inline: var(--center-gutters, var(--spacing-md, 1.5rem));
+  padding-inline: var(--center-gutters, var(--space-m, 1.5rem));
 }
 
 /* Optional utility exception: centers the text alignment inside the center box too */
@@ -480,14 +655,14 @@ h4 {
 .button {
   /* Internal state variables with sensible default (Murmur) */
   --button-bg: transparent;
-  --button-text: var(--colors-text-base);
-  --button-border: var(--colors-border-subtle);
+  --button-text: var(--color-text);
+  --button-border: var(--color-border);
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs); /* For icons */
-  padding: var(--spacing-xs) var(--spacing-md);
+  gap: var(--space-2xs); /* For icons */
+  padding: var(--inset-control);
 
   background-color: var(--button-bg);
   color: var(--button-text);
@@ -495,13 +670,13 @@ h4 {
   border-radius: 4px;
 
   font-family: inherit;
-  font-size: var(--typography-step-0);
+  font-size: var(--text-body);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition:
-    filter var(--transitions-dur-base) ease,
-    background-color var(--transitions-dur-base) ease;
+    filter var(--duration-base) ease,
+    background-color var(--duration-base) ease;
 }
 
 /* 
@@ -518,9 +693,9 @@ h4 {
  * We only need to redefine the variables, not the CSS rules!
  */
 .button[data-variant="primary"] {
-  --button-bg: var(--colors-action-primary);
-  --button-text: var(--colors-text-on-action);
-  --button-border: var(--colors-action-primary);
+  --button-bg: var(--color-action);
+  --button-text: var(--color-action-text);
+  --button-border: var(--color-action);
 }
 }
 
@@ -532,38 +707,38 @@ h4 {
 .label {
   display: block;
   font-weight: 600;
-  font-size: var(--typography-step-0);
-  color: var(--colors-text-base);
+  font-size: var(--text-body);
+  color: var(--color-text);
 }
 
 .input {
   width: 100%; /* Allows layout compositions to dictate actual width */
   font-family: inherit;
-  font-size: var(--typography-step-0);
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
+  font-size: var(--text-body);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--inset-control);
   transition:
-    border-color var(--transitions-dur-fast) ease,
-    box-shadow var(--transitions-dur-fast) ease;
+    border-color var(--duration-quick) ease,
+    box-shadow var(--duration-quick) ease;
 }
 
 .input:focus-visible {
   outline: none;
-  border-color: var(--colors-action-primary);
+  border-color: var(--color-action);
   box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
 }
 
 .input[aria-invalid="true"] {
-  border-color: var(--colors-danger);
-  background-color: var(--colors-danger-bg);
+  border-color: var(--color-status-danger);
+  background-color: var(--color-status-danger-surface);
 }
 
 .input:disabled {
-  background-color: var(--colors-surface-sunken);
-  color: var(--colors-text-muted);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 }
@@ -574,8 +749,8 @@ h4 {
    ========================================================================== */
 
 .badge {
-  --badge-bg: var(--colors-surface-sunken);
-  --badge-text: var(--colors-text-base);
+  --badge-bg: var(--color-surface-sunken);
+  --badge-text: var(--color-text);
 
   display: inline-flex;
   align-items: center;
@@ -591,23 +766,23 @@ h4 {
 
 /* CUBE Exceptions (Status Variants) */
 .badge[data-status="info"] {
-  --badge-bg: var(--colors-info-bg);
-  --badge-text: var(--colors-info-text);
+  --badge-bg: var(--color-status-info-surface);
+  --badge-text: var(--color-status-info-text);
 }
 
 .badge[data-status="success"] {
-  --badge-bg: var(--colors-success-bg);
-  --badge-text: var(--colors-success-text);
+  --badge-bg: var(--color-status-success-surface);
+  --badge-text: var(--color-status-success-text);
 }
 
 .badge[data-status="warning"] {
-  --badge-bg: var(--colors-warning-bg);
-  --badge-text: var(--colors-warning-text);
+  --badge-bg: var(--color-status-warning-surface);
+  --badge-text: var(--color-status-warning-text);
 }
 
 .badge[data-status="danger"] {
-  --badge-bg: var(--colors-danger-bg);
-  --badge-text: var(--colors-danger-text);
+  --badge-bg: var(--color-status-danger-surface);
+  --badge-text: var(--color-status-danger-text);
 }
 
 /* CUBE Exception: Floating Placement */
@@ -626,14 +801,14 @@ h4 {
    ========================================================================== */
 
 .accordion {
-  border: 1px solid var(--colors-border-subtle);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface);
   overflow: hidden;
 }
 
 .accordion__item {
-  border-bottom: 1px solid var(--colors-border-subtle);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .accordion__item:last-child {
@@ -645,19 +820,19 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--space-xs) var(--space-m);
   background: transparent;
   border: none;
-  color: var(--colors-text-base);
+  color: var(--color-text);
   font-weight: 600;
-  font-size: var(--typography-step-0);
+  font-size: var(--text-body);
   cursor: pointer;
-  transition: background-color var(--transitions-dur-fast) ease;
+  transition: background-color var(--duration-quick) ease;
 }
 
 .accordion__trigger:hover,
 .accordion__trigger:focus-visible {
-  background-color: var(--colors-surface-sunken);
+  background-color: var(--color-surface-sunken);
   outline: none;
 }
 
@@ -665,7 +840,7 @@ h4 {
 .accordion__panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--transitions-dur-base) var(--transitions-spring-smooth);
+  transition: grid-template-rows var(--duration-base) var(--ease-standard);
 }
 
 .accordion__panel[data-state="open"] {
@@ -674,17 +849,17 @@ h4 {
 
 .accordion__content {
   overflow: hidden;
-  padding-inline: var(--spacing-md);
+  padding-inline: var(--inset-surface);
 }
 
 .accordion__panel[data-state="open"] .accordion__content {
-  padding-bottom: var(--spacing-md);
+  padding-bottom: var(--inset-surface);
 }
 
 .accordion__icon {
   width: 1.5rem;
   height: 1.5rem;
-  transition: transform var(--transitions-dur-base) var(--transitions-spring-snappy);
+  transition: transform var(--duration-base) var(--ease-spring);
 }
 
 .accordion__trigger[aria-expanded="true"] .accordion__icon {
@@ -704,27 +879,27 @@ h4 {
 
 .dropdown {
   --dropdown-width: 12rem;
-  --dropdown-offset: var(--spacing-xs);
+  --dropdown-offset: var(--space-2xs);
 
   position: absolute;
   top: calc(100% + var(--dropdown-offset));
   left: 0;
   z-index: 100;
   min-inline-size: var(--dropdown-width);
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: var(--spacing-xs);
+  padding: var(--space-2xs);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 
   /* Hidden State Physics */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(calc(var(--spacing-xs) * -1));
+  transform: translateY(calc(var(--space-2xs) * -1));
   transition:
-    opacity var(--transitions-dur-base) var(--transitions-spring-smooth),
-    transform var(--transitions-dur-base) var(--transitions-spring-snappy),
-    visibility var(--transitions-dur-base);
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-spring),
+    visibility var(--duration-base);
   will-change: transform, opacity;
 }
 
@@ -737,11 +912,11 @@ h4 {
 
 .dropdown__item {
   display: block;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  color: var(--colors-text-base);
+  padding: var(--inset-control);
+  color: var(--color-text);
   text-decoration: none;
   border-radius: 4px;
-  font-size: var(--typography-step-0);
+  font-size: var(--text-body);
   font-weight: 500;
   transition:
     background-color 0.15s ease,
@@ -750,15 +925,15 @@ h4 {
 
 .dropdown__item:hover,
 .dropdown__item:focus-visible {
-  background-color: var(--colors-surface-sunken);
-  color: var(--colors-action-primary);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-action);
   outline: none;
 }
 
 .dropdown__divider {
   border: none;
-  border-top: 1px solid var(--colors-border-subtle);
-  margin-block: var(--spacing-xs);
+  border-top: 1px solid var(--color-border);
+  margin-block: var(--space-2xs);
 }
 }
 
@@ -768,10 +943,10 @@ h4 {
    ========================================================================== */
 
 .card {
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: var(--spacing-md);
+  padding: var(--inset-surface);
   position: relative;
   overflow: hidden; /* Automatically clips child images to the border-radius */
 }
@@ -779,13 +954,13 @@ h4 {
 /* If a card contains an image that should sit flush to the edges */
 .card > img:first-child {
   /* Reset the padding constraint for edge-to-edge media */
-  margin-block-start: calc(var(--spacing-md) * -1);
-  margin-inline: calc(var(--spacing-md) * -1);
-  max-width: calc(100% + (var(--spacing-md) * 2));
-  width: calc(100% + (var(--spacing-md) * 2));
+  margin-block-start: calc(var(--inset-surface) * -1);
+  margin-inline: calc(var(--inset-surface) * -1);
+  max-width: calc(100% + (var(--inset-surface) * 2));
+  width: calc(100% + (var(--inset-surface) * 2));
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  margin-block-end: var(--spacing-md);
+  margin-block-end: var(--inset-surface);
 }
 }
 
@@ -795,30 +970,30 @@ h4 {
    ========================================================================== */
 
 .navbar {
-  --navbar-bg: var(--colors-surface-base);
-  --navbar-border: var(--colors-border-subtle);
+  --navbar-bg: var(--color-surface);
+  --navbar-border: var(--color-border);
 
   background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
   z-index: 50;
-  padding-block: var(--spacing-md);
+  padding-block: var(--space-s);
 }
 
 .navbar__brand {
   font-weight: 800;
-  font-size: var(--typography-step-1);
-  color: var(--colors-text-base);
+  font-size: var(--text-lead);
+  color: var(--color-text);
   text-decoration: none;
   letter-spacing: -0.02em;
 }
 
 .navbar__link {
-  color: var(--colors-text-muted);
+  color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 500;
-  font-size: var(--typography-step-0);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-body);
+  padding: var(--inset-control);
   border-radius: 4px;
   background: transparent;
   border: none;
@@ -830,8 +1005,8 @@ h4 {
 
 .navbar__link:hover,
 .navbar__link:focus-visible {
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-sunken);
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
 }
 
 /* Mobile Toggle Behavior */
@@ -839,12 +1014,12 @@ h4 {
   .navbar__menu {
     display: none;
     flex-basis: 100%;
-    padding-block-start: var(--spacing-md);
+    padding-block-start: var(--space-s);
   }
 
   .navbar__menu[data-state="open"] {
     display: block;
-    animation: fadeIn var(--transitions-dur-fast) var(--transitions-spring-smooth);
+    animation: fadeIn var(--duration-quick) var(--ease-standard);
   }
 
   /* Force vertical stacking on mobile by adjusting the inner cluster */
@@ -859,9 +1034,9 @@ h4 {
     justify-content: center;
     background: transparent;
     border: none;
-    color: var(--colors-text-base);
+    color: var(--color-text);
     cursor: pointer;
-    padding: var(--spacing-xs);
+    padding: var(--space-2xs);
   }
 }
 
@@ -892,12 +1067,12 @@ h4 {
    ========================================================================== */
 
 .modal {
-  padding: var(--spacing-lg);
+  padding: var(--inset-surface);
   border: none;
   border-radius: 8px;
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface-raised);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  max-inline-size: var(--layout-measure);
+  max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
 }
@@ -915,11 +1090,11 @@ h4 {
 
 .alert {
   /* Internal state defaults */
-  --alert-bg: var(--colors-surface-base);
-  --alert-border: var(--colors-border-subtle);
-  --alert-text: var(--colors-text-base);
+  --alert-bg: var(--color-surface);
+  --alert-border: var(--color-border);
+  --alert-text: var(--color-text);
 
-  padding: var(--spacing-sm);
+  padding: var(--inset-surface);
   border-radius: 8px;
   border: 1px solid var(--alert-border);
   background-color: var(--alert-bg);
@@ -934,27 +1109,27 @@ h4 {
  * We reassign the variables rather than duplicating the CSS properties 
  */
 .alert[data-status="info"] {
-  --alert-bg: var(--colors-info-bg);
-  --alert-border: var(--colors-info-border);
-  --alert-text: var(--colors-info-text);
+  --alert-bg: var(--color-status-info-surface);
+  --alert-border: var(--color-status-info-border);
+  --alert-text: var(--color-status-info-text);
 }
 
 .alert[data-status="success"] {
-  --alert-bg: var(--colors-success-bg);
-  --alert-border: var(--colors-success-border);
-  --alert-text: var(--colors-success-text);
+  --alert-bg: var(--color-status-success-surface);
+  --alert-border: var(--color-status-success-border);
+  --alert-text: var(--color-status-success-text);
 }
 
 .alert[data-status="warning"] {
-  --alert-bg: var(--colors-warning-bg);
-  --alert-border: var(--colors-warning-border);
-  --alert-text: var(--colors-warning-text);
+  --alert-bg: var(--color-status-warning-surface);
+  --alert-border: var(--color-status-warning-border);
+  --alert-text: var(--color-status-warning-text);
 }
 
 .alert[data-status="danger"] {
-  --alert-bg: var(--colors-danger-bg);
-  --alert-border: var(--colors-danger-border);
-  --alert-text: var(--colors-danger-text);
+  --alert-bg: var(--color-status-danger-surface);
+  --alert-border: var(--color-status-danger-border);
+  --alert-text: var(--color-status-danger-text);
 }
 
 .alert__close {
@@ -963,11 +1138,11 @@ h4 {
   color: inherit;
   opacity: 0.7;
   cursor: pointer;
-  padding: var(--spacing-xs);
+  padding: var(--space-2xs);
   border-radius: 4px;
   transition:
-    opacity var(--transitions-dur-fast),
-    background-color var(--transitions-dur-fast);
+    opacity var(--duration-quick),
+    background-color var(--duration-quick);
 }
 
 .alert__close:hover {
@@ -1087,25 +1262,25 @@ h4 {
 
 /* --- Text Colors --- */
 .text-primary {
-  color: var(--colors-action-primary);
+  color: var(--color-action);
 }
 .text-muted {
-  color: var(--colors-text-muted);
+  color: var(--color-text-muted);
 }
 .text-danger {
-  color: var(--colors-danger);
+  color: var(--color-status-danger);
 }
 
 /* --- Surface Colors --- */
 .bg-surface-base {
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface);
 }
 .bg-surface-sunken {
-  background-color: var(--colors-surface-sunken);
+  background-color: var(--color-surface-sunken);
 }
 .bg-primary {
-  background-color: var(--colors-action-primary);
-  color: var(--colors-text-on-action);
+  background-color: var(--color-action);
+  color: var(--color-action-text);
 }
 }
 
@@ -1117,20 +1292,20 @@ h4 {
 /* --- The Lift & Scale --- */
 .anim-lift {
   transition:
-    transform var(--transitions-dur-base) var(--transitions-spring-snappy),
-    box-shadow var(--transitions-dur-base) var(--transitions-spring-snappy);
+    transform var(--duration-base) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-spring);
   will-change: transform;
 }
 
 .anim-lift:hover {
-  transform: translateY(calc(var(--spacing-xs) * -1)) scale(1.02);
+  transform: translateY(calc(var(--space-2xs) * -1)) scale(1.02);
 }
 
 /* --- The Ambient Mesh --- */
 .bg-mesh {
   position: relative;
   overflow: hidden;
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface);
   z-index: 0;
 }
 

@@ -3,14 +3,14 @@
    ========================================================================== */
 
 .accordion {
-  border: 1px solid var(--colors-border-subtle);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface);
   overflow: hidden;
 }
 
 .accordion__item {
-  border-bottom: 1px solid var(--colors-border-subtle);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .accordion__item:last-child {
@@ -22,19 +22,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--space-xs) var(--space-m);
   background: transparent;
   border: none;
-  color: var(--colors-text-base);
+  color: var(--color-text);
   font-weight: 600;
-  font-size: var(--typography-step-0);
+  font-size: var(--text-body);
   cursor: pointer;
-  transition: background-color var(--transitions-dur-fast) ease;
+  transition: background-color var(--duration-quick) ease;
 }
 
 .accordion__trigger:hover,
 .accordion__trigger:focus-visible {
-  background-color: var(--colors-surface-sunken);
+  background-color: var(--color-surface-sunken);
   outline: none;
 }
 
@@ -42,7 +42,7 @@
 .accordion__panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--transitions-dur-base) var(--transitions-spring-smooth);
+  transition: grid-template-rows var(--duration-base) var(--ease-standard);
 }
 
 .accordion__panel[data-state="open"] {
@@ -51,17 +51,17 @@
 
 .accordion__content {
   overflow: hidden;
-  padding-inline: var(--spacing-md);
+  padding-inline: var(--inset-surface);
 }
 
 .accordion__panel[data-state="open"] .accordion__content {
-  padding-bottom: var(--spacing-md);
+  padding-bottom: var(--inset-surface);
 }
 
 .accordion__icon {
   width: 1.5rem;
   height: 1.5rem;
-  transition: transform var(--transitions-dur-base) var(--transitions-spring-snappy);
+  transition: transform var(--duration-base) var(--ease-spring);
 }
 
 .accordion__trigger[aria-expanded="true"] .accordion__icon {

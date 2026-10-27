@@ -3,8 +3,8 @@
    ========================================================================== */
 
 .badge {
-  --badge-bg: var(--colors-surface-sunken);
-  --badge-text: var(--colors-text-base);
+  --badge-bg: var(--color-surface-sunken);
+  --badge-text: var(--color-text);
 
   display: inline-flex;
   align-items: center;
@@ -20,23 +20,23 @@
 
 /* CUBE Exceptions (Status Variants) */
 .badge[data-status="info"] {
-  --badge-bg: var(--colors-info-bg);
-  --badge-text: var(--colors-info-text);
+  --badge-bg: var(--color-status-info-surface);
+  --badge-text: var(--color-status-info-text);
 }
 
 .badge[data-status="success"] {
-  --badge-bg: var(--colors-success-bg);
-  --badge-text: var(--colors-success-text);
+  --badge-bg: var(--color-status-success-surface);
+  --badge-text: var(--color-status-success-text);
 }
 
 .badge[data-status="warning"] {
-  --badge-bg: var(--colors-warning-bg);
-  --badge-text: var(--colors-warning-text);
+  --badge-bg: var(--color-status-warning-surface);
+  --badge-text: var(--color-status-warning-text);
 }
 
 .badge[data-status="danger"] {
-  --badge-bg: var(--colors-danger-bg);
-  --badge-text: var(--colors-danger-text);
+  --badge-bg: var(--color-status-danger-surface);
+  --badge-text: var(--color-status-danger-text);
 }
 
 /* CUBE Exception: Floating Placement */

@@ -3,12 +3,12 @@
    ========================================================================== */
 
 .modal {
-  padding: var(--spacing-lg);
+  padding: var(--inset-surface);
   border: none;
   border-radius: 8px;
-  background-color: var(--colors-surface-base);
+  background-color: var(--color-surface-raised);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  max-inline-size: var(--layout-measure);
+  max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
 }

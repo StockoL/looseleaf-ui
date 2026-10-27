@@ -15,88 +15,344 @@ derived group wins and is marked *overridden* below.
 Custom properties cannot be used in container query conditions, so the single breakpoint is a
 documented constant: **`45rem`** (menu collapse). Use it only in `@container` rules.
 
+## Contrast
+
+WCAG 2.x ratios for the semantic text/surface pairings. Target: 4.5:1 (AA).
+
+| Foreground | Background | Scheme | Ratio | AA |
+| --- | --- | --- | --- | --- |
+| `color.text` | `color.surface` | light | 17.69 | pass |
+| `color.text` | `color.surface` | dark | 18.38 | pass |
+| `color.text-muted` | `color.surface` | light | 4.64 | pass |
+| `color.text-muted` | `color.surface` | dark | 7.83 | pass |
+| `color.text` | `color.surface-sunken` | light | 16.17 | pass |
+| `color.text` | `color.surface-sunken` | dark | 13.76 | pass |
+| `color.action-text` | `color.action` | light | 4.72 | pass |
+| `color.action-text` | `color.action` | dark | 4.72 | pass |
+| `color.status-success-text` | `color.status-success-surface` | light | 10.05 | pass |
+| `color.status-success-text` | `color.status-success-surface` | dark | 11.34 | pass |
+| `color.status-warning-text` | `color.status-warning-surface` | light | 10.53 | pass |
+| `color.status-warning-text` | `color.status-warning-surface` | dark | 10.81 | pass |
+| `color.status-danger-text` | `color.status-danger-surface` | light | 10.93 | pass |
+| `color.status-danger-text` | `color.status-danger-surface` | dark | 10.77 | pass |
+| `color.status-info-text` | `color.status-info-surface` | light | 10.27 | pass |
+| `color.status-info-text` | `color.status-info-surface` | dark | 11.05 | pass |
+| `color.link` | `color.surface` | light | 4.72 | pass |
+| `color.link` | `color.surface` | dark | 4.26 | **fail** |
+
 ## Tokens
 
-### colors
+### neutral
+
+Raw grayscale ramp, derived from $palette.neutral. Never used directly by blocks.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
-| `--colors-neutral-0` | Semantic | `#ffffff` |  |  |
-| `--colors-neutral-50` | Semantic | `#fafafa` |  |  |
-| `--colors-neutral-100` | Semantic | `#f4f4f5` |  |  |
-| `--colors-neutral-200` | Semantic | `#e4e4e7` |  |  |
-| `--colors-neutral-300` | Semantic | `#d4d4d8` |  |  |
-| `--colors-neutral-400` | Semantic | `#a1a1aa` |  |  |
-| `--colors-neutral-500` | Semantic | `#71717a` |  |  |
-| `--colors-neutral-600` | Semantic | `#52525b` |  |  |
-| `--colors-neutral-700` | Semantic | `#3f3f46` |  |  |
-| `--colors-neutral-800` | Semantic | `#27272a` |  |  |
-| `--colors-neutral-900` | Semantic | `#18181b` |  |  |
-| `--colors-neutral-950` | Semantic | `#09090b` |  |  |
-| `--colors-action-primary` | Semantic | `#0070f3` |  |  |
-| `--colors-surface-base` | Semantic | `var(--colors-neutral-0)` |  |  |
-| `--colors-surface-sunken` | Semantic | `var(--colors-neutral-100)` |  |  |
-| `--colors-text-base` | Semantic | `var(--colors-neutral-900)` |  |  |
-| `--colors-text-muted` | Semantic | `var(--colors-neutral-500)` |  |  |
-| `--colors-text-on-action` | Semantic | `var(--colors-neutral-0)` |  |  |
-| `--colors-border-subtle` | Semantic | `var(--colors-neutral-200)` |  |  |
-| `--colors-border-strong` | Semantic | `var(--colors-neutral-300)` |  |  |
-| `--colors-success` | Semantic | `#16a34a` |  |  |
-| `--colors-success-bg` | Semantic | `#f0fdf4` |  |  |
-| `--colors-success-border` | Semantic | `#bbf7d0` |  |  |
-| `--colors-success-text` | Semantic | `#166534` |  |  |
-| `--colors-warning` | Semantic | `#d97706` |  |  |
-| `--colors-warning-bg` | Semantic | `#fffbeb` |  |  |
-| `--colors-warning-border` | Semantic | `#fde68a` |  |  |
-| `--colors-warning-text` | Semantic | `#92400e` |  |  |
-| `--colors-danger` | Semantic | `#dc2626` |  |  |
-| `--colors-danger-bg` | Semantic | `#fef2f2` |  |  |
-| `--colors-danger-border` | Semantic | `#fecaca` |  |  |
-| `--colors-danger-text` | Semantic | `#991b1b` |  |  |
-| `--colors-info` | Semantic | `#0284c7` |  |  |
-| `--colors-info-bg` | Semantic | `#eff6ff` |  |  |
-| `--colors-info-border` | Semantic | `#bfdbfe` |  |  |
-| `--colors-info-text` | Semantic | `#1e3a8a` |  |  |
+| `--neutral-0` | Raw | `#ffffff` |  | derived |
+| `--neutral-50` | Raw | `#f9f9ff` |  | derived |
+| `--neutral-100` | Raw | `#f4f4fc` |  | derived |
+| `--neutral-200` | Raw | `#e4e4eb` |  | derived |
+| `--neutral-300` | Raw | `#d3d3db` |  | derived |
+| `--neutral-400` | Raw | `#a1a1a8` |  | derived |
+| `--neutral-500` | Raw | `#74747a` |  | derived |
+| `--neutral-600` | Raw | `#525258` |  | derived |
+| `--neutral-700` | Raw | `#3f3f45` |  | derived |
+| `--neutral-800` | Raw | `#26262b` |  | derived |
+| `--neutral-900` | Raw | `#18181d` |  | derived |
+| `--neutral-950` | Raw | `#07070b` |  | derived |
 
-### spacing
+### action
+
+Raw action hue (500 and its 600 hover step), derived from $palette.action.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
-| `--spacing-xs` | Semantic | `clamp(0.50rem, 0.45rem + 0.25vw, 0.63rem)` |  |  |
-| `--spacing-sm` | Semantic | `clamp(0.75rem, 0.65rem + 0.50vw, 1.00rem)` |  |  |
-| `--spacing-md` | Semantic | `clamp(1.13rem, 0.98rem + 0.75vw, 1.50rem)` |  |  |
-| `--spacing-lg` | Semantic | `clamp(1.50rem, 1.30rem + 1.00vw, 2.00rem)` |  |  |
-| `--spacing-xl` | Semantic | `clamp(2.00rem, 1.75rem + 1.25vw, 2.75rem)` |  |  |
+| `--action-500` | Raw | `#0072dd` |  | derived |
+| `--action-600` | Raw | `#0051a0` |  | derived |
 
-### typography
+### accent
 
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--typography-step-0` | Semantic | `clamp(1.00rem, 0.93rem + 0.36vw, 1.20rem)` |  |  |
-| `--typography-step-1` | Semantic | `clamp(1.20rem, 1.07rem + 0.63vw, 1.55rem)` |  |  |
-| `--typography-step-2` | Semantic | `clamp(1.44rem, 1.24rem + 1.02vw, 2.01rem)` |  |  |
-| `--typography-step-3` | Semantic | `clamp(1.73rem, 1.42rem + 1.53vw, 2.59rem)` |  |  |
-| `--typography-step-4` | Semantic | `clamp(2.07rem, 1.63rem + 2.21vw, 3.33rem)` |  |  |
-
-### transitions
+Raw accent hue (500 and its 600 hover step), derived from $palette.accent.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
-| `--transitions-spring-snappy` | Semantic | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` |  |  |
-| `--transitions-spring-smooth` | Semantic | `cubic-bezier(0.4, 0, 0.2, 1)` |  |  |
-| `--transitions-dur-fast` | Semantic | `150ms` |  |  |
-| `--transitions-dur-base` | Semantic | `250ms` |  |  |
+| `--accent-500` | Raw | `#894ed6` |  | derived |
+| `--accent-600` | Raw | `#6724ad` |  | derived |
 
-### layout
+### success
 
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--layout-measure` | Semantic | `60ch` |  |  |
-| `--layout-wrapper-max-width` | Semantic | `80rem` |  |  |
-
-### fonts
+Raw success status colours for both schemes, derived from $palette.status.success.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
-| `--fonts-heading` | Semantic | `system-ui, sans-serif` |  |  |
-| `--fonts-body` | Semantic | `system-ui, sans-serif` |  |  |
+| `--success-base` | Raw | `#278733` |  | derived |
+| `--success-surface-light` | Raw | `#e6fce6` |  | derived |
+| `--success-border-light` | Raw | `#b9e5b9` |  | derived |
+| `--success-text-light` | Raw | `#00480e` |  | derived |
+| `--success-base-dark` | Raw | `#5bb661` |  | derived |
+| `--success-surface-dark` | Raw | `#0f1f0f` |  | derived |
+| `--success-border-dark` | Raw | `#1e4420` |  | derived |
+| `--success-text-dark` | Raw | `#9be39d` |  | derived |
+
+### warning
+
+Raw warning status colours for both schemes, derived from $palette.status.warning.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--warning-base` | Raw | `#9d6300` |  | derived |
+| `--warning-surface-light` | Raw | `#fff3e6` |  | derived |
+| `--warning-border-light` | Raw | `#f8d0a2` |  | derived |
+| `--warning-text-light` | Raw | `#533200` |  | derived |
+| `--warning-base-dark` | Raw | `#d98b09` |  | derived |
+| `--warning-surface-dark` | Raw | `#261706` |  | derived |
+| `--warning-border-dark` | Raw | `#533201` |  | derived |
+| `--warning-text-dark` | Raw | `#ffc075` |  | derived |
+
+### danger
+
+Raw danger status colours for both schemes, derived from $palette.status.danger.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--danger-base` | Raw | `#b94642` |  | derived |
+| `--danger-surface-light` | Raw | `#fff2f0` |  | derived |
+| `--danger-border-light` | Raw | `#ffc8c3` |  | derived |
+| `--danger-text-light` | Raw | `#6c1517` |  | derived |
+| `--danger-base-dark` | Raw | `#ed756e` |  | derived |
+| `--danger-surface-dark` | Raw | `#2a1312` |  | derived |
+| `--danger-border-dark` | Raw | `#5c2926` |  | derived |
+| `--danger-text-dark` | Raw | `#ffbab3` |  | derived |
+
+### info
+
+Raw info status colours for both schemes, derived from $palette.status.info.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--info-base` | Raw | `#0079b3` |  | derived |
+| `--info-surface-light` | Raw | `#ecf7ff` |  | derived |
+| `--info-border-light` | Raw | `#b1deff` |  | derived |
+| `--info-text-light` | Raw | `#003f60` |  | derived |
+| `--info-base-dark` | Raw | `#26a9f1` |  | derived |
+| `--info-surface-dark` | Raw | `#081d2a` |  | derived |
+| `--info-border-dark` | Raw | `#083f5d` |  | derived |
+| `--info-text-dark` | Raw | `#9cd6ff` |  | derived |
+
+### step
+
+Raw Utopia fluid type steps, derived from $utopia.type.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--step--1` | Raw | `clamp(0.83rem, 0.81rem + 0.12vw, 0.9rem)` |  | derived |
+| `--step-0` | Raw | `clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  | derived |
+| `--step-1` | Raw | `clamp(1.2rem, 1.13rem + 0.36vw, 1.41rem)` |  | derived |
+| `--step-2` | Raw | `clamp(1.44rem, 1.33rem + 0.55vw, 1.76rem)` |  | derived |
+| `--step-3` | Raw | `clamp(1.73rem, 1.56rem + 0.82vw, 2.2rem)` |  | derived |
+| `--step-4` | Raw | `clamp(2.07rem, 1.84rem + 1.17vw, 2.75rem)` |  | derived |
+| `--step-5` | Raw | `clamp(2.49rem, 2.16rem + 1.64vw, 3.43rem)` |  | derived |
+
+### space
+
+Raw Utopia fluid space scale and one-up pairs, derived from $utopia.space.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--space-3xs` | Raw | `clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)` |  | derived |
+| `--space-2xs` | Raw | `clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem)` |  | derived |
+| `--space-xs` | Raw | `clamp(0.75rem, 0.72rem + 0.16vw, 0.84rem)` |  | derived |
+| `--space-s` | Raw | `clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  | derived |
+| `--space-m` | Raw | `clamp(1.5rem, 1.43rem + 0.33vw, 1.69rem)` |  | derived |
+| `--space-l` | Raw | `clamp(2rem, 1.91rem + 0.43vw, 2.25rem)` |  | derived |
+| `--space-xl` | Raw | `clamp(3rem, 2.87rem + 0.65vw, 3.38rem)` |  | derived |
+| `--space-2xl` | Raw | `clamp(4rem, 3.83rem + 0.87vw, 4.5rem)` |  | derived |
+| `--space-3xl` | Raw | `clamp(6rem, 5.74rem + 1.3vw, 6.75rem)` |  | derived |
+| `--space-s-m` | Raw | `clamp(1rem, 0.76rem + 1.2vw, 1.69rem)` |  | derived |
+| `--space-m-l` | Raw | `clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem)` |  | derived |
+| `--space-l-xl` | Raw | `clamp(2rem, 1.52rem + 2.39vw, 3.38rem)` |  | derived |
+
+### color
+
+Semantic colour roles. The only colour tokens blocks may use.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--color-surface` | Semantic | `#ffffff` | `#07070b` |  |
+| `--color-surface-raised` | Semantic | `#ffffff` | `#18181d` |  |
+| `--color-surface-sunken` | Semantic | `#f4f4fc` | `#26262b` |  |
+| `--color-text` | Semantic | `#18181d` | `#f4f4fc` |  |
+| `--color-text-muted` | Semantic | `#74747a` | `#a1a1a8` |  |
+| `--color-text-inverse` | Semantic | `#ffffff` | `#07070b` |  |
+| `--color-border` | Semantic | `#e4e4eb` | `#26262b` |  |
+| `--color-border-strong` | Semantic | `#d3d3db` | `#3f3f45` |  |
+| `--color-link` | Semantic | `#0072dd` |  |  |
+| `--color-action` | Semantic | `#0072dd` |  |  |
+| `--color-action-hover` | Semantic | `#0051a0` |  |  |
+| `--color-action-text` | Semantic | `#ffffff` |  |  |
+| `--color-accent` | Semantic | `#894ed6` |  |  |
+| `--color-focus` | Semantic | `#0072dd` |  |  |
+| `--color-backdrop` | Semantic | `rgb(0 0 0 / 0.5)` |  |  |
+| `--color-status-success` | Semantic | `#278733` | `#5bb661` |  |
+| `--color-status-success-surface` | Semantic | `#e6fce6` | `#0f1f0f` |  |
+| `--color-status-success-border` | Semantic | `#b9e5b9` | `#1e4420` |  |
+| `--color-status-success-text` | Semantic | `#00480e` | `#9be39d` |  |
+| `--color-status-warning` | Semantic | `#9d6300` | `#d98b09` |  |
+| `--color-status-warning-surface` | Semantic | `#fff3e6` | `#261706` |  |
+| `--color-status-warning-border` | Semantic | `#f8d0a2` | `#533201` |  |
+| `--color-status-warning-text` | Semantic | `#533200` | `#ffc075` |  |
+| `--color-status-danger` | Semantic | `#b94642` | `#ed756e` |  |
+| `--color-status-danger-surface` | Semantic | `#fff2f0` | `#2a1312` |  |
+| `--color-status-danger-border` | Semantic | `#ffc8c3` | `#5c2926` |  |
+| `--color-status-danger-text` | Semantic | `#6c1517` | `#ffbab3` |  |
+| `--color-status-info` | Semantic | `#0079b3` | `#26a9f1` |  |
+| `--color-status-info-surface` | Semantic | `#ecf7ff` | `#081d2a` |  |
+| `--color-status-info-border` | Semantic | `#b1deff` | `#083f5d` |  |
+| `--color-status-info-text` | Semantic | `#003f60` | `#9cd6ff` |  |
+
+### gutter
+
+Default gap inside compositions.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--gutter` | Semantic | `clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  |  |
+
+### region-space
+
+Vertical padding of a page section.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--region-space` | Semantic | `clamp(3rem, 2.87rem + 0.65vw, 3.38rem)` |  |  |
+
+### flow-space
+
+Default rhythm in .flow; scales with the local font size.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--flow-space` | Semantic | `1em` |  |  |
+
+### inset
+
+Padding inside blocks.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--inset-control` | Semantic | `clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem) clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  |  |
+| `--inset-surface` | Semantic | `clamp(1.5rem, 1.43rem + 0.33vw, 1.69rem)` |  |  |
+
+### text
+
+Body text sizes.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--text-body` | Semantic | `clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  |  |
+| `--text-small` | Semantic | `clamp(0.83rem, 0.81rem + 0.12vw, 0.9rem)` |  |  |
+| `--text-lead` | Semantic | `clamp(1.2rem, 1.13rem + 0.36vw, 1.41rem)` |  |  |
+
+### heading
+
+Heading sizes; h5 and h6 reuse --text-body.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--heading-1` | Semantic | `clamp(2.49rem, 2.16rem + 1.64vw, 3.43rem)` |  |  |
+| `--heading-2` | Semantic | `clamp(2.07rem, 1.84rem + 1.17vw, 2.75rem)` |  |  |
+| `--heading-3` | Semantic | `clamp(1.73rem, 1.56rem + 0.82vw, 2.2rem)` |  |  |
+| `--heading-4` | Semantic | `clamp(1.44rem, 1.33rem + 0.55vw, 1.76rem)` |  |  |
+
+### font
+
+Font family stacks. Brand-neutral placeholders; override per project.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--font-body` | Semantic | `system-ui, sans-serif` |  |  |
+| `--font-heading` | Semantic | `system-ui, sans-serif` |  |  |
+
+### weight
+
+Font weights.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--weight-regular` | Semantic | `400` |  |  |
+| `--weight-medium` | Semantic | `500` |  |  |
+| `--weight-semibold` | Semantic | `600` |  |  |
+| `--weight-bold` | Semantic | `700` |  |  |
+
+### leading
+
+Line heights.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--leading-tight` | Semantic | `1.1` |  |  |
+| `--leading-body` | Semantic | `1.5` |  |  |
+
+### radius
+
+Corner radii by what is being rounded.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--radius-control` | Semantic | `4px` |  |  |
+| `--radius-surface` | Semantic | `8px` |  |  |
+| `--radius-pill` | Semantic | `999px` |  |  |
+
+### shadow
+
+Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--shadow-raised` | Semantic | `0 10px 25px -5px rgb(0 0 0 / 0.1)` | `0 10px 25px -5px rgb(0 0 0 / 0.5)` |  |
+| `--shadow-overlay` | Semantic | `0 10px 25px rgb(0 0 0 / 0.15)` | `0 10px 25px rgb(0 0 0 / 0.6)` |  |
+
+### duration
+
+Motion durations.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--duration-quick` | Semantic | `150ms` |  |  |
+| `--duration-base` | Semantic | `250ms` |  |  |
+| `--duration-slow` | Semantic | `400ms` |  |  |
+
+### ease
+
+Motion easing curves.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--ease-standard` | Semantic | `cubic-bezier(0.4, 0, 0.2, 1)` |  |  |
+| `--ease-spring` | Semantic | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` |  |  |
+
+### layer
+
+Stacking order. Dialogs use the top layer and need no token.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--layer-raised` | Semantic | `10` |  |  |
+| `--layer-nav` | Semantic | `50` |  |  |
+| `--layer-popover` | Semantic | `100` |  |  |
+
+### measure
+
+Typographic reading width (.center, prose).
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--measure` | Semantic | `60ch` |  |  |
+
+### wrapper-max
+
+Site-wide page section width (.wrapper).
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--wrapper-max` | Semantic | `80rem` |  |  |

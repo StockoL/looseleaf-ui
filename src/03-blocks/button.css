@@ -5,14 +5,14 @@
 .button {
   /* Internal state variables with sensible default (Murmur) */
   --button-bg: transparent;
-  --button-text: var(--colors-text-base);
-  --button-border: var(--colors-border-subtle);
+  --button-text: var(--color-text);
+  --button-border: var(--color-border);
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs); /* For icons */
-  padding: var(--spacing-xs) var(--spacing-md);
+  gap: var(--space-2xs); /* For icons */
+  padding: var(--inset-control);
 
   background-color: var(--button-bg);
   color: var(--button-text);
@@ -20,13 +20,13 @@
   border-radius: 4px;
 
   font-family: inherit;
-  font-size: var(--typography-step-0);
+  font-size: var(--text-body);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition:
-    filter var(--transitions-dur-base) ease,
-    background-color var(--transitions-dur-base) ease;
+    filter var(--duration-base) ease,
+    background-color var(--duration-base) ease;
 }
 
 /* 
@@ -43,7 +43,7 @@
  * We only need to redefine the variables, not the CSS rules!
  */
 .button[data-variant="primary"] {
-  --button-bg: var(--colors-action-primary);
-  --button-text: var(--colors-text-on-action);
-  --button-border: var(--colors-action-primary);
+  --button-bg: var(--color-action);
+  --button-text: var(--color-action-text);
+  --button-border: var(--color-action);
 }
