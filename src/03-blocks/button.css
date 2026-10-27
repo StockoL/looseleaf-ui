@@ -3,10 +3,10 @@
    ========================================================================== */
 
 .button {
-  /* Internal state variables with sensible default (Murmur) */
-  --button-bg: transparent;
-  --button-text: var(--color-text);
-  --button-border: var(--color-border);
+  /* Internal state variables; the default style is a token (outlined or filled) */
+  --button-bg: var(--button-default-bg);
+  --button-text: var(--button-default-text);
+  --button-border: var(--button-default-border);
 
   display: inline-flex;
   align-items: center;

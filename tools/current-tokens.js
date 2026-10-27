@@ -278,6 +278,17 @@ export default {
     "nav": 50,
     "popover": 100
   },
+  "button": {
+    "$purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action).",
+    "default-bg": "transparent",
+    "default-text": "{color.text}",
+    "default-border": "{color.border}"
+  },
+  "link": {
+    "$purpose": "Decoration of unstyled anchors: underlined always, or only on hover.",
+    "decoration": "underline",
+    "decoration-hover": "underline"
+  },
   "measure": {
     "$value": "60ch",
     "$purpose": "Typographic reading width (.center, prose)."

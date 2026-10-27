@@ -315,6 +315,15 @@ textarea:not([rows]) {
   --layer-nav: 50;
   --layer-popover: 100;
 
+  /* --- button: Style of a .button with no data-variant: outlined (transparent) or filled (action). --- */
+  --button-default-bg: transparent;
+  --button-default-text: var(--color-text);
+  --button-default-border: var(--color-border);
+
+  /* --- link: Decoration of unstyled anchors: underlined always, or only on hover. --- */
+  --link-decoration: underline;
+  --link-decoration-hover: underline;
+
   /* --- measure: Typographic reading width (.center, prose). --- */
   --measure: 60ch;
 
@@ -406,6 +415,19 @@ body {
   color: var(--color-text);
   background-color: var(--color-surface);
   overflow-wrap: break-word;
+}
+
+/* Unstyled anchors: link colour, decoration from tokens */
+a:not([class]) {
+  color: var(--color-link);
+  text-decoration-line: var(--link-decoration);
+  text-underline-offset: 0.15em;
+}
+
+@media (hover: hover) {
+  a:not([class]):hover {
+    text-decoration-line: var(--link-decoration-hover);
+  }
 }
 
 /* 
@@ -653,10 +675,10 @@ h4 {
    ========================================================================== */
 
 .button {
-  /* Internal state variables with sensible default (Murmur) */
-  --button-bg: transparent;
-  --button-text: var(--color-text);
-  --button-border: var(--color-border);
+  /* Internal state variables; the default style is a token (outlined or filled) */
+  --button-bg: var(--button-default-bg);
+  --button-text: var(--button-default-text);
+  --button-border: var(--button-default-border);
 
   display: inline-flex;
   align-items: center;

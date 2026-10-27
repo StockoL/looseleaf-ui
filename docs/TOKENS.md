@@ -341,6 +341,25 @@ Stacking order. Dialogs use the top layer and need no token.
 | `--layer-nav` | Semantic | `50` |  |  |
 | `--layer-popover` | Semantic | `100` |  |  |
 
+### button
+
+Style of a .button with no data-variant: outlined (transparent) or filled (action).
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--button-default-bg` | Semantic | `transparent` |  |  |
+| `--button-default-text` | Semantic | `#18181d` | `#f4f4fc` |  |
+| `--button-default-border` | Semantic | `#e4e4eb` | `#26262b` |  |
+
+### link
+
+Decoration of unstyled anchors: underlined always, or only on hover.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--link-decoration` | Semantic | `underline` |  |  |
+| `--link-decoration-hover` | Semantic | `underline` |  |  |
+
 ### measure
 
 Typographic reading width (.center, prose).

@@ -186,6 +186,15 @@
   --layer-nav: 50;
   --layer-popover: 100;
 
+  /* --- button: Style of a .button with no data-variant: outlined (transparent) or filled (action). --- */
+  --button-default-bg: transparent;
+  --button-default-text: var(--color-text);
+  --button-default-border: var(--color-border);
+
+  /* --- link: Decoration of unstyled anchors: underlined always, or only on hover. --- */
+  --link-decoration: underline;
+  --link-decoration-hover: underline;
+
   /* --- measure: Typographic reading width (.center, prose). --- */
   --measure: 60ch;
 

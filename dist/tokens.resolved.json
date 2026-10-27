@@ -1178,6 +1178,51 @@
     "overridden": false,
     "purpose": "Stacking order. Dialogs use the top layer and need no token."
   },
+  "button.default-bg": {
+    "name": "--button-default-bg",
+    "tier": 2,
+    "light": "transparent",
+    "dark": "transparent",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
+  },
+  "button.default-text": {
+    "name": "--button-default-text",
+    "tier": 2,
+    "light": "#18181d",
+    "dark": "#f4f4fc",
+    "themed": true,
+    "overridden": false,
+    "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
+  },
+  "button.default-border": {
+    "name": "--button-default-border",
+    "tier": 2,
+    "light": "#e4e4eb",
+    "dark": "#26262b",
+    "themed": true,
+    "overridden": false,
+    "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
+  },
+  "link.decoration": {
+    "name": "--link-decoration",
+    "tier": 2,
+    "light": "underline",
+    "dark": "underline",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Decoration of unstyled anchors: underlined always, or only on hover."
+  },
+  "link.decoration-hover": {
+    "name": "--link-decoration-hover",
+    "tier": 2,
+    "light": "underline",
+    "dark": "underline",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Decoration of unstyled anchors: underlined always, or only on hover."
+  },
   "measure": {
     "name": "--measure",
     "tier": 2,

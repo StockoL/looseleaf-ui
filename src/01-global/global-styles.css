@@ -12,6 +12,19 @@ body {
   overflow-wrap: break-word;
 }
 
+/* Unstyled anchors: link colour, decoration from tokens */
+a:not([class]) {
+  color: var(--color-link);
+  text-decoration-line: var(--link-decoration);
+  text-underline-offset: 0.15em;
+}
+
+@media (hover: hover) {
+  a:not([class]):hover {
+    text-decoration-line: var(--link-decoration-hover);
+  }
+}
+
 /* 
  * Typographic Measure 
  * Restricts the line length of text elements to an optimal reading width.
