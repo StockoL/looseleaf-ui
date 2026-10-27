@@ -1,0 +1,11 @@
+/* ==========================================================================
+   BLOCK: TEXTAREA
+   Shares the form-control base in input.css; running text gets body leading
+   and only grows vertically, so it never breaks the layout's width.
+   ========================================================================== */
+
+.textarea {
+  display: block;
+  line-height: var(--leading-body);
+  resize: vertical;
+}

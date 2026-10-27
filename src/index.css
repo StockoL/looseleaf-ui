@@ -32,7 +32,10 @@
    -------------------------------------------------------------------------- */
 @import "03-blocks/skip-link.css" layer(blocks);
 @import "03-blocks/button.css" layer(blocks);
+@import "03-blocks/field.css" layer(blocks);
 @import "03-blocks/input.css" layer(blocks);
+@import "03-blocks/select.css" layer(blocks);
+@import "03-blocks/textarea.css" layer(blocks);
 @import "03-blocks/badge.css" layer(blocks);
 @import "03-blocks/accordion.css" layer(blocks);
 @import "03-blocks/dropdown.css" layer(blocks);

@@ -997,45 +997,173 @@ a:not([class]) {
 
 @layer blocks {
 /* ==========================================================================
-   BLOCK: FORM CONTROLS
+   BLOCK: FIELD
+   A label, its control, an optional hint and an optional error, in order.
+   Wire them with for/id and aria-describedby; the error uses role="alert".
    ========================================================================== */
+
+.field {
+  display: grid;
+  gap: var(--field-gap, var(--space-3xs));
+}
 
 .label {
   display: block;
-  line-height: var(--leading-tight);
-  font-weight: var(--weight-semibold);
   font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
   color: var(--color-text);
 }
 
-.input {
-  width: 100%; /* Allows layout compositions to dictate actual width */
+.field__hint {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.field__error {
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-status-danger-text);
+}
+
+/* A control and its companion side by side: a slider and its number, an input and a button */
+.field__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.field__controls > [type="range"] {
+  flex: 1 1 8rem;
+}
+
+/* CUBE Exception: error state, from either the field or the control itself */
+.field[data-status="danger"] :is(.input, .select, .textarea),
+:is(.input, .select, .textarea)[aria-invalid="true"] {
+  --control-border: var(--color-status-danger);
+  --control-bg: var(--color-status-danger-surface);
+}
+
+/* CUBE Exception: a disabled control mutes its label */
+.field:has(:disabled) .label {
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Fieldset: groups related controls (checkbox and radio groups)
+   -------------------------------------------------------------------------- */
+.fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-block-end: var(--space-2xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: INPUT (and the shared form-control base)
+   .input, .select and .textarea share one look; select.css and textarea.css
+   add only what is specific to them. Text stays at --text-body so iOS
+   Safari never zooms the page on focus.
+   ========================================================================== */
+
+:is(.input, .select, .textarea) {
+  --control-bg: var(--color-surface);
+  --control-border: var(--color-border);
+
+  inline-size: 100%; /* compositions decide the actual width */
   min-block-size: var(--target-min);
+  padding: var(--inset-control);
   font-family: inherit;
   font-size: var(--text-body);
   line-height: var(--leading-tight);
   color: var(--color-text);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
   border-radius: var(--radius-control);
-  padding: var(--inset-control);
   transition: border-color var(--duration-quick) var(--ease-standard);
 }
 
+:is(.input, .select, .textarea)::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
 /* The global :focus-visible ring is the focus indicator; the border follows it */
-.input:focus-visible {
-  border-color: var(--color-focus);
+:is(.input, .select, .textarea):focus-visible {
+  --control-border: var(--color-focus);
 }
 
-.input[aria-invalid="true"] {
-  border-color: var(--color-status-danger);
-  background-color: var(--color-status-danger-surface);
+@media (hover: hover) {
+  :is(.input, .select, .textarea):hover:not(:disabled, :focus-visible, [aria-invalid="true"]) {
+    --control-border: var(--color-border-strong);
+  }
 }
 
-.input:disabled {
-  background-color: var(--color-surface-sunken);
+:is(.input, .select, .textarea):disabled {
+  --control-bg: var(--color-surface-sunken);
   color: var(--color-text-muted);
   cursor: not-allowed;
+}
+
+/* CUBE Exception: range sliders keep the native thumb, coloured by accent-color */
+.input[type="range"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  accent-color: var(--color-action);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: SELECT
+   Shares the form-control base in input.css. The chevron is two
+   currentColor gradients, so it follows the text colour in both schemes.
+   ========================================================================== */
+
+.select {
+  appearance: none;
+  padding-inline-end: calc(var(--space-s) + 1.5em);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - var(--space-s) - 0.35em) 50%,
+    calc(100% - var(--space-s)) 50%;
+  background-size: 0.35em 0.35em;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* CUBE Exception: a list box shows its options, so it needs no chevron */
+.select:is([multiple], [size]:not([size="1"])) {
+  padding-inline-end: var(--space-s);
+  background-image: none;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: TEXTAREA
+   Shares the form-control base in input.css; running text gets body leading
+   and only grows vertically, so it never breaks the layout's width.
+   ========================================================================== */
+
+.textarea {
+  display: block;
+  line-height: var(--leading-body);
+  resize: vertical;
 }
 }
 
