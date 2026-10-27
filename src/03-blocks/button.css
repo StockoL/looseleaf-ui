@@ -21,6 +21,7 @@
 
   font-family: inherit;
   font-size: var(--text-body);
+  line-height: var(--leading-tight);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
