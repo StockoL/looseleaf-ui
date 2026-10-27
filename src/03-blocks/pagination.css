@@ -6,6 +6,10 @@
        <li><span class="pagination__gap" aria-hidden="true">…</span></li>
    ========================================================================== */
 
+.pagination {
+  font-variant-numeric: tabular-nums;
+}
+
 .pagination__list {
   display: flex;
   flex-wrap: wrap;
@@ -24,7 +28,6 @@
   min-inline-size: var(--target-min);
   padding-inline: var(--space-2xs);
   border-radius: var(--radius-control);
-  font-variant-numeric: tabular-nums;
 }
 
 .pagination__link {

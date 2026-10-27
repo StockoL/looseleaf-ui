@@ -2115,6 +2115,10 @@ a:not([class]) {
        <li><span class="pagination__gap" aria-hidden="true">…</span></li>
    ========================================================================== */
 
+.pagination {
+  font-variant-numeric: tabular-nums;
+}
+
 .pagination__list {
   display: flex;
   flex-wrap: wrap;
@@ -2133,7 +2137,6 @@ a:not([class]) {
   min-inline-size: var(--target-min);
   padding-inline: var(--space-2xs);
   border-radius: var(--radius-control);
-  font-variant-numeric: tabular-nums;
 }
 
 .pagination__link {
@@ -2177,6 +2180,10 @@ a:not([class]) {
    The separators are decorative and hidden from assistive tech.
    ========================================================================== */
 
+.breadcrumb {
+  font-size: var(--text-small);
+}
+
 .breadcrumb__list {
   display: flex;
   flex-wrap: wrap;
@@ -2184,7 +2191,6 @@ a:not([class]) {
   gap: var(--space-3xs);
   margin: 0;
   padding: 0;
-  font-size: var(--text-small);
 }
 
 .breadcrumb__item {
