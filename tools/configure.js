@@ -74,6 +74,7 @@
   const clone = (value) => JSON.parse(JSON.stringify(value));
   let draft = loadInitialDraft();
   let compiled = null;
+  let draftError = null; // set while the draft fails to compile; exports refuse to run
   let theme = "auto";
   let viewport = readViewport();
   let uid = 0;
@@ -582,10 +583,12 @@
     try {
       compiled = lib.compile(draft);
     } catch (error) {
+      draftError = error.message;
       dom.errors.textContent = `The draft does not compile, so the preview is paused: ${error.message}`;
       dom.errors.hidden = false;
       return;
     }
+    draftError = null;
     dom.errors.hidden = true;
     postTokens();
     renderers.forEach((renderer) => renderer());
@@ -660,21 +663,98 @@
   /* ------------------------------------------------------------------------
      TOOLBAR ACTIONS
      ------------------------------------------------------------------------ */
-  function exportDraft() {
-    const output = clone(draft);
+  // Every export records the looseleaf-ui version it came from and when.
+  function exportMeta() {
+    return { $version: lib.VERSION, $generated: new Date().toISOString() };
+  }
+
+  function sourceJson(meta) {
+    const { $version, $generated, ...rest } = clone(draft);
+    const output = { ...meta, ...rest };
     const families = webFonts();
     if (families.length) {
       output._comment_fonts = `Web fonts used: ${families.join(", ")}. The configurator only loaded them for its preview; this project must load them itself.`;
     } else {
       delete output._comment_fonts;
     }
-    const blob = new Blob([JSON.stringify(output, null, 2) + "\n"], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = el("a", { href: url, download: "design-tokens.json" });
+    return JSON.stringify(output, null, 2) + "\n";
+  }
+
+  function tokensCss() {
+    return lib.themeStylesheet(compiled.css, fontImport());
+  }
+
+  function themeReadme(meta) {
+    const families = webFonts();
+    return [
+      `LooseLeaf UI theme, exported ${meta.$generated.slice(0, 10)} from looseleaf-ui ${meta.$version}`,
+      "",
+      "Files",
+      "  looseleaf-tokens.css   Your tokens, compiled. Load it after looseleaf.css.",
+      "  tokens.resolved.json   Every token's resolved value (read by django-looseleaf).",
+      "  design-tokens.json     The source. Import it into the configurator to keep editing.",
+      "",
+      "Django",
+      "  Unzip these files into an app's static/theme/ folder (or a STATICFILES_DIRS",
+      "  entry), then in settings.py:",
+      "",
+      '    INSTALLED_APPS = [..., "django.forms", "django_looseleaf"]',
+      '    LOOSELEAF_THEME = "theme"',
+      "",
+      "  {% looseleaf_css %} then loads this theme after the base stylesheet.",
+      "",
+      "Plain HTML",
+      `  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v${meta.$version}/dist/looseleaf.css">`,
+      '  <link rel="stylesheet" href="looseleaf-tokens.css">',
+      ...(families.length
+        ? ["", `Web fonts: ${families.join(", ")}. looseleaf-tokens.css imports them from Google Fonts.`]
+        : []),
+      "",
+    ].join("\n");
+  }
+
+  function download(filename, data, type) {
+    const url = URL.createObjectURL(new Blob([data], { type }));
+    const link = el("a", { href: url, download: filename });
     document.body.append(link);
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  // A stale compile must never be exported: the draft on screen is what ships.
+  function exportable() {
+    if (!draftError) return true;
+    window.alert(`Fix the draft before exporting: ${draftError}`);
+    return false;
+  }
+
+  function exportSource() {
+    if (exportable()) download("design-tokens.json", sourceJson(exportMeta()), "application/json");
+  }
+
+  function exportBundle() {
+    if (!exportable()) return;
+    const meta = exportMeta();
+    const archive = lib.zip([
+      { name: "looseleaf-tokens.css", data: tokensCss() },
+      { name: "tokens.resolved.json", data: JSON.stringify(lib.resolvedTokens(compiled.tokens, meta), null, 2) + "\n" },
+      { name: "design-tokens.json", data: sourceJson(meta) },
+      { name: "README.txt", data: themeReadme(meta) },
+    ]);
+    download("looseleaf-theme.zip", archive, "application/zip");
+  }
+
+  async function copyTokensCss(item) {
+    if (!exportable()) return;
+    const label = item.textContent;
+    try {
+      await navigator.clipboard.writeText(tokensCss());
+      item.textContent = "Copied";
+    } catch {
+      item.textContent = "Copy failed";
+    }
+    setTimeout(() => (item.textContent = label), 2000);
   }
 
   async function copyLink() {
@@ -790,18 +870,13 @@
       postTheme();
     });
 
-    document.getElementById("export").addEventListener("click", exportDraft);
+    const exports = { bundle: exportBundle, source: exportSource, css: copyTokensCss };
+    document.querySelectorAll("[data-export]").forEach((item) =>
+      item.addEventListener("click", () => exports[item.dataset.export](item)),
+    );
     document.getElementById("reset").addEventListener("click", reset);
     dom.copyLink.addEventListener("click", copyLink);
-
-    document.querySelector('[data-open-dialog="import-dialog"]').addEventListener("click", () => dom.importDialog.showModal());
-    dom.importDialog.querySelector("[data-close-dialog]").addEventListener("click", () => dom.importDialog.close());
-    dom.importDialog.addEventListener("click", (event) => {
-      if (event.target !== dom.importDialog) return;
-      const rect = dom.importDialog.getBoundingClientRect();
-      const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
-      if (!inside) dom.importDialog.close();
-    });
+    // Opening and closing the import dialog (and the export menu) is handled by looseleaf.js.
 
     dom.importFile.addEventListener("change", () => dom.importFile.files[0] && importFile(dom.importFile.files[0]));
     dom.dropzone.addEventListener("dragover", (event) => {

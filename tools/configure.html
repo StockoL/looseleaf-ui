@@ -12,6 +12,8 @@
     <script src="tokens-lib.js"></script>
     <script src="current-tokens.js"></script>
     <script src="configure.js" defer></script>
+    <!-- The shipped behaviours: export menu, import dialog -->
+    <script src="../dist/looseleaf.js" defer></script>
   </head>
   <body>
     <svg class="visually-hidden" aria-hidden="true">
@@ -47,7 +49,17 @@
 
           <div class="cluster" style="--gutter: var(--space-2xs);">
             <button class="button" type="button" data-open-dialog="import-dialog">Import</button>
-            <button class="button" type="button" id="export">Export</button>
+            <div class="dropdown-wrapper">
+              <button class="button" type="button" id="export-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export <svg class="icon" aria-hidden="true"><use href="#icon-chevron" /></svg>
+              </button>
+              <div class="dropdown" data-align="end" role="menu" style="--dropdown-width: 16rem;">
+                <button class="dropdown__item" type="button" role="menuitem" data-export="bundle">Theme bundle (.zip)</button>
+                <button class="dropdown__item" type="button" role="menuitem" data-export="source">Tokens source (design-tokens.json)</button>
+                <hr class="dropdown__divider" />
+                <button class="dropdown__item" type="button" role="menuitem" data-export="css">Copy tokens CSS</button>
+              </div>
+            </div>
             <button class="button" type="button" id="copy-link">
               <span data-label="idle">Copy link</span>
               <span data-label="copied">Copied</span>
