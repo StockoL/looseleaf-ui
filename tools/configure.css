@@ -1,16 +1,12 @@
 /* ==========================================================================
    TOOLS: TOKEN CONFIGURATOR
-   App-shell styles only. Rules marked PROMOTE are stopgaps for blocks that
-   land in src/ in Phase 5; pass 2 deletes them in favour of the real block.
+   App-shell styles only: frame sizing and the few pieces that exist nowhere
+   else. Everything reusable is a block or composition in src/.
    ========================================================================== */
 
 @layer tools {
-  /* ------------------------------------------------------------------------
-     APP SHELL
-     ------------------------------------------------------------------------ */
   body {
     --sticky-offset: 4rem; /* measured from the toolbar by configure.js */
-    min-block-size: 100dvh;
   }
 
   .configurator__toolbar {
@@ -34,10 +30,16 @@
     padding: var(--space-s);
   }
 
-  .configurator__controls > * + * {
-    margin-block-start: var(--space-s);
+  /* Number inputs beside sliders stay compact */
+  .configurator__controls .field__controls > .input-group {
+    flex: 0 0 8rem;
   }
 
+  .configurator__controls .input-group > .input {
+    padding-inline: var(--space-2xs);
+  }
+
+  /* The preview pane: the iframe is sized and scaled by configure.js */
   .configurator__preview {
     position: relative;
     block-size: calc(100dvh - var(--sticky-offset));
@@ -53,17 +55,18 @@
     transform-origin: top left;
   }
 
+  /* Resolved type and space steps */
   .configurator__scale-list {
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: var(--space-3xs) var(--space-xs);
     align-items: baseline;
-    font-size: var(--text-small);
     margin: 0;
+    font-size: var(--text-small);
   }
 
   .configurator__scale-list dt {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-mono);
   }
 
   .configurator__scale-list dd {
@@ -71,12 +74,23 @@
     color: var(--color-text-muted);
   }
 
-  .configurator__swatches {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
-    gap: var(--space-2xs);
+  /* Override picker and revert button under each generated swatch */
+  .configurator__swatch-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
   }
 
+  .configurator__swatch-actions [type="color"] {
+    inline-size: 2rem;
+    block-size: 1.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* Import drop target */
   .configurator__dropzone {
     display: grid;
     gap: var(--space-xs);
@@ -90,233 +104,5 @@
   .configurator__dropzone[data-state="dragover"] {
     border-color: var(--color-action);
     background-color: var(--color-surface-sunken);
-  }
-
-  /* ------------------------------------------------------------------------
-     STOPGAPS
-     ------------------------------------------------------------------------ */
-
-  /* PROMOTE: navbar[data-sticky] */
-  .navbar[data-sticky] {
-    position: sticky;
-    inset-block-start: 0;
-  }
-
-  /* PROMOTE: accordion (native details) */
-  summary.accordion__trigger {
-    list-style: none;
-    min-block-size: 2.75rem;
-    user-select: none;
-  }
-
-  summary.accordion__trigger::-webkit-details-marker {
-    display: none;
-  }
-
-  .accordion__item[open] > .accordion__content {
-    padding-block: var(--space-2xs) var(--inset-surface);
-  }
-
-  .accordion__trigger .icon {
-    transition: transform var(--duration-base) var(--ease-standard);
-  }
-
-  .accordion__item[open] > .accordion__trigger .icon {
-    transform: rotate(180deg);
-  }
-
-  /* PROMOTE: icon */
-  .icon {
-    inline-size: 1em;
-    block-size: 1em;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-
-  /* PROMOTE: field */
-  .field {
-    display: grid;
-    gap: var(--space-3xs);
-  }
-
-  .field__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
-  }
-
-  .field__controls > [type="range"] {
-    flex: 1;
-  }
-
-  .field__controls > .input-group {
-    flex: 0 0 8rem;
-  }
-
-  .field__hint {
-    font-size: var(--text-small);
-    color: var(--color-text-muted);
-  }
-
-  .field__error {
-    font-size: var(--text-small);
-    color: var(--color-status-danger-text);
-  }
-
-  /* PROMOTE: input[type="range"] */
-  .input[type="range"] {
-    padding: 0;
-    border: 0;
-    background: none;
-    accent-color: var(--color-action);
-    min-block-size: 2.75rem;
-  }
-
-  /* PROMOTE: input-group */
-  .input-group {
-    display: flex;
-  }
-
-  .input-group > .input {
-    min-inline-size: 0;
-    padding-inline: var(--space-2xs);
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
-  }
-
-  .input-group__addon {
-    display: inline-flex;
-    align-items: center;
-    padding-inline: var(--space-2xs);
-    border: 1px solid var(--color-border);
-    border-inline-start: 0;
-    border-start-end-radius: var(--radius-control);
-    border-end-end-radius: var(--radius-control);
-    background-color: var(--color-surface-sunken);
-    color: var(--color-text-muted);
-    font-size: var(--text-small);
-  }
-
-  /* PROMOTE: choice-group[data-variant="segmented"] */
-  .choice-group[data-variant="segmented"] {
-    display: inline-flex;
-    margin: 0;
-    padding: 0;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-control);
-    overflow: hidden;
-  }
-
-  .choice-group[data-variant="segmented"] > label {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: 2.75rem;
-    padding: var(--inset-control);
-    font-weight: var(--weight-medium);
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .choice-group[data-variant="segmented"] > label + input + label {
-    border-inline-start: 1px solid var(--color-border);
-  }
-
-  .choice-group[data-variant="segmented"] > input:checked + label {
-    background-color: var(--color-action);
-    color: var(--color-action-text);
-  }
-
-  .choice-group[data-variant="segmented"] > input:focus-visible + label {
-    outline: 2px solid var(--color-focus);
-    outline-offset: -2px;
-  }
-
-  /* PROMOTE: swatch */
-  .swatch {
-    --swatch-color: var(--color-surface-sunken);
-    display: grid;
-    gap: var(--space-3xs);
-    padding: var(--space-3xs);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-surface);
-    font-size: var(--text-small);
-  }
-
-  .swatch__tile {
-    display: block;
-    block-size: 2.5rem;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--color-border);
-    background-color: var(--swatch-color);
-  }
-
-  .swatch__hex {
-    font-family: ui-monospace, monospace;
-  }
-
-  .swatch__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3xs);
-  }
-
-  .swatch__actions [type="color"] {
-    inline-size: 2rem;
-    block-size: 1.75rem;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-  }
-
-  .swatch[data-state="overridden"] {
-    border-color: var(--color-action);
-  }
-
-  /* PROMOTE: button[data-size="small"] */
-  .button[data-size="small"] {
-    padding: var(--space-3xs) var(--space-2xs);
-    font-size: var(--text-small);
-  }
-
-  /* PROMOTE: button[data-state="copied"] */
-  .button [data-label="copied"],
-  .button[data-state="copied"] [data-label="idle"] {
-    display: none;
-  }
-
-  .button[data-state="copied"] [data-label="copied"] {
-    display: inline;
-  }
-
-  /* PROMOTE: table */
-  .table-wrapper {
-    overflow-x: auto;
-    overscroll-behavior: contain;
-  }
-
-  .table {
-    inline-size: 100%;
-    border-collapse: collapse;
-  }
-
-  .table th,
-  .table td {
-    padding: var(--space-2xs);
-    border-block-end: 1px solid var(--color-border);
-    text-align: start;
-    vertical-align: middle;
-  }
-
-  .table[data-density="compact"] {
-    font-size: var(--text-small);
-  }
-
-  .table[data-density="compact"] :is(th, td) {
-    padding: var(--space-3xs) var(--space-2xs);
   }
 }

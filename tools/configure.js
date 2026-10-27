@@ -348,7 +348,7 @@
   }
 
   function paletteGrid(section, group) {
-    const grid = el("div", { class: "configurator__swatches" });
+    const grid = el("div", { class: "grid", style: "--grid-min-item-size: 5.5rem; --gutter: var(--space-2xs);" });
     swatchGrids.set(group, grid);
     section.append(grid);
   }
@@ -365,7 +365,7 @@
       el("span", { class: "swatch__tile" }),
       el("span", { class: "swatch__label" }, key),
       hex,
-      el("span", { class: "swatch__actions" }, picker, revert),
+      el("span", { class: "configurator__swatch-actions" }, picker, revert),
       badge,
     );
 
