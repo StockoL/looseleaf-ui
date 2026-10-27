@@ -46,12 +46,19 @@
   transform: translateY(0);
 }
 
+/* Items may be links or buttons; buttons lose their native chrome */
 .dropdown__item {
   display: flex;
   align-items: center;
+  inline-size: 100%;
   min-block-size: var(--target-min);
   touch-action: manipulation;
   padding: var(--inset-control);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
   color: var(--color-text);
   text-decoration: none;
   border-radius: var(--radius-control);
