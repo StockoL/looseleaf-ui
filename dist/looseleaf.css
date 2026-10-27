@@ -419,6 +419,15 @@ body {
   overflow-wrap: break-word;
 }
 
+/*
+ * The reset removes only end margins. Vertical rhythm belongs to .flow, so
+ * start margins go too; otherwise the first heading in a card, dialog or
+ * cluster carries a stray user-agent gap.
+ */
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) {
+  margin-block-start: 0;
+}
+
 /* The one focus style. No block may set outline: none. */
 :focus-visible {
   outline: 2px solid var(--color-focus);
