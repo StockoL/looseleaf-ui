@@ -1226,6 +1226,7 @@ a:not([class]) {
   --navbar-bg: var(--color-surface);
   --navbar-border: var(--color-border);
 
+  container: navbar / inline-size;
   background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
@@ -1272,58 +1273,65 @@ a:not([class]) {
   }
 }
 
-/* Mobile Toggle Behavior */
-@media (max-width: 44.99rem) {
+/*
+ * Menu: a wrapping row of links. It owns its own layout, so the markup
+ * needs no inner composition.
+ */
+.navbar__menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--navbar-menu-space, var(--space-2xs));
+}
+
+/* Toggle: only shown once the navbar is too narrow for the menu */
+.navbar__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-2xs);
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/*
+ * Collapsed navbar (narrower than 45rem, the documented menu-collapse
+ * constant). Driven by the navbar's own width, not the viewport, so it
+ * also collapses inside a narrow column or iframe.
+ */
+@container navbar (width < 45rem) {
+  .navbar__toggle {
+    display: inline-flex;
+  }
+
   .navbar__menu {
     display: none;
     flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
     padding-block-start: var(--space-s);
   }
 
   .navbar__menu[data-state="open"] {
-    display: block;
-    animation: fadeIn var(--duration-quick) var(--ease-standard);
-  }
-
-  /* Force vertical stacking on mobile by adjusting the inner cluster */
-  .navbar__menu .cluster {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: var(--color-text);
-    cursor: pointer;
-    padding: var(--space-2xs);
-    min-block-size: var(--target-min);
-    min-inline-size: var(--target-min);
-    touch-action: manipulation;
-    user-select: none;
+    display: flex;
+    animation: ll-navbar-reveal var(--duration-quick) var(--ease-standard);
   }
 }
 
-@media (min-width: 45rem) {
-  .navbar__toggle {
-    display: none;
-  }
-  .navbar__menu {
-    display: block !important;
-  }
-}
-
-@keyframes fadeIn {
+@keyframes ll-navbar-reveal {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(calc(var(--space-2xs) * -1));
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 }
