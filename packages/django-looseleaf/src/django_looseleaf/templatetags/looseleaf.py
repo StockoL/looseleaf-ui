@@ -6,7 +6,7 @@ from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 
-from .. import tokens
+from .. import controls, tokens
 
 register = template.Library()
 
@@ -76,3 +76,24 @@ def ll_token(path, scheme="light"):
         return tokens.get(path, scheme)
     except (KeyError, ValueError) as error:
         raise template.TemplateSyntaxError(str(error.args[0])) from None
+
+
+# ---------------------------------------------------------------------------
+# Forms (used by the renderer's templates; also usable on a single field)
+# ---------------------------------------------------------------------------
+@register.simple_tag
+def ll_widget(bound_field):
+    """A field's control with LooseLeaf classes, ARIA wiring and keyboard hints added."""
+    return bound_field.as_widget(attrs=controls.control_attrs(bound_field))
+
+
+@register.simple_tag
+def ll_field_kind(bound_field):
+    return controls.field_kind(bound_field)
+
+
+@register.simple_tag
+def ll_described_by(bound_field):
+    """ aria-describedby="…" pointing at the hint and error, or nothing."""
+    ids = controls.described_by(bound_field)
+    return format_html(' aria-describedby="{}"', ids) if ids else ""
