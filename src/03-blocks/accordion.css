@@ -32,10 +32,15 @@
   transition: background-color var(--duration-quick) ease;
 }
 
-.accordion__trigger:hover,
 .accordion__trigger:focus-visible {
   background-color: var(--color-surface-sunken);
   outline-offset: -2px; /* .accordion clips overflow, so draw the ring inside */
+}
+
+@media (hover: hover) {
+  .accordion__trigger:hover {
+    background-color: var(--color-surface-sunken);
+  }
 }
 
 /* Grid Interpolation Trick for Smooth Auto-Height */

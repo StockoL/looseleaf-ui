@@ -10,8 +10,10 @@
   will-change: transform;
 }
 
-.anim-lift:hover {
-  transform: translateY(calc(var(--space-2xs) * -1)) scale(1.02);
+@media (hover: hover) {
+  .anim-lift:hover {
+    transform: translateY(calc(var(--space-2xs) * -1)) scale(1.02);
+  }
 }
 
 /* --- The Ambient Mesh --- */
@@ -97,9 +99,14 @@
   animation: ll-marquee var(--marquee-speed) linear infinite;
 }
 
-.marquee:hover .marquee__track,
 .marquee:focus-within .marquee__track {
   animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes ll-marquee {

@@ -36,10 +36,16 @@
     background-color var(--duration-quick) ease;
 }
 
-.navbar__link:hover,
 .navbar__link:focus-visible {
   color: var(--color-text);
   background-color: var(--color-surface-sunken);
+}
+
+@media (hover: hover) {
+  .navbar__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-sunken);
+  }
 }
 
 /* Mobile Toggle Behavior */
