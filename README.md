@@ -78,29 +78,32 @@ To maintain a true Single Source of Truth across the entire tech stack (includin
 
 ### 1. Source Tokens (design-tokens.json)
 
-The token configuration defines colours, fluid curves, and structural layout metrics. Spacing and typographic scales contain guidance for integrating fluid scales generated via [https://utopia.fyi/](https://utopia.fyi/)
+`design-tokens.json` stores the *inputs* to the design, not hand-copied outputs:
 
-JSON Example:
+- `$utopia` holds the [Utopia](https://utopia.fyi/) settings (viewports, base sizes, ratios, space multipliers). The fluid `--step-*` type scale and `--space-*` scale are derived from them at build time.
+- `$palette` holds OKLCH hues and chromas. The `--neutral-*` ramp, the `--action-*` and `--accent-*` steps and every status colour (light and dark) are derived from it.
+- Everything else is a semantic token named by purpose, and these are the only tokens blocks use. Colour roles carry a light and a dark value, and `{group.key}` references another token.
 
-```JSON
+```json
 {
-  "colors": {
-    "surface-base": "#ffffff",
-    "surface-sunken": "#f4f4f5",
-    "text-base": "#18181b",
-    "action-primary": "#0070f3"
+  "$palette": { "action": { "hue": 255, "chroma": 0.2 } },
+  "color": {
+    "surface": { "light": "{neutral.0}", "dark": "{neutral.950}" },
+    "action": "{action.500}"
   },
-  "_comment_typography": "PROCESS: Configure fluid scales on [https://utopia.fyi/type/calculator/](https://utopia.fyi/type/calculator/) and paste steps below.",
-  "typography": {
-    "step-0": "clamp(1.00rem, 0.93rem + 0.36vw, 1.20rem)",
-    "step-1": "clamp(1.20rem, 1.07rem + 0.63vw, 1.55rem)"
-  }
+  "gutter": { "$value": "{space.s}", "$purpose": "Default gap inside compositions." }
 }
 ```
 
+To change a derived value, change its input. An explicit value inside a derived group (for example `"neutral": { "500": "#71717a" }`) wins and is flagged as overridden.
+
 ### 2. The Compiler (scripts/build-tokens.js)
 
-A lightweight, zero-dependency Node.js compiler reads design-tokens.json, filters out inline documentation comments, formats semantic CSS Custom Properties, and auto-generates src/01-global/variables.css.
+A zero-dependency Node.js wrapper around `scripts/tokens-core.mjs`, a pure compiler shared with the browser. It writes:
+
+- `src/01-global/variables.css`: light values on `:root`, dark values for `prefers-color-scheme: dark`, and a `[data-theme="dark"]` override
+- `dist/tokens.resolved.json`: every token fully resolved, for back-end use
+- [docs/TOKENS.md](docs/TOKENS.md): the generated reference of every token, its tier and its light and dark value, plus a WCAG contrast table
 
 ### 3. Execution Workflow
 
@@ -182,7 +185,7 @@ Layout compositions govern spacing and alignment without injecting aesthetic sty
 
 #### The Wrapper (.wrapper) vs. The Center (.center)
 
-Both cap a width and center it, but they are not interchangeable. `.wrapper` is the macro, page-section shell — apply it once per full-bleed section to align content to a wide, site-level edge margin (`--layout-wrapper-max-width`, default `80rem`), padding included in the cap. `.center` is a content primitive — apply it to prose or hero copy that must cap at the narrower typographic reading measure (`--layout-measure`, default `60ch`), using `box-sizing: content-box` so its gutter padding never eats into that measure, plus `[data-and-text]`/`[data-intrinsic]` exceptions for centering its own children. See [docs/COMPOSITIONS.md](docs/COMPOSITIONS.md#golden-rules) for the full breakdown and nesting pattern.
+Both cap a width and center it, but they are not interchangeable. `.wrapper` is the macro, page-section shell — apply it once per full-bleed section to align content to a wide, site-level edge margin (`--wrapper-max`, default `80rem`), padding included in the cap. `.center` is a content primitive — apply it to prose or hero copy that must cap at the narrower typographic reading measure (`--measure`, default `60ch`), using `box-sizing: content-box` so its gutter padding never eats into that measure, plus `[data-and-text]`/`[data-intrinsic]` exceptions for centering its own children. See [docs/COMPOSITIONS.md](docs/COMPOSITIONS.md#golden-rules) for the full breakdown and nesting pattern.
 
 #### The Flow (.flow)
 

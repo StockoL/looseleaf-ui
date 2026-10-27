@@ -192,7 +192,7 @@ A header containing a brand logo on the left, primary navigation links in the ce
       <a href="/" class="brand-logo">LooseLeaf UI</a>
 
       <!-- 3. INNER CLUSTER: Nav links grouped together with custom tight spacing -->
-      <nav class="cluster" style="--cluster-space: var(--spacing-sm);">
+      <nav class="cluster" style="--cluster-space: var(--space-xs);">
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
         <a href="#docs">Docs</a>
@@ -317,7 +317,7 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 <article class="card">
   <div
     class="sidebar"
-    style="--sidebar-target-width: 4rem; --sidebar-space: var(--spacing-md);"
+    style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
   >
     <!-- FIXED AVATAR ANCHOR -->
     <div class="media-object__avatar">
@@ -361,16 +361,16 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 @layer blocks {
   .button {
     /* Base Block Parameters */
-    --button-bg: var(--colors-surface-sunken);
-    --button-text: var(--colors-text-base);
-    --button-border: var(--colors-border-subtle);
+    --button-bg: var(--color-surface-sunken);
+    --button-text: var(--color-text);
+    --button-border: var(--color-border);
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--typography-step-0);
+    gap: var(--space-2xs);
+    padding: var(--space-xs) var(--space-m);
+    font-size: var(--text-body);
     font-weight: 600;
     line-height: 1.2;
     text-decoration: none;
@@ -380,8 +380,8 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
     border: 1px solid var(--button-border);
     cursor: pointer;
     transition:
-      transform var(--transitions-dur-fast) var(--transitions-spring-snappy),
-      background-color var(--transitions-dur-fast) ease;
+      transform var(--duration-quick) var(--ease-spring),
+      background-color var(--duration-quick) ease;
   }
 
   .button:hover {
@@ -389,19 +389,19 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
   }
 
   .button:focus-visible {
-    outline: 2px solid var(--colors-action-primary);
+    outline: 2px solid var(--color-action);
     outline-offset: 2px;
   }
 
   /* CUBE Exceptions (Attribute Driven) */
   .button[data-variant="primary"] {
-    --button-bg: var(--colors-action-primary);
+    --button-bg: var(--color-action);
     --button-text: #ffffff;
     --button-border: transparent;
   }
 
   .button[data-size="small"] {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--space-2xs) var(--space-xs);
     font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.95rem);
   }
 }
@@ -420,10 +420,10 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 ```css
 @layer blocks {
   .card {
-    --card-padding: var(--spacing-lg);
+    --card-padding: var(--space-l);
 
-    background-color: var(--colors-surface-base);
-    border: 1px solid var(--colors-border-subtle);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md, 0.5rem);
     padding: var(--card-padding);
     overflow: hidden;
@@ -455,28 +455,28 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
   .field {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: var(--space-2xs);
   }
 
   .label {
-    font-size: var(--typography-step-0);
+    font-size: var(--text-body);
     font-weight: 500;
-    color: var(--colors-text-base);
+    color: var(--color-text);
   }
 
   .input {
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--typography-step-0);
-    background-color: var(--colors-surface-base);
-    color: var(--colors-text-base);
-    border: 1px solid var(--colors-border-subtle);
+    padding: var(--space-xs) var(--space-m);
+    font-size: var(--text-body);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm, 0.375rem);
-    transition: border-color var(--transitions-dur-fast) ease;
+    transition: border-color var(--duration-quick) ease;
   }
 
   .input:focus-visible {
-    outline: 2px solid var(--colors-action-primary);
+    outline: 2px solid var(--color-action);
     outline-offset: 1px;
   }
 
@@ -499,8 +499,8 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 ```css
 @layer blocks {
   .badge {
-    --badge-bg: var(--colors-surface-sunken);
-    --badge-text: var(--colors-text-base);
+    --badge-bg: var(--color-surface-sunken);
+    --badge-text: var(--color-text);
 
     display: inline-flex;
     align-items: center;
