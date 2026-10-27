@@ -10,7 +10,8 @@
   overscroll-behavior: contain;
 }
 
-.table {
+/* Rendered prose tables share these rules (see prose.css) */
+:is(.table, .prose table) {
   --table-cell-padding: var(--space-2xs) var(--space-xs);
 
   inline-size: 100%;
@@ -18,21 +19,24 @@
   font-variant-numeric: tabular-nums;
 }
 
-.table caption {
+.table caption,
+.prose caption {
   caption-side: top;
   padding-block-end: var(--space-2xs);
   text-align: start;
   font-weight: var(--weight-semibold);
 }
 
-.table :is(th, td) {
+.table :is(th, td),
+.prose :is(th, td) {
   padding: var(--table-cell-padding);
   border-block-end: 1px solid var(--color-border);
   text-align: start;
   vertical-align: top;
 }
 
-.table thead th {
+.table thead th,
+.prose thead th {
   border-block-end-color: var(--color-border-strong);
   font-weight: var(--weight-semibold);
   white-space: nowrap;

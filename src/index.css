@@ -47,6 +47,7 @@
 @import "03-blocks/offcanvas.css" layer(blocks);
 @import "03-blocks/alert.css" layer(blocks);
 @import "03-blocks/table.css" layer(blocks);
+@import "03-blocks/prose.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)
