@@ -21,40 +21,17 @@
       });
     </script>
     <style>
-      /* Demo-only scaffolding — not part of the shipped library */
-      .demo-section {
-        padding-block: var(--space-xl);
-        border-bottom: 1px solid var(--color-border);
-      }
-      .demo-section:nth-of-type(odd) {
-        background-color: var(--color-surface-sunken);
-      }
-      .demo-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--color-text-muted);
-      }
+      /* Temporary: replaced by the .swatch block in Phase 5 */
       .swatch {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         block-size: 5rem;
-        border-radius: 8px;
+        border-radius: var(--radius-surface);
         border: 1px solid var(--color-border);
         padding: var(--space-2xs);
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
-      .placeholder-media {
-        min-height: 12rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        color: var(--color-action-text);
-        font-weight: 700;
+        font-size: var(--text-small);
+        font-weight: var(--weight-semibold);
       }
     </style>
   </head>
@@ -92,11 +69,11 @@
       <!-- ================================================================
            HERO — Wrapper > Switcher > Flow + Cluster (Case Study 1)
            ================================================================ -->
-      <section class="demo-section">
+      <section class="region bg-surface-sunken">
         <div class="wrapper">
           <div class="switcher" style="--switcher-threshold: 50rem;">
             <div class="flow">
-              <p class="demo-label">LooseLeaf UI</p>
+              <p class="text-small text-uppercase text-muted">LooseLeaf UI</p>
               <h1>Build resilient interfaces with CUBE CSS</h1>
               <p>
                 A lightweight, dependency-free design system that separates
@@ -110,12 +87,7 @@
                 <button class="button">Documentation</button>
               </div>
             </div>
-            <div
-              class="placeholder-media bg-mesh"
-              style="background-color: var(--color-action);"
-            >
-              <span>Media Slot</span>
-            </div>
+            <div class="frame bg-gradient" style="--frame-ratio: 4 / 3;" role="img" aria-label="Placeholder media"></div>
           </div>
         </div>
       </section>
@@ -123,7 +95,7 @@
       <!-- ================================================================
            DESIGN TOKENS — the palette built out this session
            ================================================================ -->
-      <section class="demo-section" id="tokens">
+      <section class="region" id="tokens">
         <div class="wrapper flow">
           <div class="center" data-and-text>
             <h2>Design Tokens</h2>
@@ -241,7 +213,7 @@
       <!-- ================================================================
            COMPOSITIONS
            ================================================================ -->
-      <section class="demo-section" id="compositions">
+      <section class="region bg-surface-sunken" id="compositions">
         <div class="wrapper flow">
           <h2>Compositions</h2>
 
@@ -250,14 +222,13 @@
             <article class="card">
               <div
                 class="card__body sidebar"
-                style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
+                style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m); --sidebar-align: flex-start;"
               >
                 <div
-                  class="placeholder-media"
-                  style="block-size: 4rem; inline-size: 4rem; border-radius: 999px; background-color: var(--color-action);"
-                >
-                  AL
-                </div>
+                  class="frame bg-gradient"
+                  style="--frame-ratio: 1; inline-size: 4rem; border-radius: var(--radius-pill);"
+                  aria-hidden="true"
+                ></div>
                 <div class="flow">
                   <blockquote>
                     "LooseLeaf UI completely transformed how our engineering
@@ -322,7 +293,7 @@
       <!-- ================================================================
            BLOCKS
            ================================================================ -->
-      <section class="demo-section" id="blocks">
+      <section class="region" id="blocks">
         <div class="wrapper flow">
           <h2>Blocks</h2>
 
@@ -486,7 +457,7 @@
       <!-- ================================================================
            UTILITIES
            ================================================================ -->
-      <section class="demo-section" id="utilities">
+      <section class="region bg-surface-sunken" id="utilities">
         <div class="wrapper flow">
           <h2>Utilities</h2>
 
@@ -533,7 +504,7 @@
       </section>
     </main>
 
-    <footer class="demo-section">
+    <footer class="region" data-size="small">
       <div class="wrapper">
         <p class="text-muted">LooseLeaf UI — live demo, not shipped as part of the library.</p>
       </div>
