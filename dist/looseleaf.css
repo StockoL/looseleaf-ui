@@ -787,15 +787,12 @@ a:not([class]) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-control);
   padding: var(--inset-control);
-  transition:
-    border-color var(--duration-quick) ease,
-    box-shadow var(--duration-quick) ease;
+  transition: border-color var(--duration-quick) var(--ease-standard);
 }
 
+/* The global :focus-visible ring is the focus indicator; the border follows it */
 .input:focus-visible {
-  outline: none;
-  border-color: var(--color-action);
-  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
+  border-color: var(--color-focus);
 }
 
 .input[aria-invalid="true"] {
@@ -900,7 +897,7 @@ a:not([class]) {
 .accordion__trigger:hover,
 .accordion__trigger:focus-visible {
   background-color: var(--color-surface-sunken);
-  outline: none;
+  outline-offset: -2px; /* .accordion clips overflow, so draw the ring inside */
 }
 
 /* Grid Interpolation Trick for Smooth Auto-Height */
@@ -994,7 +991,6 @@ a:not([class]) {
 .dropdown__item:focus-visible {
   background-color: var(--color-surface-sunken);
   color: var(--color-action);
-  outline: none;
 }
 
 .dropdown__divider {

@@ -57,7 +57,6 @@
 .dropdown__item:focus-visible {
   background-color: var(--color-surface-sunken);
   color: var(--color-action);
-  outline: none;
 }
 
 .dropdown__divider {

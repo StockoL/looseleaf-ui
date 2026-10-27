@@ -35,7 +35,7 @@
 .accordion__trigger:hover,
 .accordion__trigger:focus-visible {
   background-color: var(--color-surface-sunken);
-  outline: none;
+  outline-offset: -2px; /* .accordion clips overflow, so draw the ring inside */
 }
 
 /* Grid Interpolation Trick for Smooth Auto-Height */
