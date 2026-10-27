@@ -26,13 +26,13 @@
   background: transparent;
   border: none;
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   font-size: var(--text-body);
   min-block-size: var(--target-min);
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: background-color var(--duration-quick) ease;
+  transition: background-color var(--duration-quick) var(--ease-standard);
 }
 
 .accordion__trigger:focus-visible {

@@ -15,7 +15,7 @@
 }
 
 .navbar__brand {
-  font-weight: 800;
+  font-weight: var(--weight-bold);
   font-size: var(--text-lead);
   color: var(--color-text);
   text-decoration: none;
@@ -28,7 +28,7 @@
   min-block-size: var(--target-min);
   color: var(--color-text-muted);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   font-size: var(--text-body);
   padding: var(--inset-control);
   border-radius: var(--radius-control);

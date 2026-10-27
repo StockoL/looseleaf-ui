@@ -880,7 +880,7 @@ a:not([class]) {
   font-family: inherit;
   font-size: var(--text-body);
   line-height: var(--leading-tight);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   text-decoration: none;
   cursor: pointer;
   touch-action: manipulation;
@@ -929,7 +929,7 @@ a:not([class]) {
 .label {
   display: block;
   line-height: var(--leading-tight);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   font-size: var(--text-body);
   color: var(--color-text);
 }
@@ -978,7 +978,7 @@ a:not([class]) {
   align-items: center;
   justify-content: center;
   font-size: 0.85em;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   line-height: 1;
   padding: 0.25em 0.65em;
   border-radius: var(--radius-pill);
@@ -1046,13 +1046,13 @@ a:not([class]) {
   background: transparent;
   border: none;
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   font-size: var(--text-body);
   min-block-size: var(--target-min);
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: background-color var(--duration-quick) ease;
+  transition: background-color var(--duration-quick) var(--ease-standard);
 }
 
 .accordion__trigger:focus-visible {
@@ -1150,7 +1150,7 @@ a:not([class]) {
   text-decoration: none;
   border-radius: var(--radius-control);
   font-size: var(--text-body);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   transition:
     background-color var(--duration-quick) ease,
     color var(--duration-quick) ease;
@@ -1241,7 +1241,7 @@ a:not([class]) {
 }
 
 .navbar__brand {
-  font-weight: 800;
+  font-weight: var(--weight-bold);
   font-size: var(--text-lead);
   color: var(--color-text);
   text-decoration: none;
@@ -1254,7 +1254,7 @@ a:not([class]) {
   min-block-size: var(--target-min);
   color: var(--color-text-muted);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   font-size: var(--text-body);
   padding: var(--inset-control);
   border-radius: var(--radius-control);

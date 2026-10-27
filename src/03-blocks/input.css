@@ -5,7 +5,7 @@
 .label {
   display: block;
   line-height: var(--leading-tight);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   font-size: var(--text-body);
   color: var(--color-text);
 }
