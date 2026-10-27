@@ -96,16 +96,6 @@
      STOPGAPS
      ------------------------------------------------------------------------ */
 
-  /* PROMOTE: sidebar[data-sticky] */
-  .sidebar[data-sticky] > :first-child {
-    position: sticky;
-    inset-block-start: var(--sticky-offset, 0);
-    align-self: flex-start;
-    max-block-size: calc(100dvh - var(--sticky-offset, 0px));
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
   /* PROMOTE: navbar[data-sticky] */
   .navbar[data-sticky] {
     position: sticky;

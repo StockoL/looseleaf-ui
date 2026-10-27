@@ -630,26 +630,53 @@ a:not([class]) {
    COMPOSITION: SIDEBAR
    ========================================================================== */
 
-/* 
+/*
  * The Sidebar
- * An asymmetric layout where a sidebar holds its width, and the main 
+ * An asymmetric layout where a sidebar holds its width, and the main
  * content stretches to fill the rest, stacking when space runs out.
+ * The sidebar is the first child, or the last with [data-side="right"].
  */
 .sidebar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sidebar-space, var(--gutter, 1rem));
+  gap: var(--sidebar-space, var(--gutter));
 }
 
-.sidebar > :first-child {
+/* The sidebar: holds its target width */
+.sidebar:not([data-side="right"]) > :first-child,
+.sidebar[data-side="right"] > :last-child {
   flex-basis: var(--sidebar-target-width, 15rem);
   flex-grow: 1;
 }
 
-.sidebar > :last-child {
+/* The content: takes the rest, but never narrower than its minimum */
+.sidebar:not([data-side="right"]) > :last-child,
+.sidebar[data-side="right"] > :first-child {
   flex-basis: 0;
   flex-grow: 999;
   min-inline-size: var(--sidebar-content-min-width, 50%);
+}
+
+/*
+ * CUBE Exception: Sticky sidebar (app shells)
+ * The sidebar stays in view and scrolls on its own, offset below any sticky
+ * header via --sticky-offset. Only while the layout is wide enough to sit
+ * side by side; once stacked, a pinned panel would cover the content.
+ */
+.sidebar[data-sticky] {
+  container-type: inline-size;
+}
+
+@container (min-width: 45rem) {
+  .sidebar[data-sticky]:not([data-side="right"]) > :first-child,
+  .sidebar[data-sticky][data-side="right"] > :last-child {
+    position: sticky;
+    inset-block-start: var(--sticky-offset, 0px);
+    align-self: flex-start;
+    max-block-size: calc(100dvh - var(--sticky-offset, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 }
 }
 
