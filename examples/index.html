@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LooseLeaf UI — Live Demo</title>
     <link rel="stylesheet" href="../src/index.css" />
+    <!-- Configurator preview contract: tools/configure.html posts compiled tokens here -->
+    <style id="tokens"></style>
+    <script>
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent || window.parent === window) return;
+        const { type, css, theme } = event.data || {};
+        if (type === "looseleaf:tokens" && typeof css === "string") {
+          document.getElementById("tokens").textContent = css;
+        } else if (type === "looseleaf:theme") {
+          if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+          else if (theme === "auto") delete document.documentElement.dataset.theme;
+        }
+      });
+    </script>
     <style>
       /* Demo-only scaffolding — not part of the shipped library */
       .demo-section {
