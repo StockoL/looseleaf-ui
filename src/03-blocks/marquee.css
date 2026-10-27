@@ -1,0 +1,46 @@
+/* ==========================================================================
+   BLOCK: MARQUEE
+   Two identical tracks scrolling in a loop; the second is aria-hidden.
+   Pauses on hover (pointer devices) and whenever it holds focus, and stops
+   under reduced motion.
+   ========================================================================== */
+
+.marquee {
+  --marquee-duration: calc(var(--duration-slow) * 100);
+  --marquee-gap: var(--gutter);
+
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee__track {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--marquee-gap);
+  min-inline-size: 100%;
+  animation: ll-marquee var(--marquee-duration) linear infinite;
+}
+
+.marquee:focus-within .marquee__track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ll-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap)));
+  }
+}

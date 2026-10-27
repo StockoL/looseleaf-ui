@@ -50,6 +50,8 @@
 @import "03-blocks/prose.css" layer(blocks);
 @import "03-blocks/pagination.css" layer(blocks);
 @import "03-blocks/breadcrumb.css" layer(blocks);
+@import "03-blocks/marquee.css" layer(blocks);
+@import "03-blocks/bg-mesh.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)
