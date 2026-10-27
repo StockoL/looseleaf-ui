@@ -17,9 +17,9 @@
 .center {
   box-sizing: content-box; /* Crucial: padding doesn't subtract from our max-inline-size */
   display: block;
-  max-inline-size: var(--center-max-width, var(--measure, 60ch));
+  max-inline-size: var(--center-max-width, var(--measure));
   margin-inline: auto;
-  padding-inline: var(--center-gutters, var(--space-m, 1.5rem));
+  padding-inline: var(--center-gutters, var(--space-m));
 }
 
 /* Optional utility exception: centers the text alignment inside the center box too */
