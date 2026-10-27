@@ -45,6 +45,9 @@ TEMPLATES = [
 # The one line that gives every {{ form }} LooseLeaf markup
 FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"
 
+# The theme bundle exported from the configurator, unzipped into demo/static/theme/
+LOOSELEAF_THEME = "theme"
+
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
