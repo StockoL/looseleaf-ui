@@ -9,13 +9,13 @@
   --alert-text: var(--color-text);
 
   padding: var(--inset-surface);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   border: 1px solid var(--alert-border);
   background-color: var(--alert-bg);
   color: var(--alert-text);
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
 }
 
 /* 
@@ -53,7 +53,7 @@
   opacity: 0.7;
   cursor: pointer;
   padding: var(--space-2xs);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   transition:
     opacity var(--duration-quick),
     background-color var(--duration-quick);

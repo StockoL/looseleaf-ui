@@ -13,7 +13,7 @@
   font-weight: 600;
   line-height: 1;
   padding: 0.25em 0.65em;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background-color: var(--badge-bg);
   color: var(--badge-text);
 }
@@ -45,5 +45,5 @@
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: var(--layer-raised);
 }

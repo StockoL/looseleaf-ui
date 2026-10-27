@@ -9,7 +9,7 @@
   background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
-  z-index: 50;
+  z-index: var(--layer-nav);
   padding-block: var(--space-s);
 }
 
@@ -27,13 +27,13 @@
   font-weight: 500;
   font-size: var(--text-body);
   padding: var(--inset-control);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   background: transparent;
   border: none;
   cursor: pointer;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    color var(--duration-quick) ease,
+    background-color var(--duration-quick) ease;
 }
 
 .navbar__link:hover,

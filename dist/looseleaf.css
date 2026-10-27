@@ -667,7 +667,7 @@ h4 {
   background-color: var(--button-bg);
   color: var(--button-text);
   border: 1px solid var(--button-border);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
 
   font-family: inherit;
   font-size: var(--text-body);
@@ -718,7 +718,7 @@ h4 {
   color: var(--color-text);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   padding: var(--inset-control);
   transition:
     border-color var(--duration-quick) ease,
@@ -759,7 +759,7 @@ h4 {
   font-weight: 600;
   line-height: 1;
   padding: 0.25em 0.65em;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background-color: var(--badge-bg);
   color: var(--badge-text);
 }
@@ -791,7 +791,7 @@ h4 {
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: var(--layer-raised);
 }
 }
 
@@ -802,7 +802,7 @@ h4 {
 
 .accordion {
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   background-color: var(--color-surface);
   overflow: hidden;
 }
@@ -884,13 +884,13 @@ h4 {
   position: absolute;
   top: calc(100% + var(--dropdown-offset));
   left: 0;
-  z-index: 100;
+  z-index: var(--layer-popover);
   min-inline-size: var(--dropdown-width);
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   padding: var(--space-2xs);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-raised);
 
   /* Hidden State Physics */
   opacity: 0;
@@ -915,12 +915,12 @@ h4 {
   padding: var(--inset-control);
   color: var(--color-text);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   font-size: var(--text-body);
   font-weight: 500;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--duration-quick) ease,
+    color var(--duration-quick) ease;
 }
 
 .dropdown__item:hover,
@@ -945,7 +945,7 @@ h4 {
 .card {
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   padding: var(--inset-surface);
   position: relative;
   overflow: hidden; /* Automatically clips child images to the border-radius */
@@ -976,7 +976,7 @@ h4 {
   background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
-  z-index: 50;
+  z-index: var(--layer-nav);
   padding-block: var(--space-s);
 }
 
@@ -994,13 +994,13 @@ h4 {
   font-weight: 500;
   font-size: var(--text-body);
   padding: var(--inset-control);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   background: transparent;
   border: none;
   cursor: pointer;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    color var(--duration-quick) ease,
+    background-color var(--duration-quick) ease;
 }
 
 .navbar__link:hover,
@@ -1069,16 +1069,16 @@ h4 {
 .modal {
   padding: var(--inset-surface);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   background-color: var(--color-surface-raised);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-overlay);
   max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
 }
 
 .modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-backdrop);
   backdrop-filter: blur(4px);
 }
 }
@@ -1095,13 +1095,13 @@ h4 {
   --alert-text: var(--color-text);
 
   padding: var(--inset-surface);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   border: 1px solid var(--alert-border);
   background-color: var(--alert-bg);
   color: var(--alert-text);
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
 }
 
 /* 
@@ -1139,7 +1139,7 @@ h4 {
   opacity: 0.7;
   cursor: pointer;
   padding: var(--space-2xs);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   transition:
     opacity var(--duration-quick),
     background-color var(--duration-quick);

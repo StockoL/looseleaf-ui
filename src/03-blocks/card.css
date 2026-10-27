@@ -5,7 +5,7 @@
 .card {
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   padding: var(--inset-surface);
   position: relative;
   overflow: hidden; /* Automatically clips child images to the border-radius */

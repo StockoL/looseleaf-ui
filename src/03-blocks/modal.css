@@ -5,15 +5,15 @@
 .modal {
   padding: var(--inset-surface);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   background-color: var(--color-surface-raised);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-overlay);
   max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
 }
 
 .modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-backdrop);
   backdrop-filter: blur(4px);
 }

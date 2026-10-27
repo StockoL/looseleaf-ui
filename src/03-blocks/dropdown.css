@@ -14,13 +14,13 @@
   position: absolute;
   top: calc(100% + var(--dropdown-offset));
   left: 0;
-  z-index: 100;
+  z-index: var(--layer-popover);
   min-inline-size: var(--dropdown-width);
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-surface);
   padding: var(--space-2xs);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-raised);
 
   /* Hidden State Physics */
   opacity: 0;
@@ -45,12 +45,12 @@
   padding: var(--inset-control);
   color: var(--color-text);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   font-size: var(--text-body);
   font-weight: 500;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--duration-quick) ease,
+    color var(--duration-quick) ease;
 }
 
 .dropdown__item:hover,
