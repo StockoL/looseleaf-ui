@@ -25,6 +25,7 @@
 @import "02-compositions/reel.css" layer(compositions);
 @import "02-compositions/switcher.css" layer(compositions);
 @import "02-compositions/frame.css" layer(compositions);
+@import "02-compositions/bento.css" layer(compositions);
 
 /* --------------------------------------------------------------------------
    LAYER 3: CUBE BLOCKS (Encapsulated Component Styling)
@@ -40,7 +41,6 @@
 @import "03-blocks/modal.css" layer(blocks);
 @import "03-blocks/offcanvas.css" layer(blocks);
 @import "03-blocks/alert.css" layer(blocks);
-@import "03-blocks/bento.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)
