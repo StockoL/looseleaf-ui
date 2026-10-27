@@ -974,6 +974,17 @@ a:not([class]) {
   cursor: not-allowed;
 }
 
+/* Copied: swaps between two labels after a copy action.
+   <button class="button"><span data-label="idle">Copy</span><span data-label="copied">Copied</span></button> */
+.button [data-label="copied"],
+.button[data-state="copied"] [data-label="idle"] {
+  display: none;
+}
+
+.button[data-state="copied"] [data-label="copied"] {
+  display: inline;
+}
+
 /* Loading: the label keeps the button's width but hides behind a spinner.
    Pair with aria-busy="true" so assistive tech hears the state. */
 .button[data-state="loading"] {
