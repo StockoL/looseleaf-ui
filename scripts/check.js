@@ -120,6 +120,11 @@ function checkCss(file) {
   const css = fs.readFileSync(file, "utf8");
   const isFormControl = FORM_CONTROL_FILES.includes(path.basename(file));
 
+  // Stopgaps were marked for promotion into src/; none may outlive the blocks they stood in for.
+  css.split("\n").forEach((line, index) => {
+    if (/\bPROMOTE\b/.test(line)) report(file, index + 1, "PROMOTE stopgap left behind", line);
+  });
+
   for (const item of parseCss(css)) {
     if (item.kind === "prelude") {
       if (/^@media\b/i.test(item.text) && !isAllowedMedia(item.text)) {
