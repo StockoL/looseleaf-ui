@@ -1616,6 +1616,13 @@ a:not([class]) {
   padding-block: var(--space-s);
 }
 
+/* CUBE Exception: stays at the top while the page scrolls, clear of the notch */
+.navbar[data-sticky] {
+  position: sticky;
+  inset-block-start: 0;
+  padding-block-start: calc(var(--space-s) + var(--safe-top));
+}
+
 .navbar__brand {
   font-weight: var(--weight-bold);
   font-size: var(--text-lead);
