@@ -1,19 +1,25 @@
 /* ==========================================================================
    BLOCK: BUTTON
+   Variants only reassign the --button-* variables; the rules never repeat.
    ========================================================================== */
 
 .button {
-  /* Internal state variables; the default style is a token (outlined or filled) */
+  /* Default style is a token choice (outlined or filled), set in the configurator */
   --button-bg: var(--button-default-bg);
   --button-text: var(--button-default-text);
   --button-border: var(--button-default-border);
+  --button-bg-hover: var(--button-default-bg-hover);
+  --button-border-hover: var(--button-default-border-hover);
+  --button-padding: var(--inset-control);
+  --button-font-size: var(--text-body);
 
+  position: relative;
   display: inline-flex;
-  min-block-size: var(--target-min);
   align-items: center;
   justify-content: center;
   gap: var(--space-2xs); /* For icons */
-  padding: var(--inset-control);
+  min-block-size: var(--target-min);
+  padding: var(--button-padding);
 
   background-color: var(--button-bg);
   color: var(--button-text);
@@ -21,44 +27,110 @@
   border-radius: var(--radius-control);
 
   font-family: inherit;
-  font-size: var(--text-body);
-  line-height: var(--leading-tight);
+  font-size: var(--button-font-size);
   font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
   text-decoration: none;
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition:
-    filter var(--duration-base) ease,
-    background-color var(--duration-base) ease;
-}
-
-/* 
- * Interactive States
- * Brightness filter works universally across all color variants 
- */
-.button:focus-visible {
-  filter: brightness(0.9);
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--duration-quick);
+  transition-timing-function: var(--ease-standard);
 }
 
 @media (hover: hover) {
-  .button:hover {
-    filter: brightness(0.9);
+  .button:hover:not(:disabled, [aria-disabled="true"], [data-state="loading"]) {
+    background-color: var(--button-bg-hover);
+    border-color: var(--button-border-hover);
   }
 }
 
-/* 
- * CUBE Exceptions (Variants)
- * We only need to redefine the variables, not the CSS rules!
- */
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: variants
+   -------------------------------------------------------------------------- */
 .button[data-variant="primary"] {
   --button-bg: var(--color-action);
   --button-text: var(--color-action-text);
   --button-border: var(--color-action);
+  --button-bg-hover: var(--color-action-hover);
+  --button-border-hover: var(--color-action-hover);
 }
 
-/* CUBE Exception: icon-only buttons are square and still meet the target size */
+.button[data-variant="secondary"] {
+  --button-bg: var(--color-surface-sunken);
+  --button-text: var(--color-text);
+  --button-border: var(--color-border);
+  --button-bg-hover: color-mix(in oklch, var(--color-text) 8%, var(--color-surface-sunken));
+  --button-border-hover: var(--color-border-strong);
+}
+
+.button[data-variant="ghost"] {
+  --button-bg: transparent;
+  --button-text: var(--color-text);
+  --button-border: transparent;
+  --button-bg-hover: var(--color-surface-sunken);
+  --button-border-hover: transparent;
+}
+
+.button[data-variant="danger"] {
+  --button-bg: var(--color-status-danger);
+  --button-text: var(--color-text-inverse);
+  --button-border: var(--color-status-danger);
+  --button-bg-hover: color-mix(in oklch, var(--color-status-danger) 85%, var(--color-text));
+  --button-border-hover: var(--button-bg-hover);
+}
+
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: sizes (the touch target never shrinks)
+   -------------------------------------------------------------------------- */
+.button[data-size="small"] {
+  --button-padding: var(--space-3xs) var(--space-xs);
+  --button-font-size: var(--text-small);
+}
+
+.button[data-size="large"] {
+  --button-padding: var(--space-xs) var(--space-m);
+  --button-font-size: var(--text-lead);
+}
+
+/* Icon-only buttons are square and still meet the target size */
 .button[data-icon-only] {
   min-inline-size: var(--target-min);
   padding-inline: 0;
+}
+
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: states
+   -------------------------------------------------------------------------- */
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Loading: the label keeps the button's width but hides behind a spinner.
+   Pair with aria-busy="true" so assistive tech hears the state. */
+.button[data-state="loading"] {
+  color: transparent;
+  cursor: progress;
+}
+
+.button[data-state="loading"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid var(--button-text);
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: ll-button-spin calc(var(--duration-slow) * 2) linear infinite;
+}
+
+@keyframes ll-button-spin {
+  to {
+    transform: rotate(1turn);
+  }
 }

@@ -33,8 +33,20 @@
   ];
 
   const BUTTON_STYLES = {
-    outlined: { "default-bg": "transparent", "default-text": "{color.text}", "default-border": "{color.border}" },
-    filled: { "default-bg": "{color.action}", "default-text": "{color.action-text}", "default-border": "{color.action}" },
+    outlined: {
+      "default-bg": "transparent",
+      "default-text": "{color.text}",
+      "default-border": "{color.border}",
+      "default-bg-hover": "{color.surface-sunken}",
+      "default-border-hover": "{color.border-strong}",
+    },
+    filled: {
+      "default-bg": "{color.action}",
+      "default-text": "{color.action-text}",
+      "default-border": "{color.action}",
+      "default-bg-hover": "{color.action-hover}",
+      "default-border-hover": "{color.action-hover}",
+    },
   };
 
   const LINK_STYLES = {

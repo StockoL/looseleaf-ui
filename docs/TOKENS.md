@@ -350,6 +350,8 @@ Style of a .button with no data-variant: outlined (transparent) or filled (actio
 | `--button-default-bg` | Semantic | `transparent` |  |  |
 | `--button-default-text` | Semantic | `#18181d` | `#f4f4fc` |  |
 | `--button-default-border` | Semantic | `#e4e4eb` | `#26262b` |  |
+| `--button-default-bg-hover` | Semantic | `#f4f4fc` | `#26262b` |  |
+| `--button-default-border-hover` | Semantic | `#d3d3db` | `#3f3f45` |  |
 
 ### link
 

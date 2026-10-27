@@ -1205,6 +1205,24 @@
     "overridden": false,
     "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
   },
+  "button.default-bg-hover": {
+    "name": "--button-default-bg-hover",
+    "tier": 2,
+    "light": "#f4f4fc",
+    "dark": "#26262b",
+    "themed": true,
+    "overridden": false,
+    "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
+  },
+  "button.default-border-hover": {
+    "name": "--button-default-border-hover",
+    "tier": 2,
+    "light": "#d3d3db",
+    "dark": "#3f3f45",
+    "themed": true,
+    "overridden": false,
+    "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
+  },
   "link.decoration": {
     "name": "--link-decoration",
     "tier": 2,

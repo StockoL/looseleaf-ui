@@ -190,6 +190,8 @@
   --button-default-bg: transparent;
   --button-default-text: var(--color-text);
   --button-default-border: var(--color-border);
+  --button-default-bg-hover: var(--color-surface-sunken);
+  --button-default-border-hover: var(--color-border-strong);
 
   /* --- link: Decoration of unstyled anchors: underlined always, or only on hover. --- */
   --link-decoration: underline;

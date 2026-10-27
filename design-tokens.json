@@ -161,7 +161,9 @@
     "$purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action).",
     "default-bg": "transparent",
     "default-text": "{color.text}",
-    "default-border": "{color.border}"
+    "default-border": "{color.border}",
+    "default-bg-hover": "{color.surface-sunken}",
+    "default-border-hover": "{color.border-strong}"
   },
   "link": {
     "$purpose": "Decoration of unstyled anchors: underlined always, or only on hover.",
