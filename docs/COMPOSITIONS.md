@@ -409,7 +409,7 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 
 ##### Why This Works
 
-- DRY Parameter Isolation: Instead of duplicating rules across `.button-primary` or `.button-small`, all variations modify local custom properties (`--button-bg`, `--button-border`). The core structure (padding, transitions, flex alignment) is written only once.
+- DRY Parameter Isolation: Instead of duplicating rules across separate classes for each variant or size, all variations modify local custom properties (`--button-bg`, `--button-border`). The core structure (padding, transitions, flex alignment) is written only once.
 - Pure Visual Boundary: The block is completely purged of outer margins, allowing it to sit inside a `.cluster` for horizontal alignment or a `.flow` for vertical stack rhythm without layout conflicts.
 - Semantic Exception Hooks: Using HTML attributes such as `data-variant="primary"` or `data-size="small"` keeps class names clean and avoids specificity wars.
 
@@ -420,21 +420,22 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 ```css
 @layer blocks {
   .card {
-    --card-padding: var(--space-l);
-
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 0.5rem);
-    padding: var(--card-padding);
+    position: relative;
     overflow: hidden;
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-surface);
   }
 
-  /* Full-bleed child media helper */
-  .card__media {
-    margin-inline: calc(var(--card-padding) * -1);
-    margin-block-start: calc(var(--card-padding) * -1);
-    width: calc(100% + (var(--card-padding) * 2));
-    max-width: none;
+  .card__body {
+    padding: var(--card-padding, var(--inset-surface));
+  }
+
+  /* Flush media: a direct img, picture or video fills the card's width */
+  .card > :is(img, picture, video) {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: var(--card-media-ratio, 16 / 9);
     object-fit: cover;
   }
 }
@@ -442,8 +443,8 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 
 #### Why This Works
 
-- Calculated Full-Bleed Media: The `.card__media` helper uses `calc(var(--card-padding) * -1)` to pull child images negative-margin distance back to the container border. If you adjust the card's internal padding, the image calculation updates automatically.
-- Encapsulated Formatting: With `overflow: hidden`, child images clip to the card's border radius cleanly without requiring complex border-radius calculations on child tags.
+- Flush Media Without Arithmetic: The card itself has no padding; `.card__body` carries it. Media placed directly in the card therefore sits edge to edge with no negative margins, and changing `--card-padding` never breaks it.
+- Encapsulated Formatting: With `overflow: hidden`, child images clip to the card's border radius. A card holding a floating badge switches to `overflow: visible` (via `:has()`) so the badge is never cut off.
 - Layout Agnostic: The card focuses strictly on surface aesthetics (backgrounds, borders, radii). It can be dropped inside a `.grid`, `.switcher`, or `.sidebar` without breaking parent composition bounds.
 
 ### <a name="block-input"></a> The Input Block (`.input` & `.field`)
@@ -489,7 +490,7 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 
 #### Why This Works
 
-- Native State Integration: Instead of adding an `.is-invalid` or `.has-error` class, input errors hook directly into the standard `[aria-invalid="true"]` accessibility attribute. This enforces accessible state management in the DOM before visual styling even applies.
+- Native State Integration: Instead of adding an invalid or error state class, input errors hook directly into the standard `[aria-invalid="true"]` accessibility attribute. This enforces accessible state management in the DOM before visual styling even applies.
 - Decoupled Field Structure: Standardising `.field` as a pure flex column with a local gap keeps the `<label>` and `<input>` grouped predictably without applying vertical margins to individual elements.
 
 ### <a name="block-badge"></a> The Badge Block (`.badge`)
