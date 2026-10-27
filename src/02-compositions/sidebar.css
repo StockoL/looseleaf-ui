@@ -12,6 +12,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--sidebar-space, var(--gutter));
+  align-items: var(--sidebar-align, stretch); /* flex-start for media objects */
 }
 
 /* The sidebar: holds its target width */
