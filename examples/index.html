@@ -20,20 +20,6 @@
         }
       });
     </script>
-    <style>
-      /* Temporary: replaced by the .swatch block in Phase 5 */
-      .swatch {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        block-size: 5rem;
-        border-radius: var(--radius-surface);
-        border: 1px solid var(--color-border);
-        padding: var(--space-2xs);
-        font-size: var(--text-small);
-        font-weight: var(--weight-semibold);
-      }
-    </style>
   </head>
   <body>
     <!-- Icon sheet: the six icons the system itself uses. <svg class="icon"><use href="#icon-chevron" /></svg> -->
@@ -119,84 +105,125 @@
           <div class="flow">
             <h3>Neutral Ramp</h3>
             <div class="grid" style="--grid-min-item-size: 6rem;">
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-0); color: var(--neutral-900);"
-              >
-                neutral-0
+              <div class="swatch" style="--swatch-color: var(--neutral-0);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-0</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-100); color: var(--neutral-900);"
-              >
-                neutral-100
+              <div class="swatch" style="--swatch-color: var(--neutral-100);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-100</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-200); color: var(--neutral-900);"
-              >
-                neutral-200
+              <div class="swatch" style="--swatch-color: var(--neutral-200);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-200</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-300); color: var(--neutral-900);"
-              >
-                neutral-300
+              <div class="swatch" style="--swatch-color: var(--neutral-300);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-300</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-400); color: var(--neutral-0);"
-              >
-                neutral-400
+              <div class="swatch" style="--swatch-color: var(--neutral-400);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-400</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-500); color: var(--neutral-0);"
-              >
-                neutral-500
+              <div class="swatch" style="--swatch-color: var(--neutral-500);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-500</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-600); color: var(--neutral-0);"
-              >
-                neutral-600
+              <div class="swatch" style="--swatch-color: var(--neutral-600);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-600</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-700); color: var(--neutral-0);"
-              >
-                neutral-700
+              <div class="swatch" style="--swatch-color: var(--neutral-700);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-700</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-800); color: var(--neutral-0);"
-              >
-                neutral-800
+              <div class="swatch" style="--swatch-color: var(--neutral-800);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-800</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-900); color: var(--neutral-0);"
-              >
-                neutral-900
+              <div class="swatch" style="--swatch-color: var(--neutral-900);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-900</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--neutral-950); color: var(--neutral-0);"
-              >
-                neutral-950
+              <div class="swatch" style="--swatch-color: var(--neutral-950);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-950</span>
               </div>
             </div>
           </div>
 
           <div class="flow">
-            <h3>Semantic Status Colors</h3>
-            <div class="grid" style="--grid-min-item-size: 14rem;">
-              <div
-                class="swatch"
-                style="background-color: var(--color-status-success-surface); border-color: var(--color-status-success-border); color: var(--color-status-success-text);"
-              >
-                success
+            <h3>Semantic Roles</h3>
+            <p class="text-muted">These re-point in dark mode; blocks only ever use this tier.</p>
+            <div class="grid" style="--grid-min-item-size: 8rem;">
+              <div class="swatch" style="--swatch-color: var(--color-surface);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface</span>
               </div>
+              <div class="swatch" style="--swatch-color: var(--color-surface-raised);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface-raised</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-surface-sunken);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface-sunken</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-text);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">text</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-text-muted);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">text-muted</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-border);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">border</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-border-strong);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">border-strong</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-action);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">action</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-action-hover);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">action-hover</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-accent);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">accent</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-link);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">link</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-focus);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">focus</span>
+              </div>
+            </div>
+            <h3>Status Colors</h3>
+            <div class="grid" style="--grid-min-item-size: 8rem;">
+              <div class="swatch" style="--swatch-color: var(--color-status-success);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-success</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-warning);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-warning</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-danger);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-danger</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-info);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-info</span>
+              </div>
+            </div>
               <div
                 class="swatch"
                 style="background-color: var(--color-status-warning-surface); border-color: var(--color-status-warning-border); color: var(--color-status-warning-text);"

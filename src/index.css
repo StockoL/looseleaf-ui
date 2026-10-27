@@ -52,6 +52,7 @@
 @import "03-blocks/breadcrumb.css" layer(blocks);
 @import "03-blocks/marquee.css" layer(blocks);
 @import "03-blocks/bg-mesh.css" layer(blocks);
+@import "03-blocks/swatch.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)
