@@ -1458,6 +1458,12 @@ a:not([class]) {
 .accordion__item > .accordion__content {
   min-block-size: 0;
   overflow: hidden;
+  transition: padding-block-end var(--duration-base) var(--ease-standard);
+}
+
+/* A 0fr row cannot shrink padding, so the padding closes with it */
+.accordion__item:not([open]) > .accordion__content {
+  padding-block-end: 0;
 }
 }
 

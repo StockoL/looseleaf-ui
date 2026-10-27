@@ -1,5 +1,11 @@
 /* ==========================================================================
-   BLOCK: ACCORDION
+   BLOCK: ACCORDION (native details/summary, no JavaScript)
+   <div class="accordion">
+     <details class="accordion__item" name="faq">
+       <summary class="accordion__trigger">Question <svg class="icon accordion__icon">…</svg></summary>
+       <div class="accordion__content">Answer</div>
+     </details>
+   Items sharing a name form an exclusive group (one open at a time).
    ========================================================================== */
 
 .accordion {
@@ -9,30 +15,28 @@
   overflow: hidden;
 }
 
-.accordion__item {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.accordion__item:last-child {
-  border-bottom: none;
+.accordion__item + .accordion__item {
+  border-block-start: 1px solid var(--color-border);
 }
 
 .accordion__trigger {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-xs) var(--space-m);
-  background: transparent;
-  border: none;
+  gap: var(--space-xs);
+  min-block-size: var(--target-min);
+  padding: var(--space-xs) var(--inset-surface);
+  list-style: none; /* no native disclosure triangle */
   color: var(--color-text);
   font-weight: var(--weight-semibold);
-  font-size: var(--text-body);
-  min-block-size: var(--target-min);
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
   transition: background-color var(--duration-quick) var(--ease-standard);
+}
+
+.accordion__trigger::-webkit-details-marker {
+  display: none;
 }
 
 .accordion__trigger:focus-visible {
@@ -46,32 +50,44 @@
   }
 }
 
-/* Grid Interpolation Trick for Smooth Auto-Height */
-.accordion__panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--duration-base) var(--ease-standard);
+.accordion__icon {
+  flex-shrink: 0;
+  transition: rotate var(--duration-base) var(--ease-spring);
 }
 
-.accordion__panel[data-state="open"] {
-  grid-template-rows: 1fr;
+.accordion__item[open] > .accordion__trigger .accordion__icon {
+  rotate: 180deg;
 }
 
 .accordion__content {
+  padding: 0 var(--inset-surface) var(--inset-surface);
+}
+
+/*
+ * Height animation: the 0fr -> 1fr grid trick on the details' content slot.
+ * content-visibility transitions discretely so closing animates too.
+ * Browsers without ::details-content simply open and close instantly.
+ */
+.accordion__item::details-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition-property: grid-template-rows, content-visibility;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.accordion__item[open]::details-content {
+  grid-template-rows: 1fr;
+}
+
+.accordion__item > .accordion__content {
+  min-block-size: 0;
   overflow: hidden;
-  padding-inline: var(--inset-surface);
+  transition: padding-block-end var(--duration-base) var(--ease-standard);
 }
 
-.accordion__panel[data-state="open"] .accordion__content {
-  padding-bottom: var(--inset-surface);
-}
-
-.accordion__icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  transition: transform var(--duration-base) var(--ease-spring);
-}
-
-.accordion__trigger[aria-expanded="true"] .accordion__icon {
-  transform: rotate(180deg);
+/* A 0fr row cannot shrink padding, so the padding closes with it */
+.accordion__item:not([open]) > .accordion__content {
+  padding-block-end: 0;
 }

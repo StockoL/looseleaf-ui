@@ -8,25 +8,6 @@ document.addEventListener("click", (event) => {
   const target = event.target;
 
   // ---------------------------------------------------------------------------
-  // 1. ACCORDION BLOCK (Toggle Panel)
-  // ---------------------------------------------------------------------------
-  const accordionTrigger = target.closest(".accordion__trigger");
-  if (accordionTrigger) {
-    const isExpanded =
-      accordionTrigger.getAttribute("aria-expanded") === "true";
-    const panel = accordionTrigger.nextElementSibling;
-
-    // Toggle ARIA state on button
-    accordionTrigger.setAttribute("aria-expanded", !isExpanded);
-
-    // Toggle CUBE data-state on the target panel
-    if (panel && panel.classList.contains("accordion__panel")) {
-      panel.setAttribute("data-state", isExpanded ? "closed" : "open");
-    }
-    return;
-  }
-
-  // ---------------------------------------------------------------------------
   // 2. DROPDOWN BLOCK (Toggle Menu)
   // ---------------------------------------------------------------------------
   const dropdownTrigger = target.closest('[data-toggle="dropdown"]');

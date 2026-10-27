@@ -266,7 +266,7 @@ LooseLeaf UI ships with a zero-dependency, event-delegated JavaScript runtime (~
 
 ### Supported Interactive Patterns:
 
-1. Accordions: Toggles aria-expanded and updates `data-state="open|closed"` on `.accordion__panel`.
+1. Accordions: none needed. `.accordion` is built on native `<details name="…">`, so toggling and exclusive groups work without JavaScript.
 2. Dropdown Menus: Toggles dropdown visibility and handles automatic dismissals when clicking outside the menu container.
 3. Mobile Navigation: Controls navbar drawer states and mobile hamburger toggles.
 4. Native Modals & Drawers: Triggers native HTML5 `<dialog>` methods (`.showModal()`, `.close()`) and intercepts backdrop clicks automatically.

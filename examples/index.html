@@ -335,36 +335,19 @@
               <div class="card__body flow">
                 <h3>Accordion</h3>
                 <div class="accordion">
-                  <div class="accordion__item">
-                    <button
-                      class="accordion__trigger"
-                      aria-expanded="true"
-                      aria-controls="panel-1"
-                      id="trigger-1"
-                    >
-                      What is CUBE CSS?
-                      <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="accordion__panel" data-state="open" id="panel-1">
-                      <div class="accordion__content">
-                        <p>Composition, Utility, Block, Exception.</p>
-                      </div>
+                  <details class="accordion__item" name="demo-faq" open>
+                    <summary class="accordion__trigger">What is CUBE CSS? <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+                    <div class="accordion__content">
+                      <p>Composition, Utility, Block, Exception.</p>
                     </div>
-                  </div>
-                  <div class="accordion__item">
-                    <button
-                      class="accordion__trigger"
-                      aria-expanded="false"
-                      aria-controls="panel-2"
-                      id="trigger-2"
-                    >
-                      Does it need a framework?
-                      <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="accordion__panel" data-state="closed" id="panel-2">
-                      <div class="accordion__content">
-                        <p>No — it's plain CSS and vanilla ES6.</p>
-                      </div>
+                  </details>
+                  <details class="accordion__item" name="demo-faq">
+                    <summary class="accordion__trigger">Does it need a framework? <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+                    <div class="accordion__content">
+                      <p>No. It's plain CSS and vanilla JavaScript; this accordion needs no JavaScript at all.</p>
+                    </div>
+                  </details>
+                </div>
                     </div>
                   </div>
                 </div>
