@@ -45,6 +45,27 @@ FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"
 
 That is the whole setup. Every class in the [LooseLeaf README](https://github.com/LooseLeafApplications/looseleaf-ui#readme) is now available to your templates.
 
+## Theming
+
+Give the project its own colours, type scale, spacing, fonts and shapes without a build step:
+
+1. Open the [LooseLeaf configurator](https://looseleafapplications.github.io/looseleaf-ui/) and adjust the tokens against the live preview.
+2. Choose **Export → Theme bundle**.
+3. Unzip `looseleaf-theme.zip` into an app's `static/theme/` folder (or any `STATICFILES_DIRS` entry).
+4. Set `LOOSELEAF_THEME = "theme"` in settings.
+
+`{% looseleaf_css %}` then loads `theme/looseleaf-tokens.css` after the package stylesheet. The theme's tokens sit in the same cascade layer as the defaults, so loading second is all it takes. `{% looseleaf_meta %}` and `{% ll_token %}` read the theme's `tokens.resolved.json`, falling back to the defaults for any token the theme doesn't have, such as one added in a later minor release.
+
+The files are found with Django's staticfiles finders, so the same setting works in development, at `collectstatic` time and in production. System checks catch mistakes:
+
+| Check | Meaning |
+| --- | --- |
+| `looseleaf.E002` | `LOOSELEAF_THEME` is set but `<prefix>/looseleaf-tokens.css` can't be found. |
+| `looseleaf.W003` | The stylesheet was found but `tokens.resolved.json` wasn't, so meta tags and `ll_token` use the defaults. |
+| `looseleaf.W004` | The theme was exported from a different major version; re-export it, as token names may have changed. |
+
+The bundle also contains `design-tokens.json`: import it back into the configurator to keep editing the theme.
+
 ## Template tags
 
 | Tag | Output |
@@ -117,9 +138,9 @@ LOOSELEAF_WIDGET_CLASSES = {
 
 The renderer extends Django's `TemplatesSetting`, so your project's template directories are searched first. Copy any template from `django_looseleaf/templates/looseleaf/` (`forms/div.html`, `forms/field.html`, `forms/field_feedback.html`, `widgets/multiple_input.html`, `widgets/input_option.html`, `pagination.html`, `messages.html`) into your own `templates/looseleaf/` to change it.
 
-## Design tokens
+## Default tokens
 
-The stylesheet carries the design tokens compiled from the repository's `design-tokens.json`. To change colours, type or spacing, edit the tokens in the LooseLeaf repository (the configurator at `tools/configure.html` exports them), run `npm run build`, and the package's static files and `tokens.resolved.json` are updated with them. The package never derives a token itself, and a test fails if its static files drift from the npm build.
+The package stylesheet carries LooseLeaf's default tokens; a project changes them with a theme (above), never by editing the package. In the LooseLeaf repository itself, the defaults come from `design-tokens.json` via `npm run build`, which also refreshes the package's static files and `tokens.resolved.json`. The package never derives a token, and a test fails if its static files drift from the npm build.
 
 ## Example project
 
@@ -132,7 +153,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-It shows a ModelForm with its error state, success messages, a paginated list and the theme toggle.
+It shows a ModelForm with its error state, success messages, a paginated list and the theme toggle, all styled by a project theme in `example/demo/static/theme/` (`LOOSELEAF_THEME = "theme"`).
 
 ## Development
 
