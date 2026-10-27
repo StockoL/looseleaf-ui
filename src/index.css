@@ -49,6 +49,7 @@
 @import "03-blocks/table.css" layer(blocks);
 @import "03-blocks/prose.css" layer(blocks);
 @import "03-blocks/pagination.css" layer(blocks);
+@import "03-blocks/breadcrumb.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)

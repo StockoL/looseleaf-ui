@@ -2127,6 +2127,52 @@ a:not([class]) {
 }
 }
 
+@layer blocks {
+/* ==========================================================================
+   BLOCK: BREADCRUMB
+   <nav class="breadcrumb" aria-label="Breadcrumb">
+     <ol class="breadcrumb__list" role="list">
+       <li class="breadcrumb__item"><a href="/">Home</a></li>
+       <li class="breadcrumb__item"><a href="/docs" aria-current="page">Docs</a></li>
+   The separators are decorative and hidden from assistive tech.
+   ========================================================================== */
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-small);
+}
+
+.breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  content: "/" / "";
+  color: var(--color-text-muted);
+}
+
+.breadcrumb__item > a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  color: var(--color-text-muted);
+  text-underline-offset: 0.15em;
+}
+
+.breadcrumb__item > a[aria-current="page"] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+}
+
 
 /* --------------------------------------------------------------------------
    LAYER 4: UTILITIES (Single-Purpose Overrides)
