@@ -1045,7 +1045,8 @@ a:not([class]) {
   overflow: visible;
 }
 
-.card:has(.badge[data-placement="floating"]) > :is(img, picture, video):first-child {
+.card:has(.badge[data-placement="floating"])
+  > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
 }
