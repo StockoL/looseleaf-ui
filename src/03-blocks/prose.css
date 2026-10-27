@@ -40,10 +40,11 @@
 }
 
 /* --- Code --- */
+/* Code tints from currentColor, so it reads on any surface the prose sits on */
 .prose :not(pre) > code {
   padding: 0.1em 0.3em;
   border-radius: var(--radius-control);
-  background-color: var(--color-surface-sunken);
+  background-color: color-mix(in oklch, currentColor 8%, transparent);
   font-size: 0.9em;
 }
 
@@ -52,7 +53,7 @@
   overflow-x: auto;
   overscroll-behavior: contain;
   border-radius: var(--radius-surface);
-  background-color: var(--color-surface-sunken);
+  background-color: color-mix(in oklch, currentColor 6%, transparent);
   font-size: var(--text-small);
   line-height: var(--leading-body);
 }
