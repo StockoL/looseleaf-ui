@@ -186,6 +186,13 @@ function collectDefinitions(cssFiles) {
   return { tokens, classes };
 }
 
+// A trailing "*" (`--step-*`, `.text-*`) documents a family; it exists if anything has that prefix.
+function isDefined(name, defined) {
+  if (!name.endsWith("*")) return defined.has(name);
+  const prefix = name.slice(0, -1);
+  return [...defined].some((candidate) => candidate.startsWith(prefix));
+}
+
 function checkDocs(file, definitions) {
   const lines = fs.readFileSync(file, "utf8").split("\n");
   let fenced = false;
@@ -198,11 +205,11 @@ function checkDocs(file, definitions) {
     if (fenced) return;
 
     for (const [, code] of line.matchAll(/`([^`]+)`/g)) {
-      for (const [token] of code.matchAll(/(?<![\w-])--[a-z0-9][a-z0-9-]*/g)) {
-        if (!definitions.tokens.has(token)) report(file, index + 1, `unknown token ${token}`, code);
+      for (const [token] of code.matchAll(/(?<![\w-])--[a-z0-9][a-z0-9-]*\*?/g)) {
+        if (!isDefined(token, definitions.tokens)) report(file, index + 1, `unknown token ${token}`, code);
       }
-      for (const [, name] of code.matchAll(/(?<![\w/\\.-])\.([a-z][a-z0-9_-]*)(?![\w(-])/g)) {
-        if (!definitions.classes.has(name)) report(file, index + 1, `unknown class .${name}`, code);
+      for (const [, name] of code.matchAll(/(?<![\w/\\.-])\.([a-z][a-z0-9_-]*\*?)(?![\w(-])/g)) {
+        if (!isDefined(name, definitions.classes)) report(file, index + 1, `unknown class .${name}`, code);
       }
     }
   });
