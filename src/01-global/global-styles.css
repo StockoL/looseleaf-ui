@@ -80,6 +80,11 @@ h6 {
   font-size: var(--text-body);
 }
 
+/* --- Code --- */
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+}
+
 /* --- Links: colour and decoration from tokens --- */
 a:not([class]) {
   color: var(--color-link);

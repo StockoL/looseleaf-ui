@@ -265,6 +265,7 @@ textarea:not([rows]) {
   /* --- font: Font family stacks. Brand-neutral placeholders; override per project. --- */
   --font-body: system-ui, sans-serif;
   --font-heading: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
   /* --- weight: Font weights. --- */
   --weight-regular: 400;
@@ -469,6 +470,11 @@ h4 {
 h5,
 h6 {
   font-size: var(--text-body);
+}
+
+/* --- Code --- */
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
 }
 
 /* --- Links: colour and decoration from tokens --- */

@@ -272,6 +272,7 @@ Font family stacks. Brand-neutral placeholders; override per project.
 | --- | --- | --- | --- | --- |
 | `--font-body` | Semantic | `system-ui, sans-serif` |  |  |
 | `--font-heading` | Semantic | `system-ui, sans-serif` |  |  |
+| `--font-mono` | Semantic | `ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace` |  |  |
 
 ### weight
 

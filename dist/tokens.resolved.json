@@ -1007,6 +1007,15 @@
     "overridden": false,
     "purpose": "Font family stacks. Brand-neutral placeholders; override per project."
   },
+  "font.mono": {
+    "name": "--font-mono",
+    "tier": 2,
+    "light": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+    "dark": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Font family stacks. Brand-neutral placeholders; override per project."
+  },
   "weight.regular": {
     "name": "--weight-regular",
     "tier": 2,

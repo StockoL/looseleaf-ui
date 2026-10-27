@@ -230,7 +230,8 @@ window.LooseLeafCurrentTokens = {
   "font": {
     "$purpose": "Font family stacks. Brand-neutral placeholders; override per project.",
     "body": "system-ui, sans-serif",
-    "heading": "system-ui, sans-serif"
+    "heading": "system-ui, sans-serif",
+    "mono": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace"
   },
   "weight": {
     "$purpose": "Font weights.",

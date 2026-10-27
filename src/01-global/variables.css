@@ -152,6 +152,7 @@
   /* --- font: Font family stacks. Brand-neutral placeholders; override per project. --- */
   --font-body: system-ui, sans-serif;
   --font-heading: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
   /* --- weight: Font weights. --- */
   --weight-regular: 400;
