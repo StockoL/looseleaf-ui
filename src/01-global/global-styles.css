@@ -39,6 +39,11 @@ body {
   margin-block-start: 0;
 }
 
+/* The user-agent 40px side margins squeeze figures and quotes in narrow layouts */
+:where(figure, blockquote) {
+  margin-inline: 0;
+}
+
 /* The one focus style. No block may set outline: none. */
 :focus-visible {
   outline: 2px solid var(--color-focus);
