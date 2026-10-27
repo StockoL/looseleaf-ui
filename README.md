@@ -23,7 +23,8 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
    - [Tier 4: Utilities](#utilities)
 7. [⚡ Behaviours & Theme Scripts](#behaviors)
 8. [🛠️ Commands](#commands)
-9. [🤝 Authors & Acknowledgements](#authors)
+9. [🏷️ Versioning & Releases](#versioning)
+10. [🤝 Authors & Acknowledgements](#authors)
 
 ---
 
@@ -31,17 +32,20 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
 
 ### Plain HTML
 
-Copy `dist/` into your project (or reference it from this repository) and add three tags to the `<head>`:
+Load the release files from jsDelivr, always pinned to a tag (never `@main`), and add your theme's tokens after the stylesheet:
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="dist/theme.js"></script>
-<link rel="stylesheet" href="dist/looseleaf.css" />
-<script src="dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v2.0.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
+<script src="https://cdn.jsdelivr.net/gh/LooseLeafApplications/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
 ```
+
+The same files are attached to every [GitHub release](https://github.com/LooseLeafApplications/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
 
 Then compose with the classes below. [examples/index.html](examples/index.html) is the living documentation: one section per composition and block, built with nothing but the shipped files.
 
@@ -49,7 +53,17 @@ Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade lay
 
 ### Django
 
-Django projects use the `django-looseleaf` package in [packages/django-looseleaf/](packages/django-looseleaf/README.md). One `INSTALLED_APPS` entry ships the CSS and JS, template tags for the head and the theme, and a form renderer that outputs LooseLeaf markup from `{{ form }}`. See its README for setup.
+Django projects use the `django-looseleaf` package in [packages/django-looseleaf/](packages/django-looseleaf/README.md). One `INSTALLED_APPS` entry ships the CSS and JS, template tags for the head and the theme, and a form renderer that outputs LooseLeaf markup from `{{ form }}`. A theme bundle drops into `static/` and is switched on with one setting, `LOOSELEAF_THEME`. See its README for setup.
+
+### <a name="theming"></a> Theming
+
+Every project gets its own colours, type scale, spacing, fonts and shapes without touching this repository or running a build:
+
+1. Open the hosted [token configurator](https://looseleafapplications.github.io/looseleaf-ui/) and adjust the tokens against a live preview of every block, in light and dark, at any viewport width. A live contrast table flags any text that drops below WCAG AA.
+2. Choose **Export → Theme bundle** to download `looseleaf-theme.zip`: the compiled `looseleaf-tokens.css`, `tokens.resolved.json`, and your `design-tokens.json` for re-importing later.
+3. Load `looseleaf-tokens.css` after `looseleaf.css` (plain HTML), or unzip the bundle into `static/theme/` and set `LOOSELEAF_THEME = "theme"` (Django).
+
+The theme's tokens live in the same cascade layer as the defaults, so loading them second is the whole mechanism.
 
 ---
 
@@ -135,7 +149,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, shows a live WCAG contrast table for both schemes, and exports a `design-tokens.json`. Save the export over the repository's file and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get.
+Use it [hosted on GitHub Pages](https://looseleafapplications.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -157,11 +171,13 @@ looseleaf-ui/
 │   ├── tokens-core.mjs        <-- Pure token compiler (shared with the configurator)
 │   ├── utopia.mjs             <-- Pure fluid type and space maths
 │   ├── color.mjs              <-- Pure OKLCH and WCAG contrast maths
+│   ├── zip.mjs                <-- Pure store-only ZIP writer (theme bundles)
 │   ├── build-tokens.js        <-- Writes variables.css, tokens.resolved.json, TOKENS.md
 │   ├── build-tools.js         <-- Bundles the pure modules for the configurator
 │   ├── build-css.js           <-- Bundles src/index.css, copies the scripts to dist/
 │   ├── build-django.js        <-- Syncs dist/ into the Django package
-│   └── check.js               <-- Guardrail linter (npm run check)
+│   ├── check.js               <-- Guardrail linter (npm run check)
+│   └── bump-version.js        <-- Lockstep version for npm and Python (npm run bump)
 ├── src/
 │   ├── index.css              <-- Orchestrator and @layer order
 │   ├── 01-global/             <-- reset, variables (generated), global-styles
@@ -175,7 +191,9 @@ looseleaf-ui/
 │   └── scripts/               <-- behaviors.js, theme.js
 ├── dist/                      <-- looseleaf.css, looseleaf.js, theme.js, tokens.resolved.json
 ├── examples/index.html        <-- Living demo (also the configurator's preview)
-├── tools/                     <-- configure.html, configure.js, configure.css
+├── tools/                     <-- configure.html, configure.js, configure.css, tokens-lib.js
+├── index.html                 <-- GitHub Pages entry: redirects to the configurator
+├── .github/workflows/         <-- ci.yml, release.yml, pages.yml
 ├── docs/
 │   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
 │   └── TOKENS.md              <-- Generated token reference
@@ -294,11 +312,26 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run build:tokens` | Compile `design-tokens.json` |
 | `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
-| `npm test` | Unit tests for the token maths and compiler |
+| `npm test` | Unit tests for the token maths, compiler and ZIP writer |
+| `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
 
 ---
 
-## 9. <a name="authors"></a> 🤝 Authors & Acknowledgements
+## 9. <a name="versioning"></a> 🏷️ Versioning & Releases
+
+The npm package and `django-looseleaf` share one version and follow [semantic versioning](https://semver.org/):
+
+- **Major**: a token is renamed or removed, or a block's class or attribute contract changes.
+- **Minor**: new tokens, blocks, compositions or exceptions.
+- **Patch**: visual refinements within the existing tokens, and fixes.
+
+Theme bundles record the version they were exported from. `django-looseleaf` warns (`looseleaf.W004`) when a theme comes from a different major version; within a major, any token a theme doesn't know falls back to its default, so older themes keep working.
+
+To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three, reruns CI, attaches the built files to a GitHub release and publishes `django-looseleaf` to PyPI with trusted publishing.
+
+---
+
+## 10. <a name="authors"></a> 🤝 Authors & Acknowledgements
 
 LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 
