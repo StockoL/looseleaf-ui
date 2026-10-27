@@ -16,6 +16,7 @@
    LAYER 2: LAYOUT COMPOSITIONS (Aesthetics-Agnostic Structural Rules)
    -------------------------------------------------------------------------- */
 @import "02-compositions/wrapper.css" layer(compositions);
+@import "02-compositions/region.css" layer(compositions);
 @import "02-compositions/center.css" layer(compositions);
 @import "02-compositions/flow.css" layer(compositions);
 @import "02-compositions/cluster.css" layer(compositions);
