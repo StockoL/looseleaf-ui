@@ -1260,6 +1260,61 @@ a:not([class]) {
 
 @layer blocks {
 /* ==========================================================================
+   BLOCK: INPUT GROUP
+   An input joined to prefix/suffix addons (text or icon) or a button,
+   sharing one border and one outer radius.
+   ========================================================================== */
+
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group > * {
+  border-radius: 0;
+}
+
+.input-group > :first-child {
+  border-start-start-radius: var(--radius-control);
+  border-end-start-radius: var(--radius-control);
+}
+
+.input-group > :last-child {
+  border-start-end-radius: var(--radius-control);
+  border-end-end-radius: var(--radius-control);
+}
+
+/* Neighbours overlap by one border width so the seam is a single line */
+.input-group > :not(:first-child) {
+  margin-inline-start: -1px;
+}
+
+.input-group > :is(.input, .select) {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* The focused control's ring and border sit above its neighbours */
+.input-group > :focus-visible {
+  position: relative;
+  z-index: var(--layer-raised);
+}
+
+.input-group__addon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-inline: var(--space-2xs);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
    BLOCK: BADGE
    ========================================================================== */
 
