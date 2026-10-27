@@ -1,0 +1,16 @@
+{% extends "demo/base.html" %}
+
+{% block title %}Enquiry · LooseLeaf for Django{% endblock %}
+
+{% block content %}
+  <h1>Get in touch</h1>
+  <p class="text-muted">A plain ModelForm rendered with <code>{% templatetag openvariable %} form {% templatetag closevariable %}</code>. Submit it empty to see the error state.</p>
+
+  <article class="card" style="max-inline-size: 40rem;">
+    <form class="card__body flow" method="post" novalidate>
+      {% csrf_token %}
+      {{ form }}
+      <button class="button" type="submit" data-variant="primary">Send enquiry</button>
+    </form>
+  </article>
+{% endblock %}
