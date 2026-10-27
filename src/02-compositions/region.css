@@ -1,0 +1,26 @@
+/* ==========================================================================
+   COMPOSITION: REGION
+   ========================================================================== */
+
+/*
+ * The Region
+ * Vertical breathing room for a page section. Pair with .wrapper for the
+ * horizontal edge: <section class="region"><div class="wrapper">…
+ */
+.region {
+  padding-block: var(--region-padding, var(--region-space));
+}
+
+/* CUBE Exceptions: tighter or roomier sections */
+.region[data-size="small"] {
+  --region-padding: var(--space-l);
+}
+
+.region[data-size="large"] {
+  --region-padding: var(--space-2xl);
+}
+
+/* The last region on the page clears the home indicator */
+.region:last-of-type {
+  padding-block-end: calc(var(--region-padding, var(--region-space)) + var(--safe-bottom));
+}

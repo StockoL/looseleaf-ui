@@ -1,0 +1,2543 @@
+/* ==========================================================================
+   AUTO-GENERATED BUNDLE - DO NOT EDIT DIRECTLY
+   ==========================================================================
+   Source Document: src/index.css
+   ========================================================================== */
+
+/* ==========================================================================
+   LOOSELEAF UI: SYSTEM ENGINE
+   ========================================================================== */
+
+/* 1. Declare explicit layer precedence from lowest to highest priority */
+@layer reset, global, compositions, blocks, utilities;
+
+/* --------------------------------------------------------------------------
+   LAYER 1: RESET & GLOBAL ENVIRONMENT
+   -------------------------------------------------------------------------- */
+@layer reset {
+/* ==========================================================================
+   GLOBAL RESET
+   Andy Bell, "A (more) Modern CSS Reset" (2023), plus the reduced-motion
+   block. Typography decisions live in global-styles.css, not here.
+   ========================================================================== */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin-block-end: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+}
+
+@layer global {
+/* ==========================================================================
+   AUTO-GENERATED CUSTOM PROPERTIES - DO NOT EDIT DIRECTLY
+   ==========================================================================
+   Source: design-tokens.json, compiled by scripts/tokens-core.mjs
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- neutral: Raw grayscale ramp, derived from $palette.neutral. Never used directly by blocks. --- */
+  --neutral-0: #ffffff;
+  --neutral-50: #f9f9ff;
+  --neutral-100: #f4f4fc;
+  --neutral-200: #e4e4eb;
+  --neutral-300: #d3d3db;
+  --neutral-400: #a1a1a8;
+  --neutral-500: #74747a;
+  --neutral-600: #525258;
+  --neutral-700: #3f3f45;
+  --neutral-800: #26262b;
+  --neutral-900: #18181d;
+  --neutral-950: #07070b;
+
+  /* --- action: Raw action hue (500 and its 600 hover step), derived from $palette.action. --- */
+  --action-500: #0072dd;
+  --action-600: #0051a0;
+
+  /* --- accent: Raw accent hue (500 and its 600 hover step), derived from $palette.accent. --- */
+  --accent-500: #894ed6;
+  --accent-600: #6724ad;
+
+  /* --- success: Raw success status colours for both schemes, derived from $palette.status.success. --- */
+  --success-base: #278733;
+  --success-surface-light: #e6fce6;
+  --success-border-light: #b9e5b9;
+  --success-text-light: #00480e;
+  --success-base-dark: #5bb661;
+  --success-surface-dark: #0f1f0f;
+  --success-border-dark: #1e4420;
+  --success-text-dark: #9be39d;
+
+  /* --- warning: Raw warning status colours for both schemes, derived from $palette.status.warning. --- */
+  --warning-base: #9d6300;
+  --warning-surface-light: #fff3e6;
+  --warning-border-light: #f8d0a2;
+  --warning-text-light: #533200;
+  --warning-base-dark: #d98b09;
+  --warning-surface-dark: #261706;
+  --warning-border-dark: #533201;
+  --warning-text-dark: #ffc075;
+
+  /* --- danger: Raw danger status colours for both schemes, derived from $palette.status.danger. --- */
+  --danger-base: #b94642;
+  --danger-surface-light: #fff2f0;
+  --danger-border-light: #ffc8c3;
+  --danger-text-light: #6c1517;
+  --danger-base-dark: #ed756e;
+  --danger-surface-dark: #2a1312;
+  --danger-border-dark: #5c2926;
+  --danger-text-dark: #ffbab3;
+
+  /* --- info: Raw info status colours for both schemes, derived from $palette.status.info. --- */
+  --info-base: #0079b3;
+  --info-surface-light: #ecf7ff;
+  --info-border-light: #b1deff;
+  --info-text-light: #003f60;
+  --info-base-dark: #26a9f1;
+  --info-surface-dark: #081d2a;
+  --info-border-dark: #083f5d;
+  --info-text-dark: #9cd6ff;
+
+  /* --- step: Raw Utopia fluid type steps, derived from $utopia.type. --- */
+  --step--1: clamp(0.83rem, 0.81rem + 0.12vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --step-1: clamp(1.2rem, 1.13rem + 0.36vw, 1.41rem);
+  --step-2: clamp(1.44rem, 1.33rem + 0.55vw, 1.76rem);
+  --step-3: clamp(1.73rem, 1.56rem + 0.82vw, 2.2rem);
+  --step-4: clamp(2.07rem, 1.84rem + 1.17vw, 2.75rem);
+  --step-5: clamp(2.49rem, 2.16rem + 1.64vw, 3.43rem);
+
+  /* --- space: Raw Utopia fluid space scale and one-up pairs, derived from $utopia.space. --- */
+  --space-3xs: clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem);
+  --space-2xs: clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem);
+  --space-xs: clamp(0.75rem, 0.72rem + 0.16vw, 0.84rem);
+  --space-s: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --space-m: clamp(1.5rem, 1.43rem + 0.33vw, 1.69rem);
+  --space-l: clamp(2rem, 1.91rem + 0.43vw, 2.25rem);
+  --space-xl: clamp(3rem, 2.87rem + 0.65vw, 3.38rem);
+  --space-2xl: clamp(4rem, 3.83rem + 0.87vw, 4.5rem);
+  --space-3xl: clamp(6rem, 5.74rem + 1.3vw, 6.75rem);
+  --space-s-m: clamp(1rem, 0.76rem + 1.2vw, 1.69rem);
+  --space-m-l: clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem);
+  --space-l-xl: clamp(2rem, 1.52rem + 2.39vw, 3.38rem);
+
+  /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+  --color-surface: var(--neutral-0);
+  --color-surface-raised: var(--neutral-0);
+  --color-surface-sunken: var(--neutral-100);
+  --color-text: var(--neutral-900);
+  --color-text-muted: var(--neutral-500);
+  --color-text-inverse: var(--neutral-0);
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+  --color-link: var(--color-action);
+  --color-action: var(--action-500);
+  --color-action-hover: var(--action-600);
+  --color-action-text: var(--neutral-0);
+  --color-accent: var(--accent-500);
+  --color-focus: var(--color-action);
+  --color-backdrop: rgb(0 0 0 / 0.5);
+  --color-status-success: var(--success-base);
+  --color-status-success-surface: var(--success-surface-light);
+  --color-status-success-border: var(--success-border-light);
+  --color-status-success-text: var(--success-text-light);
+  --color-status-warning: var(--warning-base);
+  --color-status-warning-surface: var(--warning-surface-light);
+  --color-status-warning-border: var(--warning-border-light);
+  --color-status-warning-text: var(--warning-text-light);
+  --color-status-danger: var(--danger-base);
+  --color-status-danger-surface: var(--danger-surface-light);
+  --color-status-danger-border: var(--danger-border-light);
+  --color-status-danger-text: var(--danger-text-light);
+  --color-status-info: var(--info-base);
+  --color-status-info-surface: var(--info-surface-light);
+  --color-status-info-border: var(--info-border-light);
+  --color-status-info-text: var(--info-text-light);
+
+  /* --- gutter: Default gap inside compositions. --- */
+  --gutter: var(--space-s);
+
+  /* --- region-space: Vertical padding of a page section. --- */
+  --region-space: var(--space-xl);
+
+  /* --- flow-space: Default rhythm in .flow; scales with the local font size. --- */
+  --flow-space: 1em;
+
+  /* --- inset: Padding inside blocks. --- */
+  --inset-control: var(--space-2xs) var(--space-s);
+  --inset-surface: var(--space-m);
+
+  /* --- text: Body text sizes. --- */
+  --text-body: var(--step-0);
+  --text-small: var(--step--1);
+  --text-lead: var(--step-1);
+
+  /* --- heading: Heading sizes; h5 and h6 reuse --text-body. --- */
+  --heading-1: var(--step-5);
+  --heading-2: var(--step-4);
+  --heading-3: var(--step-3);
+  --heading-4: var(--step-2);
+
+  /* --- font: Font family stacks. Brand-neutral placeholders; override per project. --- */
+  --font-body: system-ui, sans-serif;
+  --font-heading: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
+  /* --- weight: Font weights. --- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- leading: Line heights. --- */
+  --leading-tight: 1.1;
+  --leading-body: 1.5;
+
+  /* --- radius: Corner radii by what is being rounded. --- */
+  --radius-control: 4px;
+  --radius-surface: 8px;
+  --radius-pill: 999px;
+
+  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
+
+  /* --- duration: Motion durations. --- */
+  --duration-quick: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+
+  /* --- ease: Motion easing curves. --- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* --- layer: Stacking order. Dialogs use the top layer and need no token. --- */
+  --layer-raised: 10;
+  --layer-nav: 50;
+  --layer-popover: 100;
+
+  /* --- button: Style of a .button with no data-variant: outlined (transparent) or filled (action). --- */
+  --button-default-bg: transparent;
+  --button-default-text: var(--color-text);
+  --button-default-border: var(--color-border);
+  --button-default-bg-hover: var(--color-surface-sunken);
+  --button-default-border-hover: var(--color-border-strong);
+
+  /* --- link: Decoration of unstyled anchors: underlined always, or only on hover. --- */
+  --link-decoration: underline;
+  --link-decoration-hover: underline;
+
+  /* --- measure: Typographic reading width (.center, prose). --- */
+  --measure: 60ch;
+
+  /* --- wrapper-max: Site-wide page section width (.wrapper). --- */
+  --wrapper-max: 80rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+    --color-surface: var(--neutral-950);
+    --color-surface-raised: var(--neutral-900);
+    --color-surface-sunken: var(--neutral-800);
+    --color-text: var(--neutral-100);
+    --color-text-muted: var(--neutral-400);
+    --color-text-inverse: var(--neutral-950);
+    --color-border: var(--neutral-700);
+    --color-border-strong: var(--neutral-600);
+    --color-status-success: var(--success-base-dark);
+    --color-status-success-surface: var(--success-surface-dark);
+    --color-status-success-border: var(--success-border-dark);
+    --color-status-success-text: var(--success-text-dark);
+    --color-status-warning: var(--warning-base-dark);
+    --color-status-warning-surface: var(--warning-surface-dark);
+    --color-status-warning-border: var(--warning-border-dark);
+    --color-status-warning-text: var(--warning-text-dark);
+    --color-status-danger: var(--danger-base-dark);
+    --color-status-danger-surface: var(--danger-surface-dark);
+    --color-status-danger-border: var(--danger-border-dark);
+    --color-status-danger-text: var(--danger-text-dark);
+    --color-status-info: var(--info-base-dark);
+    --color-status-info-surface: var(--info-surface-dark);
+    --color-status-info-border: var(--info-border-dark);
+    --color-status-info-text: var(--info-text-dark);
+
+    /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+    --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
+    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
+  --color-surface: var(--neutral-950);
+  --color-surface-raised: var(--neutral-900);
+  --color-surface-sunken: var(--neutral-800);
+  --color-text: var(--neutral-100);
+  --color-text-muted: var(--neutral-400);
+  --color-text-inverse: var(--neutral-950);
+  --color-border: var(--neutral-700);
+  --color-border-strong: var(--neutral-600);
+  --color-status-success: var(--success-base-dark);
+  --color-status-success-surface: var(--success-surface-dark);
+  --color-status-success-border: var(--success-border-dark);
+  --color-status-success-text: var(--success-text-dark);
+  --color-status-warning: var(--warning-base-dark);
+  --color-status-warning-surface: var(--warning-surface-dark);
+  --color-status-warning-border: var(--warning-border-dark);
+  --color-status-warning-text: var(--warning-text-dark);
+  --color-status-danger: var(--danger-base-dark);
+  --color-status-danger-surface: var(--danger-surface-dark);
+  --color-status-danger-border: var(--danger-border-dark);
+  --color-status-danger-text: var(--danger-text-dark);
+  --color-status-info: var(--info-base-dark);
+  --color-status-info-surface: var(--info-surface-dark);
+  --color-status-info-border: var(--info-border-dark);
+  --color-status-info-text: var(--info-text-dark);
+
+  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
+  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
+  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+}
+}
+
+@layer global {
+/* ==========================================================================
+   GLOBAL STYLES & BASE TYPOGRAPHY
+   Element defaults from Tier 2 tokens. Blocks build on these; they never
+   remove the focus ring.
+   ========================================================================== */
+
+:root {
+  /* Minimum interactive target (44px, Apple HIG); controls set min-block-size from it */
+  --target-min: 2.75rem;
+
+  /* Notch and home-indicator insets; needs viewport-fit=cover in the viewport meta */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* Interactive blocks draw their own pressed and focus states */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-block-size: 100dvh; /* dvh, not vh: tracks mobile browser toolbars */
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  overflow-wrap: break-word;
+}
+
+/*
+ * The reset removes only end margins. Vertical rhythm belongs to .flow, so
+ * start margins go too; otherwise the first heading in a card, dialog or
+ * cluster carries a stray user-agent gap.
+ */
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) {
+  margin-block-start: 0;
+}
+
+/* The user-agent 40px side margins squeeze figures and quotes in narrow layouts */
+:where(figure, blockquote) {
+  margin-inline: 0;
+}
+
+/* The one focus style. No block may set outline: none. */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --- Headings --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--heading-1);
+}
+h2 {
+  font-size: var(--heading-2);
+}
+h3 {
+  font-size: var(--heading-3);
+}
+h4 {
+  font-size: var(--heading-4);
+}
+h5,
+h6 {
+  font-size: var(--text-body);
+}
+
+/* --- Code --- */
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+}
+
+/* --- Links: colour and decoration from tokens --- */
+a:not([class]) {
+  color: var(--color-link);
+  text-decoration-line: var(--link-decoration);
+  text-underline-offset: 0.15em;
+}
+
+@media (hover: hover) {
+  a:not([class]):hover {
+    text-decoration-line: var(--link-decoration-hover);
+  }
+}
+
+::selection {
+  background-color: color-mix(in oklch, var(--color-action) 25%, transparent);
+}
+
+/*
+ * Typographic measure
+ * Caps line length for running text inside .prose and .flow only, so
+ * text in navbars, tables and grids is never squeezed by accident.
+ */
+:where(.prose, .flow) :where(p, li, dl, figcaption, blockquote) {
+  max-inline-size: var(--measure);
+}
+}
+
+
+/* --------------------------------------------------------------------------
+   LAYER 2: LAYOUT COMPOSITIONS (Aesthetics-Agnostic Structural Rules)
+   -------------------------------------------------------------------------- */
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: WRAPPER
+   ========================================================================== */
+
+/*
+ * The Wrapper
+ * A macro, page-section container: caps the width of a full-bleed section
+ * (header, footer, page region) to a site-wide max and centers it, with a
+ * plain border-box (padding counts toward the cap, same as the reset default).
+ *
+ * This is deliberately NOT the same job as .center (see center.css):
+ * - Wrapper caps to a wide site max-width (--wrapper-max),
+ *   not the narrower typographic reading measure.
+ * - Wrapper has no content-box gutter trick and no alignment exceptions —
+ *   it is a single-purpose outer shell, applied once per section.
+ * - Its gutter var is namespaced (--wrapper-gutters) rather than the shared
+ *   --gutter used by compositions like .cluster/.grid, because --gutter
+ *   inherits down the DOM: a .grid setting --gutter locally would otherwise
+ *   leak into any .wrapper nested inside it and silently change its padding.
+ */
+.wrapper {
+  max-inline-size: var(--wrapper-max-width, var(--wrapper-max));
+  margin-inline: auto;
+  padding-inline: var(--wrapper-gutters, var(--space-m));
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: REGION
+   ========================================================================== */
+
+/*
+ * The Region
+ * Vertical breathing room for a page section. Pair with .wrapper for the
+ * horizontal edge: <section class="region"><div class="wrapper">…
+ */
+.region {
+  padding-block: var(--region-padding, var(--region-space));
+}
+
+/* CUBE Exceptions: tighter or roomier sections */
+.region[data-size="small"] {
+  --region-padding: var(--space-l);
+}
+
+.region[data-size="large"] {
+  --region-padding: var(--space-2xl);
+}
+
+/* The last region on the page clears the home indicator */
+.region:last-of-type {
+  padding-block-end: calc(var(--region-padding, var(--region-space)) + var(--safe-bottom));
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: CENTER
+   ========================================================================== */
+
+/*
+ * The Center
+ * A content primitive: caps a box to the typographic reading measure
+ * (--measure) and centers it, with content-box sizing so that
+ * padding is guaranteed extra gutter space rather than eating into the
+ * measure cap. Also offers intrinsic centering exceptions for its children.
+ *
+ * Not to be confused with .wrapper (see wrapper.css), which caps a much
+ * wider macro page-section width and has no content-box trick or exceptions.
+ * Use .center around prose/hero content that needs a reading-width cap;
+ * use .wrapper around a whole section that needs a site-wide edge margin.
+ */
+.center {
+  box-sizing: content-box; /* Crucial: padding doesn't subtract from our max-inline-size */
+  display: block;
+  max-inline-size: var(--center-max-width, var(--measure));
+  margin-inline: auto;
+  padding-inline: var(--center-gutters, var(--space-m));
+}
+
+/* Optional utility exception: centers the text alignment inside the center box too */
+.center[data-and-text] {
+  text-align: center;
+}
+
+/* Optional utility exception: forces child elements to center themselves if they are flex/grid items */
+.center[data-intrinsic] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: FLOW 
+   ========================================================================== */
+
+/* 
+ * The Flow
+ * Manages vertical rhythm between direct siblings using the owl selector.
+ * Notice the absence of flexbox—this relies purely on native block flow.
+ */
+.flow > * + * {
+  margin-block-start: var(--flow-space, 1em);
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: CLUSTER
+   ========================================================================== */
+
+/*
+ * The Cluster
+ * Groups elements together with horizontal and vertical spacing.
+ * --cluster-space sets the gap for one cluster without leaking into
+ * nested compositions the way overriding --gutter would.
+ */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-space, var(--gutter));
+  justify-content: var(--cluster-justify, flex-start);
+  align-items: var(--cluster-align, center);
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: SIDEBAR
+   ========================================================================== */
+
+/*
+ * The Sidebar
+ * An asymmetric layout where a sidebar holds its width, and the main
+ * content stretches to fill the rest, stacking when space runs out.
+ * The sidebar is the first child, or the last with [data-side="right"].
+ */
+.sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sidebar-space, var(--gutter));
+  align-items: var(--sidebar-align, stretch); /* flex-start for media objects */
+}
+
+/* The sidebar: holds its target width */
+.sidebar:not([data-side="right"]) > :first-child,
+.sidebar[data-side="right"] > :last-child {
+  flex-basis: var(--sidebar-target-width, 15rem);
+  flex-grow: 1;
+}
+
+/* The content: takes the rest, but never narrower than its minimum */
+.sidebar:not([data-side="right"]) > :last-child,
+.sidebar[data-side="right"] > :first-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: var(--sidebar-content-min-width, 50%);
+}
+
+/*
+ * CUBE Exception: Sticky sidebar (app shells)
+ * The sidebar stays in view and scrolls on its own, offset below any sticky
+ * header via --sticky-offset. Only while the layout is wide enough to sit
+ * side by side; once stacked, a pinned panel would cover the content.
+ */
+.sidebar[data-sticky] {
+  container-type: inline-size;
+}
+
+@container (min-width: 45rem) {
+  .sidebar[data-sticky]:not([data-side="right"]) > :first-child,
+  .sidebar[data-sticky][data-side="right"] > :last-child {
+    position: sticky;
+    inset-block-start: var(--sticky-offset, 0px);
+    align-self: flex-start;
+    max-block-size: calc(100dvh - var(--sticky-offset, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: GRID
+   ========================================================================== */
+
+/* 
+ * The Grid
+ * An intrinsic grid layout that creates equal-width columns without media queries.
+ */
+.grid {
+  display: grid;
+  gap: var(--gutter);
+  grid-template-columns: repeat(
+    var(--grid-placement, auto-fit),
+    minmax(min(var(--grid-min-item-size, 15rem), 100%), 1fr)
+  );
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: REEL
+   ========================================================================== */
+
+/*
+ * The Reel
+ * Creates a horizontally scrollable container that snaps elements into place.
+ * Excellent for image galleries, product cards, or horizontal menus.
+ */
+.reel {
+  display: flex;
+  gap: var(--gutter);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--safe-left) var(--safe-right); /* snapped items clear the notch in landscape */
+  overscroll-behavior: contain;
+  padding-block-end: var(--space-xs); /* Room for the native scrollbar */
+}
+
+.reel > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: SWITCHER
+   ========================================================================== */
+
+/* 
+ * The Switcher
+ * Switches directly from a horizontal row to a vertical stack based on a container threshold.
+ */
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+}
+
+.switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((var(--switcher-threshold, 40rem) - 100%) * 999);
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: FRAME
+   ========================================================================== */
+
+/*
+ * The Frame
+ * Holds media (or anything) at a fixed aspect ratio, cropping rather than
+ * distorting. Set --frame-ratio for anything other than 16:9.
+ */
+.frame {
+  aspect-ratio: var(--frame-ratio, 16 / 9);
+  overflow: hidden;
+}
+
+.frame > :is(img, video) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+}
+
+@layer compositions {
+/* ==========================================================================
+   COMPOSITION: BENTO
+   ========================================================================== */
+
+/*
+ * The Bento
+ * An intrinsic, densely packed grid: as many --bento-min columns as fit,
+ * with no breakpoints. Items can span extra tracks, but only once the bento
+ * itself is wide enough (45rem), so a span can never overflow a narrow,
+ * single-column layout.
+ */
+.bento {
+  container: bento / inline-size;
+  display: grid;
+  gap: var(--bento-space, var(--gutter));
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--bento-min, 14rem), 100%), 1fr));
+  grid-auto-rows: minmax(var(--bento-row-min, 12rem), auto);
+  grid-auto-flow: dense;
+}
+
+/*
+ * CUBE Exceptions
+ * The attribute belongs on the grid item (e.g. a .card), not on .bento.
+ */
+@container bento (min-width: 45rem) {
+  .bento > [data-span="2"] {
+    grid-column: span 2;
+  }
+  .bento > [data-span="3"] {
+    grid-column: span 3;
+  }
+  .bento > [data-span="full"] {
+    grid-column: 1 / -1;
+  }
+
+  .bento > [data-row-span="2"] {
+    grid-row: span 2;
+  }
+  .bento > [data-row-span="3"] {
+    grid-row: span 3;
+  }
+}
+}
+
+
+/* --------------------------------------------------------------------------
+   LAYER 3: CUBE BLOCKS (Encapsulated Component Styling)
+   -------------------------------------------------------------------------- */
+@layer blocks {
+/* ==========================================================================
+   BLOCK: SKIP LINK
+   First focusable element on the page; parked above the viewport until it
+   receives keyboard focus.
+   ========================================================================== */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: calc(var(--space-xs) + var(--safe-top, 0px));
+  inset-inline-start: calc(var(--space-xs) + var(--safe-left, 0px));
+  z-index: var(--layer-popover);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  border-radius: var(--radius-control);
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--space-l)));
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: BUTTON
+   Variants only reassign the --button-* variables; the rules never repeat.
+   ========================================================================== */
+
+.button {
+  /* Default style is a token choice (outlined or filled), set in the configurator */
+  --button-bg: var(--button-default-bg);
+  --button-text: var(--button-default-text);
+  --button-border: var(--button-default-border);
+  --button-bg-hover: var(--button-default-bg-hover);
+  --button-border-hover: var(--button-default-border-hover);
+  --button-padding: var(--inset-control);
+  --button-font-size: var(--text-body);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs); /* For icons */
+  min-block-size: var(--target-min);
+  padding: var(--button-padding);
+
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  border-radius: var(--radius-control);
+
+  font-family: inherit;
+  font-size: var(--button-font-size);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--duration-quick);
+  transition-timing-function: var(--ease-standard);
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled, [aria-disabled="true"], [data-state="loading"]) {
+    background-color: var(--button-bg-hover);
+    border-color: var(--button-border-hover);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: variants
+   -------------------------------------------------------------------------- */
+.button[data-variant="primary"] {
+  --button-bg: var(--color-action);
+  --button-text: var(--color-action-text);
+  --button-border: var(--color-action);
+  --button-bg-hover: var(--color-action-hover);
+  --button-border-hover: var(--color-action-hover);
+}
+
+.button[data-variant="secondary"] {
+  --button-bg: var(--color-surface-sunken);
+  --button-text: var(--color-text);
+  --button-border: var(--color-border);
+  --button-bg-hover: color-mix(in oklch, var(--color-text) 8%, var(--color-surface-sunken));
+  --button-border-hover: var(--color-border-strong);
+}
+
+.button[data-variant="ghost"] {
+  --button-bg: transparent;
+  --button-text: var(--color-text);
+  --button-border: transparent;
+  --button-bg-hover: var(--color-surface-sunken);
+  --button-border-hover: transparent;
+}
+
+.button[data-variant="danger"] {
+  --button-bg: var(--color-status-danger);
+  --button-text: var(--color-text-inverse);
+  --button-border: var(--color-status-danger);
+  --button-bg-hover: color-mix(in oklch, var(--color-status-danger) 85%, var(--color-text));
+  --button-border-hover: var(--button-bg-hover);
+}
+
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: sizes (the touch target never shrinks)
+   -------------------------------------------------------------------------- */
+.button[data-size="small"] {
+  --button-padding: var(--space-3xs) var(--space-xs);
+  --button-font-size: var(--text-small);
+}
+
+.button[data-size="large"] {
+  --button-padding: var(--space-xs) var(--space-m);
+  --button-font-size: var(--text-lead);
+}
+
+/* Icon-only buttons are square and still meet the target size */
+.button[data-icon-only] {
+  min-inline-size: var(--target-min);
+  padding-inline: 0;
+}
+
+/* --------------------------------------------------------------------------
+   CUBE Exceptions: states
+   -------------------------------------------------------------------------- */
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Copied: swaps between two labels after a copy action.
+   <button class="button"><span data-label="idle">Copy</span><span data-label="copied">Copied</span></button> */
+.button [data-label="copied"],
+.button[data-state="copied"] [data-label="idle"] {
+  display: none;
+}
+
+.button[data-state="copied"] [data-label="copied"] {
+  display: inline;
+}
+
+/* Loading: the label keeps the button's width but hides behind a spinner.
+   Pair with aria-busy="true" so assistive tech hears the state. */
+.button[data-state="loading"] {
+  color: transparent;
+  cursor: progress;
+}
+
+.button[data-state="loading"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid var(--button-text);
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: ll-button-spin calc(var(--duration-slow) * 2) linear infinite;
+}
+
+@keyframes ll-button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: FIELD
+   A label, its control, an optional hint and an optional error, in order.
+   Wire them with for/id and aria-describedby; the error uses role="alert".
+   ========================================================================== */
+
+.field {
+  display: grid;
+  gap: var(--field-gap, var(--space-3xs));
+}
+
+.label {
+  display: block;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+
+.field__hint {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.field__error {
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-status-danger-text);
+}
+
+/* A control and its companion side by side: a slider and its number, an input and a button */
+.field__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.field__controls > [type="range"] {
+  flex: 1 1 8rem;
+}
+
+/* CUBE Exception: error state, from either the field or the control itself */
+.field[data-status="danger"] :is(.input, .select, .textarea),
+:is(.input, .select, .textarea)[aria-invalid="true"] {
+  --control-border: var(--color-status-danger);
+  --control-bg: var(--color-status-danger-surface);
+}
+
+/* CUBE Exception: a disabled control mutes its label */
+.field:has(:disabled) .label {
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Fieldset: groups related controls (checkbox and radio groups)
+   -------------------------------------------------------------------------- */
+.fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-block-end: var(--space-2xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: INPUT (and the shared form-control base)
+   .input, .select and .textarea share one look; select.css and textarea.css
+   add only what is specific to them. Text stays at --text-body so iOS
+   Safari never zooms the page on focus.
+   ========================================================================== */
+
+:is(.input, .select, .textarea) {
+  --control-bg: var(--color-surface);
+  --control-border: var(--color-border);
+
+  inline-size: 100%; /* compositions decide the actual width */
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  font-family: inherit;
+  font-size: var(--text-body);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--duration-quick) var(--ease-standard);
+}
+
+:is(.input, .select, .textarea)::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+/* The global :focus-visible ring is the focus indicator; the border follows it */
+:is(.input, .select, .textarea):focus-visible {
+  --control-border: var(--color-focus);
+}
+
+@media (hover: hover) {
+  :is(.input, .select, .textarea):hover:not(:disabled, :focus-visible, [aria-invalid="true"]) {
+    --control-border: var(--color-border-strong);
+  }
+}
+
+:is(.input, .select, .textarea):disabled {
+  --control-bg: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* CUBE Exception: range sliders keep the native thumb, coloured by accent-color */
+.input[type="range"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  accent-color: var(--color-action);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: SELECT
+   Shares the form-control base in input.css. The chevron is two
+   currentColor gradients, so it follows the text colour in both schemes.
+   ========================================================================== */
+
+.select {
+  appearance: none;
+  padding-inline-end: calc(var(--space-s) + 1.5em);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - var(--space-s) - 0.35em) 50%,
+    calc(100% - var(--space-s)) 50%;
+  background-size: 0.35em 0.35em;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* CUBE Exception: a list box shows its options, so it needs no chevron */
+.select:is([multiple], [size]:not([size="1"])) {
+  padding-inline-end: var(--space-s);
+  background-image: none;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: TEXTAREA
+   Shares the form-control base in input.css; running text gets body leading
+   and only grows vertically, so it never breaks the layout's width.
+   ========================================================================== */
+
+.textarea {
+  display: block;
+  line-height: var(--leading-body);
+  resize: vertical;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: CHOICE (checkbox and radio)
+   <label class="choice"><input class="choice__input" type="checkbox"> Text</label>
+   The whole label is the hit area, at least --target-min tall.
+   ========================================================================== */
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-block-size: var(--target-min);
+  line-height: var(--leading-tight);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.choice__input {
+  flex-shrink: 0;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  margin: 0;
+  accent-color: var(--color-action);
+  cursor: inherit;
+}
+
+.choice:has(.choice__input:disabled) {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Choice group: a stack of choices (Django's RadioSelect and
+   CheckboxSelectMultiple render into this)
+   -------------------------------------------------------------------------- */
+.choice-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/*
+ * CUBE Exception: segmented control
+ * Radios hidden visually (still keyboard-operable and announced), with their
+ * labels drawn as adjoining buttons:
+ * <input class="visually-hidden" type="radio" id="a"><label for="a">A</label>
+ */
+.choice-group[data-variant="segmented"] {
+  display: inline-flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+
+.choice-group[data-variant="segmented"] > label {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+
+.choice-group[data-variant="segmented"] > label + input + label {
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.choice-group[data-variant="segmented"] > input:checked + label {
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+}
+
+/* The ring sits inside, as the group clips its overflow */
+.choice-group[data-variant="segmented"] > input:focus-visible + label {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .choice-group[data-variant="segmented"] > input:not(:checked) + label:hover {
+    background-color: var(--color-surface-sunken);
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: INPUT GROUP
+   An input joined to prefix/suffix addons (text or icon) or a button,
+   sharing one border and one outer radius.
+   ========================================================================== */
+
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group > * {
+  border-radius: 0;
+}
+
+.input-group > :first-child {
+  border-start-start-radius: var(--radius-control);
+  border-end-start-radius: var(--radius-control);
+}
+
+.input-group > :last-child {
+  border-start-end-radius: var(--radius-control);
+  border-end-end-radius: var(--radius-control);
+}
+
+/* Neighbours overlap by one border width so the seam is a single line */
+.input-group > :not(:first-child) {
+  margin-inline-start: -1px;
+}
+
+.input-group > :is(.input, .select) {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* The focused control's ring and border sit above its neighbours */
+.input-group > :focus-visible {
+  position: relative;
+  z-index: var(--layer-raised);
+}
+
+.input-group__addon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-inline: var(--space-2xs);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: BADGE
+   ========================================================================== */
+
+.badge {
+  --badge-bg: var(--color-surface-sunken);
+  --badge-text: var(--color-text);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  padding: 0.25em 0.65em;
+  border-radius: var(--radius-pill);
+  background-color: var(--badge-bg);
+  color: var(--badge-text);
+}
+
+/* CUBE Exceptions (Status Variants) */
+.badge[data-status="info"] {
+  --badge-bg: var(--color-status-info-surface);
+  --badge-text: var(--color-status-info-text);
+}
+
+.badge[data-status="success"] {
+  --badge-bg: var(--color-status-success-surface);
+  --badge-text: var(--color-status-success-text);
+}
+
+.badge[data-status="warning"] {
+  --badge-bg: var(--color-status-warning-surface);
+  --badge-text: var(--color-status-warning-text);
+}
+
+.badge[data-status="danger"] {
+  --badge-bg: var(--color-status-danger-surface);
+  --badge-text: var(--color-status-danger-text);
+}
+
+/* CUBE Exception: Floating Placement */
+.badge[data-placement="floating"] {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--layer-raised);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: ACCORDION (native details/summary, no JavaScript)
+   <div class="accordion">
+     <details class="accordion__item" name="faq">
+       <summary class="accordion__trigger">Question <svg class="icon accordion__icon">…</svg></summary>
+       <div class="accordion__content">Answer</div>
+     </details>
+   Items sharing a name form an exclusive group (one open at a time).
+   ========================================================================== */
+
+.accordion {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface);
+  overflow: hidden;
+}
+
+.accordion__item + .accordion__item {
+  border-block-start: 1px solid var(--color-border);
+}
+
+.accordion__trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xs);
+  min-block-size: var(--target-min);
+  padding: var(--space-xs) var(--inset-surface);
+  list-style: none; /* no native disclosure triangle */
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+
+.accordion__trigger::-webkit-details-marker {
+  display: none;
+}
+
+.accordion__trigger:focus-visible {
+  background-color: var(--color-surface-sunken);
+  outline-offset: -2px; /* .accordion clips overflow, so draw the ring inside */
+}
+
+@media (hover: hover) {
+  .accordion__trigger:hover {
+    background-color: var(--color-surface-sunken);
+  }
+}
+
+.accordion__icon {
+  flex-shrink: 0;
+  transition: rotate var(--duration-base) var(--ease-spring);
+}
+
+.accordion__item[open] > .accordion__trigger .accordion__icon {
+  rotate: 180deg;
+}
+
+.accordion__content {
+  padding: 0 var(--inset-surface) var(--inset-surface);
+}
+
+/*
+ * Height animation: the 0fr -> 1fr grid trick on the details' content slot.
+ * content-visibility transitions discretely so closing animates too.
+ * Browsers without ::details-content simply open and close instantly.
+ */
+.accordion__item::details-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition-property: grid-template-rows, content-visibility;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.accordion__item[open]::details-content {
+  grid-template-rows: 1fr;
+}
+
+.accordion__item > .accordion__content {
+  min-block-size: 0;
+  overflow: hidden;
+  transition: padding-block-end var(--duration-base) var(--ease-standard);
+}
+
+/* A 0fr row cannot shrink padding, so the padding closes with it */
+.accordion__item:not([open]) > .accordion__content {
+  padding-block-end: 0;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: DROPDOWN
+   Hooks (set on the dropdown or any ancestor):
+     --dropdown-width   minimum menu width (default 12rem)
+     --dropdown-offset  gap between trigger and menu (default --space-2xs)
+   ========================================================================== */
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.dropdown {
+  position: absolute;
+  inset-block-start: calc(100% + var(--dropdown-offset, var(--space-2xs)));
+  inset-inline-start: 0;
+  z-index: var(--layer-popover);
+  min-inline-size: var(--dropdown-width, 12rem);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  padding: var(--space-2xs);
+  box-shadow: var(--shadow-raised);
+
+  /* Hidden State Physics */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(var(--space-2xs) * -1));
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-spring),
+    visibility var(--duration-base);
+  will-change: transform, opacity;
+}
+
+/* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
+.dropdown[data-align="end"] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* CUBE Exception: open */
+.dropdown-wrapper[data-state="open"] .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Items may be links or buttons; buttons lose their native chrome */
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--target-min);
+  touch-action: manipulation;
+  padding: var(--inset-control);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  transition:
+    background-color var(--duration-quick) var(--ease-standard),
+    color var(--duration-quick) var(--ease-standard);
+}
+
+.dropdown__item:focus-visible {
+  background-color: var(--color-surface-sunken);
+  color: var(--color-action);
+}
+
+@media (hover: hover) {
+  .dropdown__item:hover {
+    background-color: var(--color-surface-sunken);
+    color: var(--color-action);
+  }
+}
+
+.dropdown__divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin-block: var(--space-2xs);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: CARD
+   The card is only the surface. Padding lives on .card__body, so media
+   placed directly inside the card sits flush with no negative margins.
+   ========================================================================== */
+
+.card {
+  position: relative;
+  overflow: hidden; /* clips flush media to the radius */
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+}
+
+.card__body {
+  padding: var(--card-padding, var(--inset-surface));
+}
+
+/* Flush media: a direct img, picture or video fills the card's width */
+.card > :is(img, picture, video) {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: var(--card-media-ratio, 16 / 9);
+  object-fit: cover;
+}
+
+.card > picture > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/*
+ * CUBE Exception: a floating badge straddles the top edge, so the card must
+ * not clip it. Leading media then rounds its own top corners instead.
+ */
+.card:has(.badge[data-placement="floating"]) {
+  overflow: visible;
+}
+
+.card:has(.badge[data-placement="floating"])
+  > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: NAVBAR
+   ========================================================================== */
+
+.navbar {
+  --navbar-bg: var(--color-surface);
+  --navbar-border: var(--color-border);
+
+  container: navbar / inline-size;
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+  position: relative;
+  z-index: var(--layer-nav);
+  padding-block: var(--space-s);
+}
+
+/* CUBE Exception: stays at the top while the page scrolls, clear of the notch */
+.navbar[data-sticky] {
+  position: sticky;
+  inset-block-start: 0;
+  padding-block-start: calc(var(--space-s) + var(--safe-top));
+}
+
+.navbar__brand {
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lead);
+  color: var(--color-text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.navbar__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-body);
+  padding: var(--inset-control);
+  border-radius: var(--radius-control);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color var(--duration-quick) var(--ease-standard),
+    background-color var(--duration-quick) var(--ease-standard);
+}
+
+.navbar__link:focus-visible {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}
+
+@media (hover: hover) {
+  .navbar__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-sunken);
+  }
+}
+
+/*
+ * Menu: a wrapping row of links. It owns its own layout, so the markup
+ * needs no inner composition.
+ */
+.navbar__menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--navbar-menu-space, var(--space-2xs));
+}
+
+/* Toggle: only shown once the navbar is too narrow for the menu */
+.navbar__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-2xs);
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/*
+ * Collapsed navbar (narrower than 45rem, the documented menu-collapse
+ * constant). Driven by the navbar's own width, not the viewport, so it
+ * also collapses inside a narrow column or iframe.
+ */
+@container navbar (width < 45rem) {
+  .navbar__toggle {
+    display: inline-flex;
+  }
+
+  .navbar__menu {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding-block-start: var(--space-s);
+  }
+
+  .navbar__menu[data-state="open"] {
+    display: flex;
+    animation: ll-navbar-reveal var(--duration-quick) var(--ease-standard);
+  }
+}
+
+@keyframes ll-navbar-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-2xs) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: MODAL (Native Dialog)
+   Enters via @starting-style; display and overlay transition discretely so
+   the dialog stays in the top layer until its exit animation finishes.
+   ========================================================================== */
+
+.modal {
+  padding: var(--inset-surface);
+  border: none;
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-overlay);
+  max-inline-size: var(--measure);
+  width: 90vw;
+  margin: auto; /* Reset browser dialog defaults */
+  overscroll-behavior: contain;
+
+  /* Closed state (also the exit target) */
+  opacity: 0;
+  transform: translateY(var(--space-xs)) scale(0.97);
+  transition-property: opacity, transform, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.modal[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: translateY(var(--space-xs)) scale(0.97);
+  }
+}
+
+.modal::backdrop {
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
+  backdrop-filter: blur(4px);
+  transition-property: background-color, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.modal[open]::backdrop {
+  background-color: var(--color-backdrop);
+}
+
+@starting-style {
+  .modal[open]::backdrop {
+    background-color: transparent;
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: OFFCANVAS (Drawer via Native Dialog)
+   Slides in via @starting-style; display and overlay transition discretely
+   so the drawer stays in the top layer until it has slid back out.
+   ========================================================================== */
+
+.offcanvas {
+  --offcanvas-hidden: translateX(100%);
+
+  margin: 0;
+  margin-inline-start: auto; /* Aligns to the right edge by default */
+  height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  max-inline-size: 24rem;
+  border: none;
+  background-color: var(--color-surface-raised);
+  padding: var(--inset-surface);
+  padding-block: calc(var(--inset-surface) + var(--safe-top)) calc(var(--inset-surface) + var(--safe-bottom));
+  padding-inline-end: calc(var(--inset-surface) + var(--safe-right));
+  overscroll-behavior: contain;
+  box-shadow: var(--shadow-overlay);
+  color: var(--color-text);
+
+  /* Closed state (also the exit target) */
+  transform: var(--offcanvas-hidden);
+  transition-property: transform, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.offcanvas[open] {
+  transform: none;
+}
+
+@starting-style {
+  .offcanvas[open] {
+    transform: var(--offcanvas-hidden);
+  }
+}
+
+.offcanvas::backdrop {
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
+  backdrop-filter: blur(4px);
+  transition-property: background-color, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.offcanvas[open]::backdrop {
+  background-color: var(--color-backdrop);
+}
+
+@starting-style {
+  .offcanvas[open]::backdrop {
+    background-color: transparent;
+  }
+}
+
+/* CUBE Exception: Left Alignment */
+.offcanvas[data-position="left"] {
+  --offcanvas-hidden: translateX(-100%);
+
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+  padding-inline-start: calc(var(--inset-surface) + var(--safe-left));
+  padding-inline-end: var(--inset-surface);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: ALERT
+   ========================================================================== */
+
+.alert {
+  /* Internal state defaults */
+  --alert-bg: var(--color-surface);
+  --alert-border: var(--color-border);
+  --alert-text: var(--color-text);
+
+  padding: var(--inset-surface);
+  border-radius: var(--radius-surface);
+  border: 1px solid var(--alert-border);
+  background-color: var(--alert-bg);
+  color: var(--alert-text);
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+
+/* 
+ * CUBE Exceptions (Status Variants) 
+ * We reassign the variables rather than duplicating the CSS properties 
+ */
+.alert[data-status="info"] {
+  --alert-bg: var(--color-status-info-surface);
+  --alert-border: var(--color-status-info-border);
+  --alert-text: var(--color-status-info-text);
+}
+
+.alert[data-status="success"] {
+  --alert-bg: var(--color-status-success-surface);
+  --alert-border: var(--color-status-success-border);
+  --alert-text: var(--color-status-success-text);
+}
+
+.alert[data-status="warning"] {
+  --alert-bg: var(--color-status-warning-surface);
+  --alert-border: var(--color-status-warning-border);
+  --alert-text: var(--color-status-warning-text);
+}
+
+.alert[data-status="danger"] {
+  --alert-bg: var(--color-status-danger-surface);
+  --alert-border: var(--color-status-danger-border);
+  --alert-text: var(--color-status-danger-text);
+}
+
+.alert__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  opacity: 0.7;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-control);
+  transition:
+    opacity var(--duration-quick),
+    background-color var(--duration-quick);
+}
+
+@media (hover: hover) {
+  .alert__close:hover {
+    opacity: 1;
+    background-color: color-mix(in oklch, currentColor 10%, transparent);
+  }
+}
+
+.alert[data-state="removing"] {
+  opacity: 0;
+  transform: scale(0.95);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: TABLE
+   Wrap in .table-wrapper so a wide table scrolls by itself instead of the
+   page: <div class="table-wrapper" role="region" aria-label="…" tabindex="0">
+   ========================================================================== */
+
+.table-wrapper {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+}
+
+/* Rendered prose tables share these rules (see prose.css) */
+:is(.table, .prose table) {
+  --table-cell-padding: var(--space-2xs) var(--space-xs);
+
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table caption,
+.prose caption {
+  caption-side: top;
+  padding-block-end: var(--space-2xs);
+  text-align: start;
+  font-weight: var(--weight-semibold);
+}
+
+.table :is(th, td),
+.prose :is(th, td) {
+  padding: var(--table-cell-padding);
+  border-block-end: 1px solid var(--color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table thead th,
+.prose thead th {
+  border-block-end-color: var(--color-border-strong);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+/* Numbers line up on the right: <td data-align="end"> */
+.table :is(th, td)[data-align="end"] {
+  text-align: end;
+}
+
+/* CUBE Exception: zebra rows */
+.table[data-striped] tbody tr:nth-child(even) {
+  background-color: var(--color-surface-sunken);
+}
+
+/* CUBE Exception: highlight the row under the pointer */
+@media (hover: hover) {
+  .table[data-hover] tbody tr:hover {
+    background-color: color-mix(in oklch, var(--color-action) 8%, transparent);
+  }
+}
+
+/* CUBE Exception: dense data */
+.table[data-density="compact"] {
+  --table-cell-padding: var(--space-3xs) var(--space-2xs);
+  font-size: var(--text-small);
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: PROSE
+   Rich text you don't control the markup of (CMS fields, rendered Markdown).
+   Every gap is a multiple of --flow-space, so the whole block re-spaces from
+   one variable. Line length comes from the global --measure rule.
+   ========================================================================== */
+
+.prose > * + * {
+  margin-block-start: var(--flow-space, 1em);
+}
+
+/* Headings get more room above than below, binding them to what follows */
+.prose > :is(h2, h3, h4, h5, h6) {
+  margin-block-start: calc(var(--flow-space, 1em) * 2);
+}
+
+.prose > :is(h2, h3, h4, h5, h6) + * {
+  margin-block-start: calc(var(--flow-space, 1em) * 0.5);
+}
+
+/* --- Lists --- */
+.prose :is(ul, ol) {
+  padding-inline-start: 1.25em;
+}
+
+.prose li + li,
+.prose li > :is(ul, ol) {
+  margin-block-start: calc(var(--flow-space, 1em) * 0.25);
+}
+
+.prose li::marker {
+  color: var(--color-text-muted);
+}
+
+/* --- Quotes --- */
+.prose blockquote {
+  padding-inline-start: var(--space-s);
+  border-inline-start: 3px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+}
+
+/* --- Code --- */
+/* Code tints from currentColor, so it reads on any surface the prose sits on */
+.prose :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: var(--radius-control);
+  background-color: color-mix(in oklch, currentColor 8%, transparent);
+  font-size: 0.9em;
+}
+
+.prose pre {
+  padding: var(--space-s);
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-surface);
+  background-color: color-mix(in oklch, currentColor 6%, transparent);
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
+}
+
+/* --- Rules and media --- */
+.prose hr {
+  margin-block: calc(var(--flow-space, 1em) * 2);
+  border: 0;
+  border-block-start: 1px solid var(--color-border);
+}
+
+.prose :is(img, video) {
+  border-radius: var(--radius-surface);
+}
+
+.prose figcaption {
+  margin-block-start: calc(var(--flow-space, 1em) * 0.5);
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+/* Tables inside prose take the table block's styles (see table.css) */
+.prose table {
+  display: block;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: PAGINATION
+   <nav class="pagination" aria-label="Pagination">
+     <ol class="pagination__list" role="list">
+       <li><a class="pagination__link" href="?page=2" aria-current="page">2</a></li>
+       <li><span class="pagination__gap" aria-hidden="true">…</span></li>
+   ========================================================================== */
+
+.pagination {
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding: 0;
+}
+
+.pagination__link,
+.pagination__gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  padding-inline: var(--space-2xs);
+  border-radius: var(--radius-control);
+}
+
+.pagination__link {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+
+.pagination__gap {
+  color: var(--color-text-muted);
+}
+
+/* CUBE Exception: the current page */
+.pagination__link[aria-current="page"] {
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+}
+
+/* CUBE Exception: previous/next at either end (render without href) */
+.pagination__link[aria-disabled="true"] {
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .pagination__link:hover:not([aria-current="page"]) {
+    background-color: var(--color-surface-sunken);
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: BREADCRUMB
+   <nav class="breadcrumb" aria-label="Breadcrumb">
+     <ol class="breadcrumb__list" role="list">
+       <li class="breadcrumb__item"><a href="/">Home</a></li>
+       <li class="breadcrumb__item"><a href="/docs" aria-current="page">Docs</a></li>
+   The separators are decorative and hidden from assistive tech.
+   ========================================================================== */
+
+.breadcrumb {
+  font-size: var(--text-small);
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+}
+
+.breadcrumb__item + .breadcrumb__item::before {
+  content: "/" / "";
+  color: var(--color-text-muted);
+}
+
+.breadcrumb__item > a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  color: var(--color-text-muted);
+  text-underline-offset: 0.15em;
+}
+
+.breadcrumb__item > a[aria-current="page"] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: MARQUEE
+   Two identical tracks scrolling in a loop; the second is aria-hidden.
+   Pauses on hover (pointer devices) and whenever it holds focus, and stops
+   under reduced motion.
+   ========================================================================== */
+
+.marquee {
+  --marquee-duration: calc(var(--duration-slow) * 100);
+  --marquee-gap: var(--gutter);
+
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee__track {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--marquee-gap);
+  min-inline-size: 100%;
+  animation: ll-marquee var(--marquee-duration) linear infinite;
+}
+
+.marquee:focus-within .marquee__track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ll-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap)));
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: BG MESH
+   An ambient, slowly drifting wash of the action and accent hues behind a
+   section's content. Decorative only; it stops under reduced motion.
+   ========================================================================== */
+
+.bg-mesh {
+  --mesh-duration: calc(var(--duration-slow) * 40);
+  --mesh-strength: 8%;
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* own stacking context, so the wash sits behind content */
+  background-color: var(--color-surface);
+}
+
+.bg-mesh::before,
+.bg-mesh::after {
+  content: "";
+  position: absolute;
+  inline-size: 150%;
+  block-size: 150%;
+  inset-block-start: -25%;
+  inset-inline-start: -25%;
+  z-index: calc(var(--layer-raised) * -1);
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-action) var(--mesh-strength), transparent) 0%,
+    transparent 60%
+  );
+  animation: ll-mesh-drift var(--mesh-duration) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.bg-mesh::after {
+  inset-block-start: 10%;
+  inset-inline-start: 20%;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-accent) var(--mesh-strength), transparent) 0%,
+    transparent 50%
+  );
+  animation-duration: calc(var(--mesh-duration) * 1.25);
+  animation-direction: alternate-reverse;
+}
+
+@keyframes ll-mesh-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(5%, 5%) scale(1.1);
+  }
+  100% {
+    transform: translate(-5%, -5%) scale(0.9);
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: SWATCH
+   A colour tile with its name and, optionally, its value:
+   <div class="swatch" style="--swatch-color: var(--color-action)">
+     <span class="swatch__tile"></span>
+     <span class="swatch__label">action</span>
+     <code class="swatch__hex">#0072dd</code>
+   </div>
+   ========================================================================== */
+
+.swatch {
+  --swatch-color: var(--color-surface-sunken);
+
+  display: grid;
+  gap: var(--space-3xs);
+  padding: var(--space-3xs);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface-raised);
+  font-size: var(--text-small);
+}
+
+.swatch__tile {
+  display: block;
+  block-size: var(--swatch-tile-size, 2.5rem);
+  border: 1px solid color-mix(in oklch, var(--color-text) 12%, transparent);
+  border-radius: var(--radius-control);
+  background-color: var(--swatch-color);
+}
+
+.swatch__label {
+  font-weight: var(--weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.swatch__hex {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+/* CUBE Exception: a value set by hand rather than derived (configurator) */
+.swatch[data-state="overridden"] {
+  border-color: var(--color-action);
+}
+}
+
+
+/* --------------------------------------------------------------------------
+   LAYER 4: UTILITIES (Single-Purpose Overrides)
+   -------------------------------------------------------------------------- */
+@layer utilities {
+/* ==========================================================================
+   UTILITY: ACCESSIBILITY
+   ========================================================================== */
+
+/* Hidden visually, still announced. Reveals itself while focused or active. */
+.visually-hidden:not(:focus):not(:active) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Blocks set display (.badge, .button ...), which beats the user-agent
+ * [hidden] rule. The utilities layer outranks blocks, so this restores it.
+ */
+[hidden]:not([hidden="until-found"]) {
+  display: none;
+}
+}
+
+@layer utilities {
+/* ==========================================================================
+   UTILITY: ICON
+   Inline SVG only, drawn in currentColor and sized to the surrounding text.
+   No icon library ships with LooseLeaf: paste the SVG paths you need, or
+   keep a <symbol> sheet in the page and <use href="#icon-name">.
+   ========================================================================== */
+
+.icon {
+  inline-size: 1em;
+  block-size: 1em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.125em; /* sit on the text baseline when inline */
+}
+
+.icon[data-size="s"] {
+  inline-size: 0.75em;
+  block-size: 0.75em;
+}
+
+.icon[data-size="l"] {
+  inline-size: 1.5em;
+  block-size: 1.5em;
+}
+}
+
+@layer utilities {
+/* ==========================================================================
+   UTILITY: INDENT ACCENT
+   ========================================================================== */
+
+.indent {
+  border-inline-start: var(--indent-size, 4px) solid
+    var(--indent-color, currentColor);
+}
+}
+
+@layer utilities {
+/* ==========================================================================
+   UTILITY: TEXT ADJUSTMENTS
+   ========================================================================== */
+
+.text-center {
+  text-align: center;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.04ch; /* Automatically applies kerning to prevent squishing */
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Size steps (semantic) --- */
+.text-small {
+  font-size: var(--text-small);
+}
+
+.text-lead {
+  font-size: var(--text-lead);
+}
+}
+
+@layer utilities {
+/* ==========================================================================
+   UTILITY: COLORS (Text & Surface)
+   ========================================================================== */
+
+/* --- Text Colors --- */
+.text-primary {
+  color: var(--color-action);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-danger {
+  color: var(--color-status-danger);
+}
+
+/* --- Surface Colors --- */
+.bg-surface-base {
+  background-color: var(--color-surface);
+}
+.bg-surface-sunken {
+  background-color: var(--color-surface-sunken);
+}
+.bg-primary {
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+}
+
+/* --- Gradient surface (decorative: placeholders, hero media) --- */
+.bg-gradient {
+  background-image: linear-gradient(135deg, var(--color-action), var(--color-accent));
+  color: var(--color-action-text);
+}
+}
+
+@layer utilities {
+/* ==========================================================================
+   UTILITY: ANIMATIONS
+   ========================================================================== */
+
+/* --- The Lift & Scale --- */
+.anim-lift {
+  transition:
+    transform var(--duration-base) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-spring);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .anim-lift:hover {
+    transform: translateY(calc(var(--space-2xs) * -1)) scale(1.02);
+  }
+}
+}
+

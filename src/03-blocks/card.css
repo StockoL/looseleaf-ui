@@ -1,24 +1,45 @@
 /* ==========================================================================
    BLOCK: CARD
+   The card is only the surface. Padding lives on .card__body, so media
+   placed directly inside the card sits flush with no negative margins.
    ========================================================================== */
 
 .card {
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
-  border-radius: 8px;
-  padding: var(--spacing-md);
   position: relative;
-  overflow: hidden; /* Automatically clips child images to the border-radius */
+  overflow: hidden; /* clips flush media to the radius */
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
 }
 
-/* If a card contains an image that should sit flush to the edges */
-.card > img:first-child {
-  /* Reset the padding constraint for edge-to-edge media */
-  margin-block-start: calc(var(--spacing-md) * -1);
-  margin-inline: calc(var(--spacing-md) * -1);
-  max-width: calc(100% + (var(--spacing-md) * 2));
-  width: calc(100% + (var(--spacing-md) * 2));
-  aspect-ratio: 16 / 9;
+.card__body {
+  padding: var(--card-padding, var(--inset-surface));
+}
+
+/* Flush media: a direct img, picture or video fills the card's width */
+.card > :is(img, picture, video) {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: var(--card-media-ratio, 16 / 9);
   object-fit: cover;
-  margin-block-end: var(--spacing-md);
+}
+
+.card > picture > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/*
+ * CUBE Exception: a floating badge straddles the top edge, so the card must
+ * not clip it. Leading media then rounds its own top corners instead.
+ */
+.card:has(.badge[data-placement="floating"]) {
+  overflow: visible;
+}
+
+.card:has(.badge[data-placement="floating"])
+  > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
 }

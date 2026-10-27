@@ -1,0 +1,12 @@
+{
+  "$version": "1.4.0",
+  "color.surface": {
+    "name": "--color-surface",
+    "tier": 2,
+    "light": "#eeeeee",
+    "dark": "#111111",
+    "themed": true,
+    "overridden": false,
+    "purpose": null
+  }
+}

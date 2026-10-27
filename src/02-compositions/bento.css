@@ -1,0 +1,42 @@
+/* ==========================================================================
+   COMPOSITION: BENTO
+   ========================================================================== */
+
+/*
+ * The Bento
+ * An intrinsic, densely packed grid: as many --bento-min columns as fit,
+ * with no breakpoints. Items can span extra tracks, but only once the bento
+ * itself is wide enough (45rem), so a span can never overflow a narrow,
+ * single-column layout.
+ */
+.bento {
+  container: bento / inline-size;
+  display: grid;
+  gap: var(--bento-space, var(--gutter));
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--bento-min, 14rem), 100%), 1fr));
+  grid-auto-rows: minmax(var(--bento-row-min, 12rem), auto);
+  grid-auto-flow: dense;
+}
+
+/*
+ * CUBE Exceptions
+ * The attribute belongs on the grid item (e.g. a .card), not on .bento.
+ */
+@container bento (min-width: 45rem) {
+  .bento > [data-span="2"] {
+    grid-column: span 2;
+  }
+  .bento > [data-span="3"] {
+    grid-column: span 3;
+  }
+  .bento > [data-span="full"] {
+    grid-column: 1 / -1;
+  }
+
+  .bento > [data-row-span="2"] {
+    grid-row: span 2;
+  }
+  .bento > [data-row-span="3"] {
+    grid-row: span 3;
+  }
+}

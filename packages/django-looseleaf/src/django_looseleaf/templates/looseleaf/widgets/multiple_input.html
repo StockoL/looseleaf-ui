@@ -1,0 +1,4 @@
+{% with id=widget.attrs.id %}<div{% if id %} id="{{ id }}"{% endif %} class="{{ widget.attrs.class|default:'choice-group' }}">{% for group, options, index in widget.optgroups %}{% if group %}
+  <p class="legend">{{ group }}</p>{% endif %}{% for option in options %}
+  {% include "looseleaf/widgets/input_option.html" with widget=option %}{% endfor %}{% endfor %}
+</div>{% endwith %}

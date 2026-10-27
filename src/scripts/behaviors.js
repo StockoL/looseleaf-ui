@@ -1,209 +1,272 @@
 /**
- * LooseLeaf UI - Behaviors Engine
- * Handles DOM interactivity via global event delegation.
- * Maps directly to CUBE CSS Block state hooks (data-state, aria-expanded).
+ * LooseLeaf UI - Behaviours
+ * Drop-in progressive enhancement through event delegation. Exports nothing,
+ * works as a classic or a module script, and is safe to include twice.
+ *
+ * Hooks:
+ *   .dropdown-wrapper > [data-toggle="dropdown"] + .dropdown   menu button (arrows, Home/End, Escape)
+ *   .navbar__toggle + .navbar__menu                           collapsed navbar menu
+ *   [data-open-dialog="id"] / [data-close-dialog]              native <dialog> triggers
+ *   .alert__close                                              dismiss an alert
+ *   [data-copy="text"] (optional data-copy-message)            copy to clipboard, announced
+ *   a[href^="#"]                                               motion-safe in-page scrolling
+ * Accordions need no script: they are native <details>.
  */
 
-document.addEventListener("click", (event) => {
-  const target = event.target;
+(() => {
+  "use strict";
 
-  // ---------------------------------------------------------------------------
-  // 1. ACCORDION BLOCK (Toggle Panel)
-  // ---------------------------------------------------------------------------
-  const accordionTrigger = target.closest(".accordion__trigger");
-  if (accordionTrigger) {
-    const isExpanded =
-      accordionTrigger.getAttribute("aria-expanded") === "true";
-    const panel = accordionTrigger.nextElementSibling;
+  const GUARD = Symbol.for("looseleaf.behaviours");
+  if (window[GUARD]) return;
+  window[GUARD] = true;
 
-    // Toggle ARIA state on button
-    accordionTrigger.setAttribute("aria-expanded", !isExpanded);
+  let uid = 0;
+  const ensureId = (element, prefix) => element.id || (element.id = `${prefix}-${++uid}`);
+  const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Toggle CUBE data-state on the target panel
-    if (panel && panel.classList.contains("accordion__panel")) {
-      panel.setAttribute("data-state", isExpanded ? "closed" : "open");
-    }
-    return;
-  }
-
-  // ---------------------------------------------------------------------------
-  // 2. DROPDOWN BLOCK (Toggle Menu)
-  // ---------------------------------------------------------------------------
-  const dropdownTrigger = target.closest('[data-toggle="dropdown"]');
-  if (dropdownTrigger) {
-    const wrapper = dropdownTrigger.closest(".dropdown-wrapper");
-    if (wrapper) {
-      const currentState = wrapper.getAttribute("data-state");
-      const newState = currentState === "open" ? "closed" : "open";
-
-      wrapper.setAttribute("data-state", newState);
-      dropdownTrigger.setAttribute("aria-expanded", newState === "open");
-    }
-    return;
-  }
-
-  // Close open dropdowns when clicking outside
-  if (!target.closest(".dropdown-wrapper")) {
-    document
-      .querySelectorAll('.dropdown-wrapper[data-state="open"]')
-      .forEach((wrapper) => {
-        wrapper.setAttribute("data-state", "closed");
-        const trigger = wrapper.querySelector('[data-toggle="dropdown"]');
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
-      });
-  }
-
-  // ---------------------------------------------------------------------------
-  // 3. NAVBAR BLOCK (Mobile Menu Toggle)
-  // ---------------------------------------------------------------------------
-  const navToggle = target.closest(".navbar__toggle");
-  if (navToggle) {
-    const navbar = navToggle.closest(".navbar");
-    const menu = navbar ? navbar.querySelector(".navbar__menu") : null;
-
-    if (menu) {
-      const isExpanded = navToggle.getAttribute("aria-expanded") === "true";
-      navToggle.setAttribute("aria-expanded", !isExpanded);
-      menu.setAttribute("data-state", isExpanded ? "closed" : "open");
-    }
-    return;
-  }
-
-  // ---------------------------------------------------------------------------
-  // 4. MODAL & OFFCANVAS (Native Dialog Triggers)
-  // ---------------------------------------------------------------------------
-  const dialogTrigger = target.closest("[data-open-dialog]");
-  if (dialogTrigger) {
-    const dialogId = dialogTrigger.getAttribute("data-open-dialog");
-    const dialogElement = document.getElementById(dialogId);
-
-    if (dialogElement && typeof dialogElement.showModal === "function") {
-      dialogElement.showModal();
-    }
-    return;
-  }
-
-  const dialogClose = target.closest("[data-close-dialog]");
-  if (dialogClose) {
-    const dialogElement = dialogClose.closest("dialog");
-    if (dialogElement && typeof dialogElement.close === "function") {
-      dialogElement.close();
-    }
-    return;
-  }
-
-  // ---------------------------------------------------------------------------
-  // 5. ALERT BLOCK (Dismiss Alert)
-  // ---------------------------------------------------------------------------
-  const alertClose = target.closest(".alert__close");
-  if (alertClose) {
-    const alertBlock = alertClose.closest(".alert");
-    if (alertBlock) {
-      // Trigger CSS transition before removing from DOM
-      alertBlock.setAttribute("data-state", "removing");
-      alertBlock.addEventListener("transitionend", () => alertBlock.remove(), {
-        once: true,
-      });
-    }
-  }
-});
-
-// ---------------------------------------------------------------------------
-// BACKDROP CLICK TO CLOSE (Modals & Offcanvas Drawers)
-// ---------------------------------------------------------------------------
-document.addEventListener("click", (event) => {
-  if (event.target.tagName === "DIALOG") {
-    const dialog = event.target;
-    const rect = dialog.getBoundingClientRect();
-
-    // Check if click was outside the dialog bounding box (on the ::backdrop)
-    const isInDialog =
-      rect.top <= event.clientY &&
-      event.clientY <= rect.top + rect.height &&
-      rect.left <= event.clientX &&
-      event.clientX <= rect.left + rect.width;
-
-    if (!isInDialog) {
-      dialog.close();
-    }
-  }
-});
-
-// ---------------------------------------------------------------------------
-// GLOBAL ESCAPE KEY HANDLER (Closes Open Dropdowns & Menus)
-// ---------------------------------------------------------------------------
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    // Close any open dropdowns
-    document
-      .querySelectorAll('.dropdown-wrapper[data-state="open"]')
-      .forEach((wrapper) => {
-        wrapper.setAttribute("data-state", "closed");
-        const trigger = wrapper.querySelector('[data-toggle="dropdown"]');
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
-      });
-
-    // Close mobile navbar if expanded
-    document
-      .querySelectorAll('.navbar__menu[data-state="open"]')
-      .forEach((menu) => {
-        menu.setAttribute("data-state", "closed");
-        const toggle = menu
-          .closest(".navbar")
-          ?.querySelector(".navbar__toggle");
-        if (toggle) toggle.setAttribute("aria-expanded", "false");
-      });
-  }
-});
-
-// ---------------------------------------------------------------------------
-// UTILITY: CLIPBOARD COPY
-// ---------------------------------------------------------------------------
-document.addEventListener("click", async (event) => {
-  const copyTrigger = event.target.closest("[data-copy]");
-  if (!copyTrigger) return;
-
-  const textToCopy = copyTrigger.getAttribute("data-copy");
-
-  try {
-    await navigator.clipboard.writeText(textToCopy);
-
-    // Provide visual feedback hook for CSS
-    copyTrigger.setAttribute("data-state", "copied");
-
-    // Reset state after 2 seconds
-    setTimeout(() => {
-      copyTrigger.removeAttribute("data-state");
-    }, 2000);
-  } catch (err) {
-    console.error("Failed to copy text: ", err);
-  }
-});
-
-// ---------------------------------------------------------------------------
-// UTILITY: MOTION-SAFE SMOOTH SCROLLING
-// ---------------------------------------------------------------------------
-document.addEventListener("click", (event) => {
-  const scrollTrigger = event.target.closest('a[href^="#"]:not([href="#"])');
-  if (!scrollTrigger) return;
-
-  const targetId = scrollTrigger.getAttribute("href").substring(1);
-  const targetElement = document.getElementById(targetId);
-
-  if (targetElement) {
-    event.preventDefault();
-
-    // Respect user reduced motion preferences
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    targetElement.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start",
+  /* ------------------------------------------------------------------------
+     ARIA WIRING: give toggles aria-controls/aria-expanded that match the DOM
+     ------------------------------------------------------------------------ */
+  function wire() {
+    document.querySelectorAll(".dropdown-wrapper").forEach((wrapper) => {
+      const trigger = wrapper.querySelector('[data-toggle="dropdown"]');
+      const menu = wrapper.querySelector(".dropdown");
+      if (!trigger || !menu) return;
+      trigger.setAttribute("aria-controls", ensureId(menu, "ll-dropdown"));
+      trigger.setAttribute("aria-haspopup", "true");
+      trigger.setAttribute("aria-expanded", String(wrapper.dataset.state === "open"));
     });
 
-    // Set focus to the target for keyboard users
-    targetElement.focus({ preventScroll: true });
+    document.querySelectorAll(".navbar__toggle").forEach((toggle) => {
+      const menu = toggle.closest(".navbar")?.querySelector(".navbar__menu");
+      if (!menu) return;
+      toggle.setAttribute("aria-controls", ensureId(menu, "ll-navbar-menu"));
+      toggle.setAttribute("aria-expanded", String(menu.dataset.state === "open"));
+    });
   }
-});
+
+  /* ------------------------------------------------------------------------
+     DROPDOWN
+     ------------------------------------------------------------------------ */
+  const dropdownItems = (wrapper) =>
+    [...wrapper.querySelectorAll(".dropdown__item")].filter((item) => !item.matches(':disabled, [aria-disabled="true"]'));
+
+  function setDropdown(wrapper, open, focus) {
+    wrapper.dataset.state = open ? "open" : "closed";
+    wrapper.querySelector('[data-toggle="dropdown"]')?.setAttribute("aria-expanded", String(open));
+    if (!open || !focus) return;
+    const items = dropdownItems(wrapper);
+    // The menu becomes focusable once visibility flips, on the next frame
+    requestAnimationFrame(() => (focus === "last" ? items[items.length - 1] : items[0])?.focus());
+  }
+
+  function closeDropdowns(except) {
+    document.querySelectorAll('.dropdown-wrapper[data-state="open"]').forEach((wrapper) => {
+      if (wrapper !== except) setDropdown(wrapper, false);
+    });
+  }
+
+  function moveInDropdown(wrapper, key) {
+    const items = dropdownItems(wrapper);
+    if (!items.length) return false;
+    const index = items.indexOf(document.activeElement);
+    const last = items.length - 1;
+    const next = { ArrowDown: index < last ? index + 1 : 0, ArrowUp: index > 0 ? index - 1 : last, Home: 0, End: last }[key];
+    if (next === undefined) return false;
+    items[next].focus();
+    return true;
+  }
+
+  /* ------------------------------------------------------------------------
+     NAVBAR MENU
+     ------------------------------------------------------------------------ */
+  function setNavMenu(toggle, open) {
+    const menu = toggle.closest(".navbar")?.querySelector(".navbar__menu");
+    if (!menu) return;
+    menu.dataset.state = open ? "open" : "closed";
+    toggle.setAttribute("aria-expanded", String(open));
+  }
+
+  /* ------------------------------------------------------------------------
+     ANNOUNCEMENTS: one polite live region, created on first use
+     ------------------------------------------------------------------------ */
+  let liveRegion = null;
+  function announce(message) {
+    if (!liveRegion) {
+      liveRegion = document.createElement("div");
+      liveRegion.className = "visually-hidden";
+      liveRegion.setAttribute("role", "status");
+      liveRegion.setAttribute("aria-live", "polite");
+      document.body.append(liveRegion);
+    }
+    liveRegion.textContent = "";
+    // A fresh text node on the next frame re-announces repeated messages
+    requestAnimationFrame(() => (liveRegion.textContent = message));
+  }
+
+  /* ------------------------------------------------------------------------
+     COPY
+     ------------------------------------------------------------------------ */
+  const copyTimers = new WeakMap();
+  async function copy(trigger) {
+    try {
+      await navigator.clipboard.writeText(trigger.dataset.copy);
+      trigger.dataset.state = "copied";
+      announce(trigger.dataset.copyMessage || "Copied to clipboard");
+      clearTimeout(copyTimers.get(trigger));
+      copyTimers.set(
+        trigger,
+        setTimeout(() => {
+          if (trigger.dataset.state === "copied") delete trigger.dataset.state;
+        }, 2000),
+      );
+    } catch {
+      announce("Copy failed");
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     ALERT DISMISS: animate out, then remove (with a fallback if no transition runs)
+     ------------------------------------------------------------------------ */
+  function dismissAlert(alert) {
+    let removed = false;
+    const remove = () => {
+      if (removed) return;
+      removed = true;
+      alert.remove();
+    };
+    alert.dataset.state = "removing";
+    alert.addEventListener("transitionend", remove, { once: true });
+    setTimeout(remove, 1000);
+  }
+
+  /* ------------------------------------------------------------------------
+     IN-PAGE LINKS: motion-safe scroll, and move focus to the target
+     ------------------------------------------------------------------------ */
+  function followInPageLink(link, event) {
+    const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    if (!target) return;
+    event.preventDefault();
+
+    link.closest("dialog[open]")?.close();
+    const navToggle = link.closest(".navbar")?.querySelector(".navbar__toggle");
+    if (navToggle && link.closest('.navbar__menu[data-state="open"]')) setNavMenu(navToggle, false);
+
+    target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    // Non-interactive targets need tabindex="-1" to take focus for keyboard and screen reader users
+    if (!target.matches('a[href], button, input, select, textarea, summary, [tabindex]')) {
+      target.setAttribute("tabindex", "-1");
+    }
+    target.focus({ preventScroll: true });
+    if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+  }
+
+  /* ------------------------------------------------------------------------
+     EVENTS
+     ------------------------------------------------------------------------ */
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const dropdownTrigger = target.closest('[data-toggle="dropdown"]');
+    if (dropdownTrigger) {
+      const wrapper = dropdownTrigger.closest(".dropdown-wrapper");
+      if (!wrapper) return;
+      closeDropdowns(wrapper);
+      setDropdown(wrapper, wrapper.dataset.state !== "open");
+      return;
+    }
+    const openWrapper = target.closest('.dropdown-wrapper[data-state="open"]');
+    if (!openWrapper) closeDropdowns();
+    else if (target.closest(".dropdown__item")) setDropdown(openWrapper, false);
+
+    const navToggle = target.closest(".navbar__toggle");
+    if (navToggle) {
+      setNavMenu(navToggle, navToggle.getAttribute("aria-expanded") !== "true");
+      return;
+    }
+
+    const opener = target.closest("[data-open-dialog]");
+    if (opener) {
+      document.getElementById(opener.dataset.openDialog)?.showModal?.();
+      return;
+    }
+
+    const closer = target.closest("[data-close-dialog]");
+    if (closer) {
+      closer.closest("dialog")?.close();
+      return;
+    }
+
+    // A click on the dialog element itself, outside its box, is a click on the ::backdrop
+    if (target instanceof HTMLDialogElement && target.open) {
+      const rect = target.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      if (!inside) target.close();
+      return;
+    }
+
+    const alertClose = target.closest(".alert__close");
+    if (alertClose) {
+      const alert = alertClose.closest(".alert");
+      if (alert) dismissAlert(alert);
+      return;
+    }
+
+    const copyTrigger = target.closest("[data-copy]");
+    if (copyTrigger) {
+      copy(copyTrigger);
+      return;
+    }
+
+    const link = target.closest('a[href^="#"]:not([href="#"])');
+    if (link) followInPageLink(link, event);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const wrapper = event.target.closest(".dropdown-wrapper");
+
+    if (event.key === "Escape") {
+      const open = wrapper?.dataset.state === "open" ? wrapper : document.querySelector('.dropdown-wrapper[data-state="open"]');
+      if (open) {
+        setDropdown(open, false);
+        open.querySelector('[data-toggle="dropdown"]')?.focus();
+        return;
+      }
+      const openMenu = document.querySelector('.navbar__menu[data-state="open"]');
+      const toggle = openMenu?.closest(".navbar")?.querySelector(".navbar__toggle");
+      if (toggle) {
+        setNavMenu(toggle, false);
+        toggle.focus();
+      }
+      return;
+    }
+
+    if (!wrapper) return;
+
+    // Arrow keys on the trigger open the menu at the first or last item
+    if (event.target.matches('[data-toggle="dropdown"]') && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+      event.preventDefault();
+      closeDropdowns(wrapper);
+      setDropdown(wrapper, true, event.key === "ArrowUp" ? "last" : "first");
+      return;
+    }
+
+    if (wrapper.dataset.state === "open" && event.target.closest(".dropdown") && moveInDropdown(wrapper, event.key)) {
+      event.preventDefault();
+    }
+  });
+
+  // A menu closes once focus leaves it (Tab away, or focus moves elsewhere)
+  document.addEventListener("focusout", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const wrapper = event.target.closest('.dropdown-wrapper[data-state="open"]');
+    if (!wrapper || (event.relatedTarget && wrapper.contains(event.relatedTarget))) return;
+    if (event.relatedTarget) setDropdown(wrapper, false);
+  });
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire, { once: true });
+  else wire();
+})();

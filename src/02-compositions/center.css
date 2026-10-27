@@ -5,7 +5,7 @@
 /*
  * The Center
  * A content primitive: caps a box to the typographic reading measure
- * (--layout-measure) and centers it, with content-box sizing so that
+ * (--measure) and centers it, with content-box sizing so that
  * padding is guaranteed extra gutter space rather than eating into the
  * measure cap. Also offers intrinsic centering exceptions for its children.
  *
@@ -17,9 +17,9 @@
 .center {
   box-sizing: content-box; /* Crucial: padding doesn't subtract from our max-inline-size */
   display: block;
-  max-inline-size: var(--center-max-width, var(--layout-measure, 60ch));
+  max-inline-size: var(--center-max-width, var(--measure));
   margin-inline: auto;
-  padding-inline: var(--center-gutters, var(--spacing-md, 1.5rem));
+  padding-inline: var(--center-gutters, var(--space-m));
 }
 
 /* Optional utility exception: centers the text alignment inside the center box too */

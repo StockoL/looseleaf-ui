@@ -1,41 +1,53 @@
 /* ==========================================================================
-   BLOCK: FORM CONTROLS
+   BLOCK: INPUT (and the shared form-control base)
+   .input, .select and .textarea share one look; select.css and textarea.css
+   add only what is specific to them. Text stays at --text-body so iOS
+   Safari never zooms the page on focus.
    ========================================================================== */
 
-.label {
-  display: block;
-  font-weight: 600;
-  font-size: var(--typography-step-0);
-  color: var(--colors-text-base);
-}
+:is(.input, .select, .textarea) {
+  --control-bg: var(--color-surface);
+  --control-border: var(--color-border);
 
-.input {
-  width: 100%; /* Allows layout compositions to dictate actual width */
+  inline-size: 100%; /* compositions decide the actual width */
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
   font-family: inherit;
-  font-size: var(--typography-step-0);
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
-  border-radius: 4px;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  transition:
-    border-color var(--transitions-dur-fast) ease,
-    box-shadow var(--transitions-dur-fast) ease;
+  font-size: var(--text-body);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-control);
+  transition: border-color var(--duration-quick) var(--ease-standard);
 }
 
-.input:focus-visible {
-  outline: none;
-  border-color: var(--colors-action-primary);
-  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
+:is(.input, .select, .textarea)::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
 }
 
-.input[aria-invalid="true"] {
-  border-color: var(--colors-danger);
-  background-color: var(--colors-danger-bg);
+/* The global :focus-visible ring is the focus indicator; the border follows it */
+:is(.input, .select, .textarea):focus-visible {
+  --control-border: var(--color-focus);
 }
 
-.input:disabled {
-  background-color: var(--colors-surface-sunken);
-  color: var(--colors-text-muted);
+@media (hover: hover) {
+  :is(.input, .select, .textarea):hover:not(:disabled, :focus-visible, [aria-invalid="true"]) {
+    --control-border: var(--color-border-strong);
+  }
+}
+
+:is(.input, .select, .textarea):disabled {
+  --control-bg: var(--color-surface-sunken);
+  color: var(--color-text-muted);
   cursor: not-allowed;
+}
+
+/* CUBE Exception: range sliders keep the native thumb, coloured by accent-color */
+.input[type="range"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  accent-color: var(--color-action);
 }

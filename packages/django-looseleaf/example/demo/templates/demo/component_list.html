@@ -1,0 +1,24 @@
+{% extends "demo/base.html" %}
+{% load looseleaf %}
+
+{% block title %}Components · LooseLeaf for Django{% endblock %}
+
+{% block content %}
+  <h1>Components</h1>
+  <p class="text-muted">A ListView paginated with <code>{% templatetag openblock %} ll_pagination page_obj {% templatetag closeblock %}</code>.</p>
+
+  <div class="table-wrapper" role="region" aria-label="Components" tabindex="0">
+    <table class="table" data-striped>
+      <thead>
+        <tr><th scope="col">Name</th><th scope="col">Layer</th></tr>
+      </thead>
+      <tbody>
+        {% for component in object_list %}
+          <tr><td><code>.{{ component.name }}</code></td><td>{{ component.layer }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% ll_pagination page_obj %}
+{% endblock %}

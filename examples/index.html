@@ -2,49 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
     <title>LooseLeaf UI — Live Demo</title>
+    <!-- Blocking on purpose: applies the stored theme before first paint -->
+    <script src="../src/scripts/theme.js"></script>
     <link rel="stylesheet" href="../src/index.css" />
-    <style>
-      /* Demo-only scaffolding — not part of the shipped library */
-      .demo-section {
-        padding-block: var(--spacing-xl);
-        border-bottom: 1px solid var(--colors-border-subtle);
-      }
-      .demo-section:nth-of-type(odd) {
-        background-color: var(--colors-surface-sunken);
-      }
-      .demo-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--colors-text-muted);
-      }
-      .swatch {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        block-size: 5rem;
-        border-radius: 8px;
-        border: 1px solid var(--colors-border-subtle);
-        padding: var(--spacing-xs);
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
-      .placeholder-media {
-        min-height: 12rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        color: var(--colors-text-on-action);
-        font-weight: 700;
-      }
-    </style>
+    <!-- Configurator preview contract: tools/configure.html posts compiled tokens here -->
+    <style id="tokens"></style>
+    <script>
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent || window.parent === window) return;
+        const { type, css, theme } = event.data || {};
+        if (type === "looseleaf:tokens" && typeof css === "string") {
+          document.getElementById("tokens").textContent = css;
+        } else if (type === "looseleaf:theme") {
+          if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+          else if (theme === "auto") delete document.documentElement.dataset.theme;
+        }
+      });
+    </script>
   </head>
   <body>
-    <a class="visually-hidden" href="#main">Skip to content</a>
+    <!-- Icon sheet: the six icons the system itself uses. <svg class="icon"><use href="#icon-chevron" /></svg> -->
+    <svg hidden>
+      <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
 
     <!-- ==================================================================
          NAVBAR (Block) inside WRAPPER (macro section container)
@@ -54,22 +44,20 @@
         <div class="cluster" style="--cluster-justify: space-between;">
           <a href="#main" class="navbar__brand">LooseLeaf UI</a>
 
-          <button
-            class="navbar__toggle"
-            aria-expanded="false"
-            aria-controls="primary-nav"
-          >
-            Menu
+          <button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">
+            <svg class="icon" aria-hidden="true"><use href="#icon-menu" /></svg>
           </button>
 
           <nav id="primary-nav" class="navbar__menu">
-            <div class="cluster">
-              <a href="#tokens" class="navbar__link">Tokens</a>
-              <a href="#compositions" class="navbar__link">Compositions</a>
-              <a href="#blocks" class="navbar__link">Blocks</a>
-              <a href="#utilities" class="navbar__link">Utilities</a>
-              <button class="button" data-variant="primary">Get Started</button>
-            </div>
+            <a href="#design-tokens" class="navbar__link">Tokens</a>
+            <a href="#compositions" class="navbar__link">Compositions</a>
+            <a href="#blocks" class="navbar__link">Blocks</a>
+            <a href="#utilities" class="navbar__link">Utilities</a>
+            <button class="button" type="button" data-variant="ghost" data-theme-toggle>
+              <svg class="icon" aria-hidden="true"><use href="#icon-moon" /></svg>
+              <span data-theme-label>Auto</span>
+            </button>
+            <button class="button" type="button" data-variant="primary">Get Started</button>
           </nav>
         </div>
       </div>
@@ -79,11 +67,11 @@
       <!-- ================================================================
            HERO — Wrapper > Switcher > Flow + Cluster (Case Study 1)
            ================================================================ -->
-      <section class="demo-section">
+      <section class="region bg-surface-sunken">
         <div class="wrapper">
           <div class="switcher" style="--switcher-threshold: 50rem;">
             <div class="flow">
-              <p class="demo-label">LooseLeaf UI</p>
+              <p class="text-small text-uppercase text-muted">LooseLeaf UI</p>
               <h1>Build resilient interfaces with CUBE CSS</h1>
               <p>
                 A lightweight, dependency-free design system that separates
@@ -97,12 +85,7 @@
                 <button class="button">Documentation</button>
               </div>
             </div>
-            <div
-              class="placeholder-media bg-mesh"
-              style="background-color: var(--colors-action-primary);"
-            >
-              <span>Media Slot</span>
-            </div>
+            <div class="frame bg-gradient" style="--frame-ratio: 4 / 3;" role="img" aria-label="Placeholder media"></div>
           </div>
         </div>
       </section>
@@ -110,113 +93,154 @@
       <!-- ================================================================
            DESIGN TOKENS — the palette built out this session
            ================================================================ -->
-      <section class="demo-section" id="tokens">
+      <section class="region" id="design-tokens">
         <div class="wrapper flow">
           <div class="center" data-and-text>
             <h2>Design Tokens</h2>
             <p class="text-muted">
               Every color below is a live custom property from
               <code>design-tokens.json</code>, compiled by
-              <code>build-tokens.js</code>.
+              <code>scripts/build-tokens.js</code>.
             </p>
           </div>
 
           <div class="flow">
             <h3>Neutral Ramp</h3>
             <div class="grid" style="--grid-min-item-size: 6rem;">
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-0); color: var(--colors-neutral-900);"
-              >
-                neutral-0
+              <div class="swatch" style="--swatch-color: var(--neutral-0);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-0</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-100); color: var(--colors-neutral-900);"
-              >
-                neutral-100
+              <div class="swatch" style="--swatch-color: var(--neutral-100);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-100</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-200); color: var(--colors-neutral-900);"
-              >
-                neutral-200
+              <div class="swatch" style="--swatch-color: var(--neutral-200);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-200</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-300); color: var(--colors-neutral-900);"
-              >
-                neutral-300
+              <div class="swatch" style="--swatch-color: var(--neutral-300);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-300</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-400); color: var(--colors-neutral-0);"
-              >
-                neutral-400
+              <div class="swatch" style="--swatch-color: var(--neutral-400);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-400</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-500); color: var(--colors-neutral-0);"
-              >
-                neutral-500
+              <div class="swatch" style="--swatch-color: var(--neutral-500);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-500</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-600); color: var(--colors-neutral-0);"
-              >
-                neutral-600
+              <div class="swatch" style="--swatch-color: var(--neutral-600);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-600</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-700); color: var(--colors-neutral-0);"
-              >
-                neutral-700
+              <div class="swatch" style="--swatch-color: var(--neutral-700);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-700</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-800); color: var(--colors-neutral-0);"
-              >
-                neutral-800
+              <div class="swatch" style="--swatch-color: var(--neutral-800);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-800</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-900); color: var(--colors-neutral-0);"
-              >
-                neutral-900
+              <div class="swatch" style="--swatch-color: var(--neutral-900);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-900</span>
               </div>
-              <div
-                class="swatch"
-                style="background-color: var(--colors-neutral-950); color: var(--colors-neutral-0);"
-              >
-                neutral-950
+              <div class="swatch" style="--swatch-color: var(--neutral-950);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">neutral-950</span>
               </div>
             </div>
           </div>
 
           <div class="flow">
-            <h3>Semantic Status Colors</h3>
-            <div class="grid" style="--grid-min-item-size: 14rem;">
-              <div
-                class="swatch"
-                style="background-color: var(--colors-success-bg); border-color: var(--colors-success-border); color: var(--colors-success-text);"
-              >
-                success
+            <h3>Semantic Roles</h3>
+            <p class="text-muted">These re-point in dark mode; blocks only ever use this tier.</p>
+            <div class="grid" style="--grid-min-item-size: 8rem;">
+              <div class="swatch" style="--swatch-color: var(--color-surface);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface</span>
               </div>
+              <div class="swatch" style="--swatch-color: var(--color-surface-raised);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface-raised</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-surface-sunken);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">surface-sunken</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-text);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">text</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-text-muted);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">text-muted</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-border);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">border</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-border-strong);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">border-strong</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-action);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">action</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-action-hover);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">action-hover</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-accent);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">accent</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-link);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">link</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-focus);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">focus</span>
+              </div>
+            </div>
+            <h3>Status Colors</h3>
+            <div class="grid" style="--grid-min-item-size: 8rem;">
+              <div class="swatch" style="--swatch-color: var(--color-status-success);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-success</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-warning);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-warning</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-danger);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-danger</span>
+              </div>
+              <div class="swatch" style="--swatch-color: var(--color-status-info);">
+                <span class="swatch__tile"></span>
+                <span class="swatch__label">status-info</span>
+              </div>
+            </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-warning-bg); border-color: var(--colors-warning-border); color: var(--colors-warning-text);"
+                style="background-color: var(--color-status-warning-surface); border-color: var(--color-status-warning-border); color: var(--color-status-warning-text);"
               >
                 warning
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-danger-bg); border-color: var(--colors-danger-border); color: var(--colors-danger-text);"
+                style="background-color: var(--color-status-danger-surface); border-color: var(--color-status-danger-border); color: var(--color-status-danger-text);"
               >
                 danger
               </div>
               <div
                 class="swatch"
-                style="background-color: var(--colors-info-bg); border-color: var(--colors-info-border); color: var(--colors-info-text);"
+                style="background-color: var(--color-status-info-surface); border-color: var(--color-status-info-border); color: var(--color-status-info-text);"
               >
                 info
               </div>
@@ -228,7 +252,7 @@
       <!-- ================================================================
            COMPOSITIONS
            ================================================================ -->
-      <section class="demo-section" id="compositions">
+      <section class="region bg-surface-sunken" id="compositions">
         <div class="wrapper flow">
           <h2>Compositions</h2>
 
@@ -236,15 +260,14 @@
             <h3>Sidebar — Media Object (Case Study 6)</h3>
             <article class="card">
               <div
-                class="sidebar"
-                style="--sidebar-target-width: 4rem; --sidebar-space: var(--spacing-md);"
+                class="card__body sidebar"
+                style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m); --sidebar-align: flex-start;"
               >
                 <div
-                  class="placeholder-media"
-                  style="block-size: 4rem; inline-size: 4rem; border-radius: 999px; background-color: var(--colors-action-primary);"
-                >
-                  AL
-                </div>
+                  class="frame bg-gradient"
+                  style="--frame-ratio: 1; inline-size: 4rem; border-radius: var(--radius-pill);"
+                  aria-hidden="true"
+                ></div>
                 <div class="flow">
                   <blockquote>
                     "LooseLeaf UI completely transformed how our engineering
@@ -262,7 +285,7 @@
             <h3>Bento Grid (Case Study 5)</h3>
             <div class="bento">
               <article class="card" data-span="2">
-                <div class="flow">
+                <div class="card__body flow">
                   <span class="badge" data-status="info">Featured</span>
                   <h4>Next-Gen Token Compiler</h4>
                   <p>
@@ -272,13 +295,13 @@
                 </div>
               </article>
               <article class="card">
-                <div class="flow">
+                <div class="card__body flow">
                   <h4>Zero Dependencies</h4>
                   <p>Shipped with plain ES6 and native browser standards.</p>
                 </div>
               </article>
               <article class="card">
-                <div class="flow">
+                <div class="card__body flow">
                   <h4>CUBE CSS Architecture</h4>
                   <p>Flat specificity layers using CSS @layer boundaries.</p>
                 </div>
@@ -290,16 +313,16 @@
             <h3>Reel — Horizontal Scroll Snap</h3>
             <div class="reel">
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card One</h4><p>Snaps into place.</p></div>
+                <div class="card__body flow"><h4>Card One</h4><p>Snaps into place.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Two</h4><p>Scroll horizontally.</p></div>
+                <div class="card__body flow"><h4>Card Two</h4><p>Scroll horizontally.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Three</h4><p>Touch or trackpad.</p></div>
+                <div class="card__body flow"><h4>Card Three</h4><p>Touch or trackpad.</p></div>
               </article>
               <article class="card" style="min-inline-size: 16rem;">
-                <div class="flow"><h4>Card Four</h4><p>No JS required.</p></div>
+                <div class="card__body flow"><h4>Card Four</h4><p>No JS required.</p></div>
               </article>
             </div>
           </div>
@@ -309,215 +332,430 @@
       <!-- ================================================================
            BLOCKS
            ================================================================ -->
-      <section class="demo-section" id="blocks">
+      <section class="region" id="blocks" aria-labelledby="blocks-title">
         <div class="wrapper flow">
-          <h2>Blocks</h2>
+          <h2 id="blocks-title">Blocks</h2>
+          <p class="text-muted">One section per block. Every colour, size and duration below comes from a semantic token.</p>
+        </div>
+      </section>
 
-          <div class="grid" style="--grid-min-item-size: 20rem;">
-            <!-- Card + Input -->
-            <article class="card">
-              <div class="flow">
-                <h3>Sign up</h3>
-                <div class="flow" style="--flow-space: 0.4em;">
-                  <label class="label" for="email">Email address</label>
-                  <input class="input" type="email" id="email" placeholder="you@example.com" />
-                </div>
-                <div class="flow" style="--flow-space: 0.4em;">
-                  <label class="label" for="email-invalid">Invalid state</label>
-                  <input
-                    class="input"
-                    type="email"
-                    id="email-invalid"
-                    aria-invalid="true"
-                    value="not-an-email"
-                  />
-                </div>
-                <button class="button" data-variant="primary">Continue</button>
+      <!-- BUTTON -->
+      <section class="region" data-size="small" aria-labelledby="block-button">
+        <div class="wrapper flow">
+          <h3 id="block-button">Button</h3>
+          <div class="cluster">
+            <button class="button" type="button">Default</button>
+            <button class="button" type="button" data-variant="primary">Primary</button>
+            <button class="button" type="button" data-variant="secondary">Secondary</button>
+            <button class="button" type="button" data-variant="ghost">Ghost</button>
+            <button class="button" type="button" data-variant="danger">Danger</button>
+          </div>
+          <div class="cluster">
+            <button class="button" type="button" data-variant="primary" data-size="small">Small</button>
+            <button class="button" type="button" data-variant="primary" data-size="large">Large</button>
+            <button class="button" type="button" data-variant="primary" disabled>Disabled</button>
+            <button class="button" type="button" data-variant="primary" data-state="loading" aria-busy="true">Saving</button>
+            <button class="button" type="button" data-icon-only aria-label="Menu">
+              <svg class="icon" aria-hidden="true"><use href="#icon-menu" /></svg>
+            </button>
+            <button class="button" type="button" data-copy="npm install looseleaf-ui">
+              <svg class="icon" aria-hidden="true"><use href="#icon-copy" /></svg>
+              <span data-label="idle">Copy install command</span>
+              <span data-label="copied">Copied</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMS: field, input, select, textarea, choice, input-group -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-forms">
+        <div class="wrapper flow">
+          <h3 id="block-forms">Forms</h3>
+          <p class="text-muted"><code>.field</code>, <code>.input</code>, <code>.select</code>, <code>.textarea</code>, <code>.choice</code> and <code>.input-group</code>.</p>
+          <article class="card" style="max-inline-size: 40rem;">
+            <form class="card__body flow" action="#" novalidate>
+              <div class="field">
+                <label class="label" for="form-name">Full name</label>
+                <input class="input" type="text" id="form-name" autocomplete="name" placeholder="Ada Lovelace" />
               </div>
-            </article>
 
-            <!-- Accordion -->
-            <article class="card">
-              <div class="flow">
-                <h3>Accordion</h3>
-                <div class="accordion">
-                  <div class="accordion__item">
-                    <button
-                      class="accordion__trigger"
-                      aria-expanded="true"
-                      aria-controls="panel-1"
-                      id="trigger-1"
-                    >
-                      What is CUBE CSS?
-                      <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="accordion__panel" data-state="open" id="panel-1">
-                      <div class="accordion__content">
-                        <p>Composition, Utility, Block, Exception.</p>
-                      </div>
-                    </div>
+              <div class="field" data-status="danger">
+                <label class="label" for="form-email">Email address</label>
+                <input class="input" type="email" id="form-email" value="not-an-email" aria-invalid="true" aria-describedby="form-email-error" inputmode="email" autocapitalize="none" autocomplete="email" />
+                <p class="field__error" id="form-email-error" role="alert">Enter an email address like name@example.com.</p>
+              </div>
+
+              <div class="field">
+                <label class="label" for="form-password">Password</label>
+                <input class="input" type="password" id="form-password" aria-describedby="form-password-hint" autocomplete="new-password" />
+                <p class="field__hint" id="form-password-hint">At least 12 characters.</p>
+              </div>
+
+              <div class="field">
+                <label class="label" for="form-site">Website</label>
+                <div class="input-group">
+                  <span class="input-group__addon">https://</span>
+                  <input class="input" type="text" id="form-site" inputmode="url" autocapitalize="none" placeholder="example.com" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="form-plan">Plan</label>
+                <select class="select" id="form-plan">
+                  <option>Starter</option>
+                  <option selected>Team</option>
+                  <option>Enterprise</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="label" for="form-seats">Seats</label>
+                <div class="field__controls">
+                  <input class="input" type="range" id="form-seats-range" min="1" max="50" value="12" aria-label="Seats" />
+                  <div class="input-group" style="inline-size: 8rem;">
+                    <input class="input" type="number" id="form-seats" min="1" max="50" value="12" />
+                    <span class="input-group__addon">seats</span>
                   </div>
-                  <div class="accordion__item">
-                    <button
-                      class="accordion__trigger"
-                      aria-expanded="false"
-                      aria-controls="panel-2"
-                      id="trigger-2"
-                    >
-                      Does it need a framework?
-                      <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="accordion__panel" data-state="closed" id="panel-2">
-                      <div class="accordion__content">
-                        <p>No — it's plain CSS and vanilla ES6.</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
-            </article>
 
-            <!-- Dropdown -->
-            <article class="card">
-              <div class="flow">
-                <h3>Dropdown</h3>
-                <div class="dropdown-wrapper">
-                  <button class="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Options
-                  </button>
-                  <div class="dropdown" role="menu">
-                    <a href="#" class="dropdown__item" role="menuitem">Edit</a>
-                    <a href="#" class="dropdown__item" role="menuitem">Duplicate</a>
-                    <hr class="dropdown__divider" />
-                    <a href="#" class="dropdown__item" role="menuitem">Delete</a>
-                  </div>
+              <div class="field">
+                <label class="label" for="form-message">Message</label>
+                <textarea class="textarea" id="form-message" rows="4" placeholder="Tell us about your project"></textarea>
+              </div>
+
+              <fieldset class="fieldset">
+                <legend class="legend">Interests</legend>
+                <div class="choice-group">
+                  <label class="choice"><input class="choice__input" type="checkbox" name="interests" checked /> Design systems</label>
+                  <label class="choice"><input class="choice__input" type="checkbox" name="interests" /> Accessibility</label>
+                  <label class="choice"><input class="choice__input" type="checkbox" name="interests" disabled /> Beta features (full)</label>
                 </div>
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="legend">Contact preference</legend>
+                <div class="choice-group">
+                  <label class="choice"><input class="choice__input" type="radio" name="contact" checked /> Email</label>
+                  <label class="choice"><input class="choice__input" type="radio" name="contact" /> Phone</label>
+                </div>
+              </fieldset>
+
+              <fieldset class="choice-group" data-variant="segmented">
+                <legend class="visually-hidden">Billing period</legend>
+                <input class="visually-hidden" type="radio" name="billing" id="billing-monthly" checked />
+                <label for="billing-monthly">Monthly</label>
+                <input class="visually-hidden" type="radio" name="billing" id="billing-yearly" />
+                <label for="billing-yearly">Yearly</label>
+              </fieldset>
+
+              <div class="field">
+                <label class="label" for="form-company">Company (locked)</label>
+                <input class="input" type="text" id="form-company" value="LooseLeaf Applications" disabled />
+              </div>
+
+              <div class="cluster">
+                <button class="button" type="submit" data-variant="primary">Send</button>
+                <button class="button" type="reset" data-variant="ghost">Reset</button>
+              </div>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <!-- BADGE -->
+      <section class="region" data-size="small" aria-labelledby="block-badge">
+        <div class="wrapper flow">
+          <h3 id="block-badge">Badge</h3>
+          <div class="cluster">
+            <span class="badge">Default</span>
+            <span class="badge" data-status="info">Info</span>
+            <span class="badge" data-status="success">Success</span>
+            <span class="badge" data-status="warning">Warning</span>
+            <span class="badge" data-status="danger">Danger</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ALERT -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-alert">
+        <div class="wrapper flow">
+          <h3 id="block-alert">Alert</h3>
+          <div class="alert" data-status="info">
+            <div class="cluster" style="--cluster-justify: space-between;">
+              <p>Heads up: this is an informational alert.</p>
+              <button class="alert__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
+            </div>
+          </div>
+          <div class="alert" data-status="success">
+            <div class="cluster" style="--cluster-justify: space-between;">
+              <p>Your changes have been saved.</p>
+              <button class="alert__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
+            </div>
+          </div>
+          <div class="alert" data-status="warning">
+            <div class="cluster" style="--cluster-justify: space-between;">
+              <p>This action can't be undone.</p>
+              <button class="alert__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
+            </div>
+          </div>
+          <div class="alert" data-status="danger">
+            <div class="cluster" style="--cluster-justify: space-between;">
+              <p>Something went wrong. Please try again.</p>
+              <button class="alert__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD -->
+      <section class="region" data-size="small" aria-labelledby="block-card">
+        <div class="wrapper flow">
+          <h3 id="block-card">Card</h3>
+          <div class="grid" style="--grid-min-item-size: 16rem;">
+            <article class="card">
+              <div class="card__body flow">
+                <h4>Plain card</h4>
+                <p>The card is only the surface; <code>.card__body</code> carries the padding.</p>
               </div>
             </article>
-
-            <!-- Badges -->
             <article class="card">
-              <div class="flow">
-                <h3>Badges</h3>
-                <div class="cluster">
-                  <span class="badge">Default</span>
-                  <span class="badge" data-status="info">Info</span>
-                  <span class="badge" data-status="success">Success</span>
-                  <span class="badge" data-status="warning">Warning</span>
-                  <span class="badge" data-status="danger">Danger</span>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card with full-bleed media -->
-            <article class="card">
+              <span class="badge" data-status="success" data-placement="floating">New</span>
               <img
                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230070f3'/%3E%3Cstop offset='1' stop-color='%2318181b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='225' fill='url(%23g)'/%3E%3C/svg%3E"
                 alt="Placeholder gradient"
               />
-              <div class="flow">
-                <h3>Full-bleed Media</h3>
-                <p>The card's first child image clips to the border radius.</p>
+              <div class="card__body flow">
+                <h4>Flush media</h4>
+                <p>Media placed directly in the card sits flush. The floating badge is not clipped.</p>
               </div>
             </article>
-
-            <!-- Modal + Offcanvas triggers -->
-            <article class="card">
-              <div class="flow">
-                <h3>Overlays</h3>
-                <div class="cluster">
-                  <button class="button" data-open-dialog="demo-modal">
-                    Open Modal
-                  </button>
-                  <button class="button" data-open-dialog="demo-drawer">
-                    Open Drawer
-                  </button>
-                </div>
+            <article class="card anim-lift">
+              <div class="card__body flow">
+                <h4>With .anim-lift</h4>
+                <p class="text-muted">Hover to lift (pointer devices only).</p>
               </div>
             </article>
           </div>
+        </div>
+      </section>
 
-          <div class="flow">
-            <h3>Alerts</h3>
-            <div class="flow" style="--flow-space: var(--spacing-sm);">
-              <div class="alert" data-status="info">
-                <div class="cluster" style="--cluster-justify: space-between;">
-                  <p>Heads up — this is an informational alert.</p>
-                  <button class="alert__close" aria-label="Dismiss">&times;</button>
-                </div>
+      <!-- ACCORDION -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-accordion">
+        <div class="wrapper flow">
+          <h3 id="block-accordion">Accordion</h3>
+          <div class="accordion" style="max-inline-size: 40rem;">
+            <details class="accordion__item" name="demo-faq" open>
+              <summary class="accordion__trigger">What is CUBE CSS? <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+              <div class="accordion__content">
+                <p>Composition, Utility, Block, Exception.</p>
               </div>
-              <div class="alert" data-status="success">
-                <div class="cluster" style="--cluster-justify: space-between;">
-                  <p>Success — your changes have been saved.</p>
-                  <button class="alert__close" aria-label="Dismiss">&times;</button>
-                </div>
+            </details>
+            <details class="accordion__item" name="demo-faq">
+              <summary class="accordion__trigger">Does it need a framework? <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+              <div class="accordion__content">
+                <p>No. It's plain CSS and vanilla JavaScript; this accordion needs no JavaScript at all.</p>
               </div>
-              <div class="alert" data-status="warning">
-                <div class="cluster" style="--cluster-justify: space-between;">
-                  <p>Warning — this action can't be undone.</p>
-                  <button class="alert__close" aria-label="Dismiss">&times;</button>
-                </div>
+            </details>
+            <details class="accordion__item" name="demo-faq">
+              <summary class="accordion__trigger">Can two be open at once? <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+              <div class="accordion__content">
+                <p>Not when they share a <code>name</code>: the browser closes the others.</p>
               </div>
-              <div class="alert" data-status="danger">
-                <div class="cluster" style="--cluster-justify: space-between;">
-                  <p>Danger — something went wrong.</p>
-                  <button class="alert__close" aria-label="Dismiss">&times;</button>
-                </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- DROPDOWN -->
+      <section class="region" data-size="small" aria-labelledby="block-dropdown">
+        <div class="wrapper flow">
+          <h3 id="block-dropdown">Dropdown</h3>
+          <div class="cluster" style="--cluster-justify: space-between;">
+            <div class="dropdown-wrapper">
+              <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+              <div class="dropdown" role="menu">
+                <a href="#" class="dropdown__item" role="menuitem">Edit</a>
+                <a href="#" class="dropdown__item" role="menuitem">Duplicate</a>
+                <hr class="dropdown__divider" />
+                <a href="#" class="dropdown__item" role="menuitem">Delete</a>
+              </div>
+            </div>
+            <div class="dropdown-wrapper">
+              <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aligned to end</button>
+              <div class="dropdown" data-align="end" role="menu">
+                <a href="#" class="dropdown__item" role="menuitem">Profile</a>
+                <a href="#" class="dropdown__item" role="menuitem">Settings</a>
+                <a href="#" class="dropdown__item" role="menuitem">Sign out</a>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- MODAL + OFFCANVAS -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-overlays">
+        <div class="wrapper flow">
+          <h3 id="block-overlays">Modal and offcanvas</h3>
+          <div class="cluster">
+            <button class="button" type="button" data-open-dialog="demo-modal">Open modal</button>
+            <button class="button" type="button" data-open-dialog="demo-drawer">Open drawer</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABLE -->
+      <section class="region" data-size="small" aria-labelledby="block-table">
+        <div class="wrapper flow">
+          <h3 id="block-table">Table</h3>
+          <div class="table-wrapper" role="region" aria-labelledby="table-caption" tabindex="0">
+            <table class="table" data-striped data-hover>
+              <caption id="table-caption">Token build output</caption>
+              <thead>
+                <tr>
+                  <th scope="col">File</th>
+                  <th scope="col">Purpose</th>
+                  <th scope="col" data-align="end">Tokens</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><code>variables.css</code></td><td>Custom properties, light and dark</td><td data-align="end">141</td></tr>
+                <tr><td><code>tokens.resolved.json</code></td><td>Resolved values for back ends</td><td data-align="end">141</td></tr>
+                <tr><td><code>TOKENS.md</code></td><td>Generated reference</td><td data-align="end">141</td></tr>
+                <tr><td><code>current-tokens.js</code></td><td>Configurator reset</td><td data-align="end">n/a</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROSE -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-prose">
+        <div class="wrapper flow">
+          <h3 id="block-prose">Prose</h3>
+          <article class="prose">
+            <p>Wrap rendered Markdown or CMS content in <code>.prose</code> and it gets sensible rhythm without any classes on the content itself.</p>
+            <h4>Lists</h4>
+            <ul>
+              <li>Spacing is a multiple of <code>--flow-space</code>.</li>
+              <li>Line length is capped at <code>--measure</code>.</li>
+            </ul>
+            <ol>
+              <li>Write the content.</li>
+              <li>Wrap it.</li>
+            </ol>
+            <blockquote><p>Build the layout from intrinsic compositions, then dress it.</p></blockquote>
+            <pre><code>npm run build</code></pre>
+            <hr />
+            <table>
+              <thead><tr><th>Exception</th><th>Effect</th></tr></thead>
+              <tbody><tr><td><code>data-status</code></td><td>Status colours</td></tr></tbody>
+            </table>
+          </article>
+        </div>
+      </section>
+
+      <!-- BREADCRUMB + PAGINATION -->
+      <section class="region" data-size="small" aria-labelledby="block-navigation">
+        <div class="wrapper flow">
+          <h3 id="block-navigation">Breadcrumb and pagination</h3>
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <ol class="breadcrumb__list" role="list">
+              <li class="breadcrumb__item"><a href="#">Home</a></li>
+              <li class="breadcrumb__item"><a href="#">Docs</a></li>
+              <li class="breadcrumb__item"><a href="#block-navigation" aria-current="page">Navigation</a></li>
+            </ol>
+          </nav>
+          <nav class="pagination" aria-label="Pagination">
+            <ol class="pagination__list" role="list">
+              <li><a class="pagination__link" aria-disabled="true">Previous</a></li>
+              <li><a class="pagination__link" href="#" aria-current="page">1</a></li>
+              <li><a class="pagination__link" href="#">2</a></li>
+              <li><a class="pagination__link" href="#">3</a></li>
+              <li><span class="pagination__gap" aria-hidden="true">…</span></li>
+              <li><a class="pagination__link" href="#">12</a></li>
+              <li><a class="pagination__link" href="#">Next</a></li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <!-- MARQUEE -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-marquee">
+        <div class="wrapper flow">
+          <h3 id="block-marquee">Marquee</h3>
+          <div class="marquee">
+            <div class="marquee__track">
+              <span class="badge" data-status="info">Composition</span>
+              <span class="badge" data-status="success">Utility</span>
+              <span class="badge" data-status="warning">Block</span>
+              <span class="badge" data-status="danger">Exception</span>
+            </div>
+            <div class="marquee__track" aria-hidden="true">
+              <span class="badge" data-status="info">Composition</span>
+              <span class="badge" data-status="success">Utility</span>
+              <span class="badge" data-status="warning">Block</span>
+              <span class="badge" data-status="danger">Exception</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BG MESH -->
+      <section class="region bg-mesh" data-size="large" aria-labelledby="block-mesh">
+        <div class="wrapper flow">
+          <h3 id="block-mesh">Background mesh</h3>
+          <p>An ambient drift of the action and accent hues behind a section. It stops under reduced motion.</p>
         </div>
       </section>
 
       <!-- ================================================================
            UTILITIES
            ================================================================ -->
-      <section class="demo-section" id="utilities">
+      <section class="region bg-surface-sunken" id="utilities" aria-labelledby="utilities-title">
         <div class="wrapper flow">
-          <h2>Utilities</h2>
+          <h2 id="utilities-title">Utilities</h2>
 
           <div class="grid" style="--grid-min-item-size: 14rem;">
-            <article class="card anim-lift">
-              <div class="flow">
-                <h4>.anim-lift</h4>
-                <p class="text-muted">Hover this card.</p>
-              </div>
-            </article>
-            <article class="card indent" style="--indent-color: var(--colors-action-primary);">
-              <div class="flow">
+            <article class="card indent" style="--indent-color: var(--color-action);">
+              <div class="card__body flow">
                 <h4>.indent</h4>
                 <p class="text-muted">Decorative edge accent.</p>
               </div>
             </article>
             <article class="card">
-              <p class="text-center">.text-center</p>
-              <p class="text-uppercase">.text-uppercase</p>
-              <p class="truncate" style="max-width: 10ch;">.truncate a long sentence</p>
+              <div class="card__body flow">
+                <h4>Text</h4>
+                <p class="text-center">.text-center</p>
+                <p class="text-uppercase">.text-uppercase</p>
+                <p class="text-small">.text-small</p>
+                <p class="text-lead">.text-lead</p>
+                <p class="truncate" style="max-width: 10ch;">.truncate a long sentence</p>
+              </div>
             </article>
-          </div>
-
-          <div class="flow">
-            <h4>.marquee</h4>
-            <div class="marquee">
-              <div class="marquee__track">
-                <span class="badge" data-status="info">Composition</span>
-                <span class="badge" data-status="success">Utility</span>
-                <span class="badge" data-status="warning">Block</span>
-                <span class="badge" data-status="danger">Exception</span>
+            <article class="card">
+              <div class="card__body flow">
+                <h4>.icon</h4>
+                <div class="cluster">
+                  <svg class="icon" data-size="s" aria-hidden="true"><use href="#icon-sun" /></svg>
+                  <svg class="icon" aria-hidden="true"><use href="#icon-sun" /></svg>
+                  <svg class="icon" data-size="l" aria-hidden="true"><use href="#icon-moon" /></svg>
+                </div>
+                <p class="text-muted">Inline SVG in currentColor, sized to the text.</p>
               </div>
-              <div class="marquee__track" aria-hidden="true">
-                <span class="badge" data-status="info">Composition</span>
-                <span class="badge" data-status="success">Utility</span>
-                <span class="badge" data-status="warning">Block</span>
-                <span class="badge" data-status="danger">Exception</span>
+            </article>
+            <article class="card bg-gradient">
+              <div class="card__body flow">
+                <h4>.bg-gradient</h4>
+                <p>Action to accent.</p>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="demo-section">
+    <footer class="region" data-size="small">
       <div class="wrapper">
         <p class="text-muted">LooseLeaf UI — live demo, not shipped as part of the library.</p>
       </div>
@@ -541,13 +779,15 @@
       <div class="wrapper flow">
         <div class="cluster" style="--cluster-justify: space-between;">
           <h3>Navigation</h3>
-          <button class="button" data-close-dialog>Close</button>
+          <button class="button" type="button" data-icon-only data-close-dialog aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
         </div>
-        <nav class="flow">
-          <a href="#tokens">Tokens</a>
-          <a href="#compositions">Compositions</a>
-          <a href="#blocks">Blocks</a>
-          <a href="#utilities">Utilities</a>
+        <nav aria-label="Drawer">
+          <ul class="flow" role="list">
+            <li><a href="#design-tokens">Tokens</a></li>
+            <li><a href="#compositions">Compositions</a></li>
+            <li><a href="#blocks">Blocks</a></li>
+            <li><a href="#utilities">Utilities</a></li>
+          </ul>
         </nav>
       </div>
     </dialog>

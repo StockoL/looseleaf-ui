@@ -1,0 +1,2 @@
+{% if field.help_text %}<p class="field__hint"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</p>{% endif %}{% if field.errors %}
+  <p class="field__error"{% if field.auto_id %} id="{{ field.auto_id }}_error"{% endif %} role="alert">{{ field.errors|join:" " }}</p>{% endif %}

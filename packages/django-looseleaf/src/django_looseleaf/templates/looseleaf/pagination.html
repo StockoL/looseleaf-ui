@@ -1,0 +1,7 @@
+{% load i18n %}{% if items %}<nav class="pagination" aria-label="{% translate 'Pagination' %}">
+  <ol class="pagination__list" role="list">
+    <li>{% if previous %}<a class="pagination__link" href="{{ previous }}" rel="prev">{% translate "Previous" %}</a>{% else %}<a class="pagination__link" aria-disabled="true">{% translate "Previous" %}</a>{% endif %}</li>{% for item in items %}
+    <li>{% if item.gap %}<span class="pagination__gap" aria-hidden="true">…</span>{% else %}<a class="pagination__link" href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.number }}</a>{% endif %}</li>{% endfor %}
+    <li>{% if next %}<a class="pagination__link" href="{{ next }}" rel="next">{% translate "Next" %}</a>{% else %}<a class="pagination__link" aria-disabled="true">{% translate "Next" %}</a>{% endif %}</li>
+  </ol>
+</nav>{% endif %}

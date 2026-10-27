@@ -1,7 +1,7 @@
 # LooseLeaf UI Component Library
 
-[![GitHub license](https://img.shields.io/github/license/LooseLeafApplications/looseleaf-ui?color=blue)](https://github.com/LooseLeafApplications/looseleaf-ui/blob/main/LICENSE)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/LooseLeafApplications/looseleaf-ui?color=success)](https://github.com/LooseLeafApplications/looseleaf-ui)
+[![GitHub license](https://img.shields.io/github/license/StockoL/looseleaf-ui?color=blue)](https://github.com/StockoL/looseleaf-ui/blob/main/LICENSE)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/StockoL/looseleaf-ui?color=success)](https://github.com/StockoL/looseleaf-ui)
 
 LooseLeaf UI is a lightweight, dependency-free, architecture-first CSS design system template built on the CUBE CSS Methodology (Composition, Utility, Block, Exception).
 
@@ -11,21 +11,63 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
 
 ## 📋 Table of Contents
 
-1. [📐 Planning & Pre-Production Workflow](#planning)
-2. [📖 The CUBE CSS Architectural Paradigm](#architecture)
-3. [⚙️ The Token Engine & Workflow](#token-engine)
-4. [📂 Directory & Layer Structure](#directory)
-5. [🧩 Tier Breakdown & Implementation Guide](#tiers)
+1. [🚀 Quick Start](#quick-start)
+2. [📐 Planning & Pre-Production Workflow](#planning)
+3. [📖 The CUBE CSS Architectural Paradigm](#architecture)
+4. [⚙️ The Token Engine & Workflow](#token-engine)
+5. [📂 Directory & Layer Structure](#directory)
+6. [🧩 Tier Breakdown & Implementation Guide](#tiers)
    - [Tier 1: Global Layer & Reset](#tier-1)
-   - [Tier 2: Composition Primitives](#tier-2)
-   - [Tier 3: Pure Visual Blocks](#tier-3)
-   - [Tier 4: Single-Purpose Utilities](#tier-4)
-6. [⚡ Native Interactivity Engine (behaviors.js)](#behaviors)
-7. [🤝 Authors & Acknowledgements](#authors)
+   - [Tier 2: Compositions](#compositions)
+   - [Tier 3: Blocks](#blocks)
+   - [Tier 4: Utilities](#utilities)
+7. [⚡ Behaviours & Theme Scripts](#behaviors)
+8. [🛠️ Commands](#commands)
+9. [🏷️ Versioning & Releases](#versioning)
+10. [🤝 Authors & Acknowledgements](#authors)
 
 ---
 
-## 1. <a name="planning"></a> 📐 Planning & Pre-Production Workflow
+## 1. <a name="quick-start"></a> 🚀 Quick Start
+
+### Plain HTML
+
+Load the release files from jsDelivr, always pinned to a tag (never `@main`), and add your theme's tokens after the stylesheet:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+
+<!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+```
+
+The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
+
+Then compose with the classes below. [examples/index.html](examples/index.html) is the living documentation: one section per composition and block, built with nothing but the shipped files.
+
+Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade layers, container queries, `:has()`, `color-mix()` and `@starting-style` are used freely.
+
+### Django
+
+Django projects use the `django-looseleaf` package in [packages/django-looseleaf/](packages/django-looseleaf/README.md). One `INSTALLED_APPS` entry ships the CSS and JS, template tags for the head and the theme, and a form renderer that outputs LooseLeaf markup from `{{ form }}`. A theme bundle drops into `static/` and is switched on with one setting, `LOOSELEAF_THEME`. See its README for setup.
+
+### <a name="theming"></a> Theming
+
+Every project gets its own colours, type scale, spacing, fonts and shapes without touching this repository or running a build:
+
+1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against a live preview of every block, in light and dark, at any viewport width. A live contrast table flags any text that drops below WCAG AA.
+2. Choose **Export → Theme bundle** to download `looseleaf-theme.zip`: the compiled `looseleaf-tokens.css`, `tokens.resolved.json`, and your `design-tokens.json` for re-importing later.
+3. Load `looseleaf-tokens.css` after `looseleaf.css` (plain HTML), or unzip the bundle into `static/theme/` and set `LOOSELEAF_THEME = "theme"` (Django).
+
+The theme's tokens live in the same cascade layer as the defaults, so loading them second is the whole mechanism.
+
+---
+
+## 2. <a name="planning"></a> 📐 Planning & Pre-Production Workflow
 
 A primary tenet of the LooseLeaf philosophy—derived from Andy Bell’s Complete CSS milestones—is that writing CSS code is the final step, not the first. Jumping directly into an IDE to write styles without pre-production planning leads to specificity battles, arbitrary media queries, and high technical debt.
 
@@ -52,11 +94,11 @@ Apply layout compositions and visual blocks using standard class names and CSS C
 
 ### Phase 4: Flair Pass
 
-Inject micro-interactions, hardware-accelerated transitions (`.anim-lift`), ambient canvas keyframes (`.bg-mesh`), and fine-tuned hover physics on top of the established layout.
+Inject micro-interactions, hardware-accelerated transitions (`.anim-lift`), ambient backgrounds (`.bg-mesh`), and fine-tuned hover physics on top of the established layout.
 
 ---
 
-## 2. <a name="architecture"></a> 📖 The CUBE CSS Architectural Paradigm
+## 3. <a name="architecture"></a> 📖 The CUBE CSS Architectural Paradigm
 
 Traditional frameworks couple layout positioning directly with component styling, forcing developers to write non-DRY utility strings or override margins constantly. LooseLeaf UI enforces strict CUBE CSS boundaries:
 
@@ -70,302 +112,235 @@ E - EXCEPTION (State Toggles via data-\* attributes)
 - Block (B): Pure, portable visual components (e.g., `.button`, `.card`, `.input`). Blocks care only about their internal aesthetics (padding, border, background). They have zero external margins or fixed width/height constraints.
 - Exception (E): State-based overrides driven by HTML attributes ([data-state="open"], [data-status="danger"]) that update local block parameters dynamically.
 
+Layout responds to the space a component actually has, not the viewport: compositions are intrinsic, and the few size switches (navbar collapse, bento spans, sticky sidebar) are `@container` queries at the one documented breakpoint, `45rem`.
+
 ---
 
-## 3. <a name="token-engine"></a> ⚙️ The Token Engine & Workflow
+## 4. <a name="token-engine"></a> ⚙️ The Token Engine & Workflow
 
 To maintain a true Single Source of Truth across the entire tech stack (including front-end stylesheets and back-end templates such as Python/Django), design decisions are extracted out of the CSS and stored in a platform-agnostic JSON document.
 
+### Three tiers
+
+1. **Raw** tokens are the palette and scales (`--neutral-*`, `--action-*`, `--step-*`, `--space-*`). They are derived from inputs and never used for colour or type by blocks.
+2. **Semantic** tokens are named by purpose (`--color-surface-raised`, `--color-action`, `--gutter`, `--inset-control`, `--text-body`, `--radius-control`, `--duration-quick`, `--layer-nav`). Blocks and compositions use these, and dark mode re-points them.
+3. **Component** variables live inside each block with a semantic default (`--button-bg`, `--card-padding`, `--dropdown-width`), and exceptions reassign them.
+
 ### 1. Source Tokens (design-tokens.json)
 
-The token configuration defines colours, fluid curves, and structural layout metrics. Spacing and typographic scales contain guidance for integrating fluid scales generated via [https://utopia.fyi/](https://utopia.fyi/)
+`design-tokens.json` stores the *inputs* to the design, not hand-copied outputs:
 
-JSON Example:
+- `$utopia` holds the [Utopia](https://utopia.fyi/) settings (viewports, base sizes, ratios, space multipliers). The fluid `--step-*` type scale and `--space-*` scale are derived from them at build time.
+- `$palette` holds OKLCH hues and chromas. The `--neutral-*` ramp, the `--action-*` and `--accent-*` steps and every status colour (light and dark) are derived from it.
+- Everything else is a semantic token named by purpose. Colour roles carry a light and a dark value, and `{group.key}` references another token.
 
-```JSON
+```json
 {
-  "colors": {
-    "surface-base": "#ffffff",
-    "surface-sunken": "#f4f4f5",
-    "text-base": "#18181b",
-    "action-primary": "#0070f3"
+  "$palette": { "action": { "hue": 255, "chroma": 0.2 } },
+  "color": {
+    "surface": { "light": "{neutral.0}", "dark": "{neutral.950}" },
+    "action": "{action.500}"
   },
-  "_comment_typography": "PROCESS: Configure fluid scales on [https://utopia.fyi/type/calculator/](https://utopia.fyi/type/calculator/) and paste steps below.",
-  "typography": {
-    "step-0": "clamp(1.00rem, 0.93rem + 0.36vw, 1.20rem)",
-    "step-1": "clamp(1.20rem, 1.07rem + 0.63vw, 1.55rem)"
-  }
+  "gutter": { "$value": "{space.s}", "$purpose": "Default gap inside compositions." }
 }
 ```
 
-### 2. The Compiler (build-tokens.js)
+To change a derived value, change its input. An explicit value inside a derived group (for example `"neutral": { "500": "#71717a" }`) wins and is flagged as overridden.
 
-A lightweight, zero-dependency Node.js compiler reads design-tokens.json, filters out inline documentation comments, formats semantic CSS Custom Properties, and auto-generates src/01-global/variables.css.
+### 2. The Configurator (tools/configure.html)
 
-### 3. Execution Workflow
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get.
 
-Run the compilation script whenever design parameters change:
+### 3. The Compiler (scripts/build-tokens.js)
 
-```bash
-npm run build:tokens
-```
+A zero-dependency Node.js wrapper around `scripts/tokens-core.mjs`, a pure compiler shared with the configurator. It writes:
+
+- `src/01-global/variables.css`: light values on `:root`, dark values for `prefers-color-scheme: dark`, and a `[data-theme="dark"]` override
+- `dist/tokens.resolved.json`: every token fully resolved, for back-end use
+- [docs/TOKENS.md](docs/TOKENS.md): the generated reference of every token, its tier and its light and dark value, plus a WCAG contrast table
 
 ---
 
-## 4. <a name="directory"></a> 📂 Directory & Layer Structure
-
-The repository maintains a strict boundary between Build Tooling Engine (root directory) and Source Code Assets (src/).
+## 5. <a name="directory"></a> 📂 Directory & Layer Structure
 
 ```text
 looseleaf-ui/
-├── design-tokens.json <-- Single Source of Truth (JSON Tokens)
-├── build-tokens.js <-- Compiler Engine (Vanilla Node.js)
-├── package.json <-- Project Manifest & Build Commands
-│
-└── src/
- ├── index.css <-- Orchestrator & Native @layer Definitions
-│
-├── 01-global/ <-- Resets, Tokens, and Core Typography
-│ ├── reset.css
-│ ├── variables.css <-- Auto-Generated (Do not edit directly!)
-│ └── global-styles.css
-│
-├── 02-compositions/ <-- Intrinsic Layout Primitives
-│ ├── wrapper.css
-│ ├── center.css
-│ ├── flow.css
-│ ├── cluster.css
-│ ├── sidebar.css
-│ ├── grid.css
-│ ├── reel.css
-│ └── switcher.css
-│
-├── 03-blocks/ <-- Pure Visual Components
-│ ├── button.css
-│ ├── input.css
-│ ├── badge.css
-│ ├── accordion.css
-│ ├── dropdown.css
-│ ├── card.css
-│ ├── navbar.css
-│ ├── modal.css
-│ ├── alert.css
-│ └── bento.css
-│
-├── 04-utilities/ <-- Heavy-Lifting Overrides
-│ ├── accessibility.css
-│ ├── indent.css
-│ ├── text.css
-│ ├── colors.css
-│ └── animations.css
-│
-└── scripts/
-└── behaviors.js <-- DOM Event Delegation Engine
+├── design-tokens.json         <-- Single source of truth (token inputs)
+├── package.json               <-- Manifest and build commands
+├── scripts/
+│   ├── tokens-core.mjs        <-- Pure token compiler (shared with the configurator)
+│   ├── utopia.mjs             <-- Pure fluid type and space maths
+│   ├── color.mjs              <-- Pure OKLCH and WCAG contrast maths
+│   ├── zip.mjs                <-- Pure store-only ZIP writer (theme bundles)
+│   ├── build-tokens.js        <-- Writes variables.css, tokens.resolved.json, TOKENS.md
+│   ├── build-tools.js         <-- Bundles the pure modules for the configurator
+│   ├── build-css.js           <-- Bundles src/index.css, copies the scripts to dist/
+│   ├── build-django.js        <-- Syncs dist/ into the Django package
+│   ├── check.js               <-- Guardrail linter (npm run check)
+│   └── bump-version.js        <-- Lockstep version for npm and Python (npm run bump)
+├── src/
+│   ├── index.css              <-- Orchestrator and @layer order
+│   ├── 01-global/             <-- reset, variables (generated), global-styles
+│   ├── 02-compositions/       <-- wrapper, region, center, flow, cluster, sidebar,
+│   │                              grid, reel, switcher, frame, bento
+│   ├── 03-blocks/             <-- skip-link, button, field, input, select, textarea,
+│   │                              choice, input-group, badge, accordion, dropdown, card,
+│   │                              navbar, modal, offcanvas, alert, table, prose,
+│   │                              pagination, breadcrumb, marquee, bg-mesh, swatch
+│   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors, animations
+│   └── scripts/               <-- behaviors.js, theme.js
+├── dist/                      <-- looseleaf.css, looseleaf.js, theme.js, tokens.resolved.json
+├── examples/index.html        <-- Living demo (also the configurator's preview)
+├── tools/                     <-- configure.html, configure.js, configure.css, tokens-lib.js
+├── index.html                 <-- GitHub Pages entry: redirects to the configurator
+├── .github/workflows/         <-- ci.yml, release.yml, pages.yml
+├── docs/
+│   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
+│   └── TOKENS.md              <-- Generated token reference
+└── packages/django-looseleaf/ <-- Django package
 ```
+
+The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `blocks`, `utilities`.
 
 ---
 
-## 5. <a name="tiers"></a> 🧩 Tier Breakdown & Implementation Guide
+## 6. <a name="tiers"></a> 🧩 Tier Breakdown & Implementation Guide
 
-### Tier 1: Global Layer & Reset (src/01-global/)
+### <a name="tier-1"></a> Tier 1: Global Layer & Reset (src/01-global/)
 
-Leverages a modern, battle-tested CSS reset that:
+- Andy Bell's "A (more) Modern CSS Reset", plus a global reduced-motion switch.
+- Body type, colour and surface from semantic tokens; headings mapped to `--heading-1` … `--heading-4` with balanced wrapping.
+- One focus style for everything: a 2px `--color-focus` ring on `:focus-visible`. No block removes it.
+- Unstyled links use `--color-link` and the configurable underline (`--link-decoration`).
+- The reading measure (`--measure`) caps running text inside `.flow` and `.prose` only.
+- Touch and mobile safeguards: `--target-min` (44px) for interactive controls, `dvh` instead of `vh`, and safe-area insets (`--safe-top` and friends).
 
-- Enforces global border-box sizing.
-- Applies `text-wrap: balance` across headings to prevent widows.
-- Applies `scroll-margin-block: 5ex` to anchor targets to prevent sticky header collisions.
-- Enforces strict prefers-reduced-motion safety overrides globally.
+### <a name="compositions"></a> Tier 2: Compositions (src/02-compositions/)
 
-### Tier 2: Composition Primitives (src/02-compositions/)
+Compositions govern spacing and alignment without injecting aesthetic styling. Tune them inline with custom properties, e.g. `style="--switcher-threshold: 40rem"`. [docs/COMPOSITIONS.md](docs/COMPOSITIONS.md) walks through real layouts built from them.
 
-Layout compositions govern spacing and alignment without injecting aesthetic styling.
+| Class | Purpose | Custom properties and exceptions |
+| --- | --- | --- |
+| `.wrapper` | Page-section shell: caps a site-wide width and centres it | `--wrapper-max-width`, `--wrapper-gutters` |
+| `.region` | Vertical breathing room for a page section | `--region-padding`, `[data-size="small"]`, `[data-size="large"]` |
+| `.center` | Caps content to the reading measure and centres it | `--center-max-width`, `--center-gutters`, `[data-and-text]`, `[data-intrinsic]` |
+| `.flow` | Vertical rhythm between siblings | `--flow-space` |
+| `.cluster` | Wrapping horizontal group | `--cluster-space`, `--cluster-justify`, `--cluster-align` |
+| `.sidebar` | Target-width panel beside fluid content, stacking when space runs out | `--sidebar-target-width`, `--sidebar-content-min-width`, `--sidebar-space`, `--sidebar-align`, `[data-side="right"]`, `[data-sticky]` (with `--sticky-offset`) |
+| `.switcher` | Row that becomes a stack below a threshold | `--switcher-threshold` |
+| `.grid` | Auto-filling intrinsic grid | `--grid-min-item-size`, `--grid-placement` |
+| `.reel` | Horizontal scroll-snap strip | gap from `--gutter` |
+| `.frame` | Crops media to an aspect ratio | `--frame-ratio` |
+| `.bento` | Dense intrinsic grid with spanning items | `--bento-min`, `--bento-row-min`, `--bento-space`; items take `[data-span]` and `[data-row-span]` |
 
-#### The Wrapper (.wrapper) vs. The Center (.center)
+**Wrapper vs. Center.** Both cap a width and centre it, but they are not interchangeable. `.wrapper` is the macro, page-section shell — apply it once per full-bleed section to align content to a wide, site-level edge margin (`--wrapper-max`, default `80rem`), padding included in the cap. `.center` is a content primitive — apply it to prose or hero copy that must cap at the narrower typographic reading measure (`--measure`, default `60ch`), using `box-sizing: content-box` so its gutter padding never eats into that measure. See [docs/COMPOSITIONS.md](docs/COMPOSITIONS.md#golden-rules) for the nesting pattern.
 
-Both cap a width and center it, but they are not interchangeable. `.wrapper` is the macro, page-section shell — apply it once per full-bleed section to align content to a wide, site-level edge margin (`--layout-wrapper-max-width`, default `80rem`), padding included in the cap. `.center` is a content primitive — apply it to prose or hero copy that must cap at the narrower typographic reading measure (`--layout-measure`, default `60ch`), using `box-sizing: content-box` so its gutter padding never eats into that measure, plus `[data-and-text]`/`[data-intrinsic]` exceptions for centering its own children. See [docs/COMPOSITIONS.md](docs/COMPOSITIONS.md#golden-rules) for the full breakdown and nesting pattern.
+### <a name="blocks"></a> Tier 3: Blocks (src/03-blocks/)
 
-#### The Flow (.flow)
+Blocks care only about internal styling and are purged of external margins. Variants and states are exceptions on data or ARIA attributes, which only reassign the block's own variables.
 
-Manages intrinsic vertical rhythm between direct sibling elements using the lobotomised owl selector `(* + *)`. Does not use Flexbox, preserving native block formatting contexts and margin collapsing.
+| Class | Purpose | Exceptions | JS hook |
+| --- | --- | --- | --- |
+| `.skip-link` | First focusable link, revealed on focus | — | — |
+| `.button` | Actions | `data-variant`: primary, secondary, ghost, danger; `data-size`: small, large; `[data-icon-only]`; `:disabled` and `[aria-disabled="true"]`; `data-state`: loading, copied | `[data-copy]` sets the copied state |
+| `.field` | Label, control, `.field__hint` and `.field__error`; `.field__controls` sets a control beside its companion; `.fieldset` and `.legend` group choices | `[data-status="danger"]` | — |
+| `.input` | Text-like inputs and range sliders (shares a base with select and textarea) | `[aria-invalid="true"]`, `:disabled` | — |
+| `.select` | Native select with a theme-aware chevron | `[aria-invalid="true"]`, `[multiple]` | — |
+| `.textarea` | Multi-line input, vertical resize only | `[aria-invalid="true"]` | — |
+| `.choice` | Checkbox or radio with its label (`.choice__input`); `.choice-group` stacks them | `.choice-group[data-variant="segmented"]` | — |
+| `.input-group` | Input joined to `.input-group__addon` or a button | — | — |
+| `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | — |
+| `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
+| `.dropdown` | Menu inside `.dropdown-wrapper` (`.dropdown__item`, `.dropdown__divider`) | `[data-state="open"]` on the wrapper; `[data-align="end"]` | `[data-toggle="dropdown"]` |
+| `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped | — |
+| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`, `.navbar__toggle`); collapses below 45rem of its own width | `[data-sticky]`; `[data-state="open"]` on the menu | `.navbar__toggle` |
+| `.modal` | Native `<dialog>`, animated in and out | `[open]` | `[data-open-dialog]`, `[data-close-dialog]` |
+| `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `[data-open-dialog]`, `[data-close-dialog]` |
+| `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
+| `.table` | Data tables inside a scrolling `.table-wrapper` | `[data-striped]`, `[data-hover]`, `[data-density="compact"]`; cells take `[data-align="end"]` | — |
+| `.prose` | Rich text you don't control (CMS, Markdown) | — | — |
+| `.pagination` | Page links (`.pagination__list`, `.pagination__link`, `.pagination__gap`) | `[aria-current="page"]`, `[aria-disabled="true"]` | — |
+| `.breadcrumb` | Location trail (`.breadcrumb__list`, `.breadcrumb__item`) | `[aria-current="page"]` | — |
+| `.marquee` | Looping strip of `.marquee__track` rows | `--marquee-duration`, `--marquee-gap` | — |
+| `.bg-mesh` | Ambient drifting wash of the action and accent hues | `--mesh-duration`, `--mesh-strength` | — |
+| `.swatch` | Colour tile with `.swatch__tile`, `.swatch__label`, `.swatch__hex` | `--swatch-color`, `[data-state="overridden"]` | — |
 
-CSS Rule:
+### <a name="utilities"></a> Tier 4: Utilities (src/04-utilities/)
 
-```CSS
-.flow > * + * {
-  margin-block-start: var(--flow-space, 1em);
-}
-```
+Utilities sit at the top of the layer stack and do one thing each.
 
-#### The Sidebar (.sidebar)
-
-Creates an asymmetric 2-column layout where a sidebar holds a target width (`--sidebar-target-width`) and the main content fills the remaining space, stacking vertically when constraints are met.
-
-HTML Structure:
-
-```HTML
-<div class="sidebar">
-  <div>Sidebar Content (Fixed Target)</div>
-  <div>Main Content (Fluid Fill)</div>
-</div>
-```
-
-#### The Switcher (.switcher)
-
-Switches a row of elements instantly into a vertical stack when container width drops below a specific threshold (`--switcher-threshold`).
-
-### Tier 3: Pure Visual Blocks (src/03-blocks/)
-
-Blocks care only about internal styling. They are purged of external positioning or margins.
-
-#### The Button (.button)
-
-Uses local CSS variables to keep structural code completely DRY. State variations are handled by CUBE Exception data attributes:
-
-HTML Structure:
-
-```HTML
-<!-- Default Variant -->
-<button class="button">Secondary Action</button>
-
-<!-- Primary Action Variant (Exception Hook) -->
-<button class="button" data-variant="primary">Primary Action</button>
-```
-
-#### The Card (.card)
-
-Acts strictly as a visual boundary with `overflow: hidden`. Child media automatically clips to the container border radius without complex negative-margin mathematics.
-
-HTML Structure:
-
-```HTML
-<article class="card">
-  <img src="thumbnail.jpg" alt="Media thumbnail" />
-  <div class="flow">
-    <h3>Card Title</h3>
-    <p>Card description governed by vertical flow.</p>
-  </div>
-</article>
-```
-
-### Tier 4: Single-Purpose Utilities (src/04-utilities/)
-
-Utilities override specific styles and sit at the top of the @layer hierarchy.
-
-- .visually-hidden: Screen-reader accessible visual hiding.
-- .anim-lift: Hardware-accelerated hover elevation.
-- .indent: Decorative edge accent border driven by local CSS variables.
+- `.visually-hidden`: hidden visually but still announced; reveals itself when focused. A `[hidden]` rule restores `display: none` on blocks that set their own display.
+- `.icon`: sizes an inline SVG to the text and strokes it in `currentColor`; `[data-size="s"]` and `[data-size="l"]`. No icon library ships: paste paths or keep a `<symbol>` sheet.
+- `.text-center`, `.text-uppercase`, `.truncate`, `.text-small`, `.text-lead`
+- `.text-primary`, `.text-muted`, `.text-danger`, `.bg-surface-base`, `.bg-surface-sunken`, `.bg-primary`, `.bg-gradient`
+- `.indent`: decorative edge accent (`--indent-size`, `--indent-color`)
+- `.anim-lift`: hover elevation on pointer devices
 
 ---
 
-## 6. <a name="behaviors"></a> ⚡ Native Interactivity Engine (src/scripts/behaviors.js)
+## 7. <a name="behaviors"></a> ⚡ Behaviours & Theme Scripts
 
-LooseLeaf UI ships with a zero-dependency, event-delegated JavaScript runtime (~200 lines of plain ES6). Instead of attaching listeners to individual DOM nodes, a single listener processes user actions across the document root.
+### dist/looseleaf.js (src/scripts/behaviors.js)
 
-### Supported Interactive Patterns:
+A zero-dependency drop-in script using event delegation: one click, one keydown and one focusout listener on the document. It exports nothing, works as a classic or module script, and is safe to include twice.
 
-1. Accordions: Toggles aria-expanded and updates `data-state="open|closed"` on `.accordion__panel`.
-2. Dropdown Menus: Toggles dropdown visibility and handles automatic dismissals when clicking outside the menu container.
-3. Mobile Navigation: Controls navbar drawer states and mobile hamburger toggles.
-4. Native Modals & Drawers: Triggers native HTML5 `<dialog>` methods (`.showModal()`, `.close()`) and intercepts backdrop clicks automatically.
-5. Alert Dismissals: Applies `data-state="removing"` to execute smooth fade transitions before removing elements from the DOM tree.
-6. Accessibility Handlers: Global Escape key listener closes active overlays; smooth scroll helper respects system prefers-reduced-motion settings.
+1. Accordions: none needed. `.accordion` is built on native `<details name="…">`.
+2. Dropdowns: toggle on click; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; Escape closes and returns focus; leaving the menu closes it. Triggers get `aria-controls` and `aria-expanded` wired automatically.
+3. Navbar: the toggle opens and closes the collapsed menu (Escape closes it too), with `aria-controls` wired.
+4. Modals and drawers: `[data-open-dialog]` and `[data-close-dialog]` drive native `<dialog>`; a backdrop click closes it.
+5. Alerts: `.alert__close` animates the alert out, then removes it.
+6. Copy: `[data-copy]` copies its value, swaps the button label and announces the result through a polite live region.
+7. In-page links: scroll motion-safely, move focus to the target (adding `tabindex="-1"` where needed), and close the dialog or menu they were clicked from.
 
----
+### dist/theme.js (src/scripts/theme.js)
 
-## 8. <a name="comeau"></a> Josh W Comeau favourites
-
-### The Magical 3D Button
-
-```css
-.pushable {
-  position: relative;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  outline-offset: 4px;
-  transition: filter 250ms;
-}
-.shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: hsl(0deg 0% 0% / 0.25);
-  will-change: transform;
-  transform: translateY(2px);
-  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-}
-.edge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: linear-gradient(
-    to left,
-    hsl(340deg 100% 16%) 0%,
-    hsl(340deg 100% 32%) 8%,
-    hsl(340deg 100% 32%) 92%,
-    hsl(340deg 100% 16%) 100%
-  );
-}
-.front {
-  display: block;
-  position: relative;
-  padding: 12px 42px;
-  border-radius: 12px;
-  font-size: 1.25rem;
-  color: white;
-  background: hsl(345deg 100% 47%);
-  will-change: transform;
-  transform: translateY(-4px);
-  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-}
-.pushable:hover {
-  filter: brightness(110%);
-}
-.pushable:hover .front {
-  transform: translateY(-6px);
-  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
-}
-.pushable:active .front {
-  transform: translateY(-2px);
-  transition: transform 34ms;
-}
-.pushable:hover .shadow {
-  transform: translateY(4px);
-  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
-}
-.pushable:active .shadow {
-  transform: translateY(1px);
-  transition: transform 34ms;
-}
-.pushable:focus:not(:focus-visible) {
-  outline: none;
-}
-```
+Load it as a blocking script in `<head>` (or inline it) so the saved choice is applied before first paint. Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system.
 
 ```html
-<button class="pushable">
-  <span class="shadow"></span>
-  <span class="edge"></span>
-  <span class="front"> Push me </span>
+<button class="button" type="button" data-variant="ghost" data-theme-toggle>
+  Theme: <span data-theme-label>Auto</span>
 </button>
 ```
 
-## 7. <a name="authors"></a> 🤝 Authors & Acknowledgements
+---
 
-LooseLeaf UI is conceptualized and maintained by Louis Mannix (@StockoL) under the LooseLeaf Applications organisation.
+## 8. <a name="commands"></a> 🛠️ Commands
+
+| Command | What it does |
+| --- | --- |
+| `npm run build` | Tokens, configurator library, CSS and scripts, Django sync, then `check` |
+| `npm run build:tokens` | Compile `design-tokens.json` |
+| `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
+| `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
+| `npm test` | Unit tests for the token maths, compiler and ZIP writer |
+| `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
+
+---
+
+## 9. <a name="versioning"></a> 🏷️ Versioning & Releases
+
+The npm package and `django-looseleaf` share one version and follow [semantic versioning](https://semver.org/):
+
+- **Major**: a token is renamed or removed, or a block's class or attribute contract changes.
+- **Minor**: new tokens, blocks, compositions or exceptions.
+- **Patch**: visual refinements within the existing tokens, and fixes.
+
+Theme bundles record the version they were exported from. `django-looseleaf` warns (`looseleaf.W004`) when a theme comes from a different major version; within a major, any token a theme doesn't know falls back to its default, so older themes keep working.
+
+To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three, reruns CI, attaches the built files to a GitHub release and publishes `django-looseleaf` to PyPI with trusted publishing.
+
+---
+
+## 10. <a name="authors"></a> 🤝 Authors & Acknowledgements
+
+LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 
 ### Inspirations & Methodologies:
 
 - Andy Bell & Piccalilli: CUBE CSS Methodology, the Complete CSS course, and modern reset paradigms.
-- Heydon Pickering: Every Layout intrinsic layout primitives and lobotomized owl selectors.
+- Heydon Pickering: Every Layout intrinsic layout primitives and lobotomised owl selectors.
 - Utopia.fyi: Fluid typography and space scale mathematical principles.
-  Josh Comeau: Whimsical Animations course content and blog posts.
+- Björn Ottosson: the OKLab and OKLCH colour spaces behind the palette.
+- Josh Comeau: Whimsical Animations course content and blog posts.
 
 Designed for maintainability. Built for the fluid web.

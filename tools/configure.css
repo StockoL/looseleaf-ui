@@ -1,0 +1,108 @@
+/* ==========================================================================
+   TOOLS: TOKEN CONFIGURATOR
+   App-shell styles only: frame sizing and the few pieces that exist nowhere
+   else. Everything reusable is a block or composition in src/.
+   ========================================================================== */
+
+@layer tools {
+  body {
+    --sticky-offset: 4rem; /* measured from the toolbar by configure.js */
+  }
+
+  .configurator__toolbar {
+    padding-block: var(--space-2xs);
+  }
+
+  .configurator__viewport .input-group {
+    inline-size: 8rem;
+  }
+
+  .configurator__viewport [type="range"] {
+    inline-size: 10rem;
+  }
+
+  .configurator__scale {
+    font-size: var(--text-small);
+    min-inline-size: 4ch;
+  }
+
+  .configurator__controls {
+    padding: var(--space-s);
+  }
+
+  /* Number inputs beside sliders stay compact */
+  .configurator__controls .field__controls > .input-group {
+    flex: 0 0 8rem;
+  }
+
+  .configurator__controls .input-group > .input {
+    padding-inline: var(--space-2xs);
+  }
+
+  /* The preview pane: the iframe is sized and scaled by configure.js */
+  .configurator__preview {
+    position: relative;
+    block-size: calc(100dvh - var(--sticky-offset));
+    overflow: hidden;
+    background-color: var(--color-surface-sunken);
+  }
+
+  .configurator__frame {
+    position: absolute;
+    inset-block-start: 0;
+    border: 0;
+    background-color: var(--color-surface);
+    transform-origin: top left;
+  }
+
+  /* Resolved type and space steps */
+  .configurator__scale-list {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-3xs) var(--space-xs);
+    align-items: baseline;
+    margin: 0;
+    font-size: var(--text-small);
+  }
+
+  .configurator__scale-list dt {
+    font-family: var(--font-mono);
+  }
+
+  .configurator__scale-list dd {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  /* Override picker and revert button under each generated swatch */
+  .configurator__swatch-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .configurator__swatch-actions [type="color"] {
+    inline-size: 2rem;
+    block-size: 1.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* Import drop target */
+  .configurator__dropzone {
+    display: grid;
+    gap: var(--space-xs);
+    place-items: center;
+    padding: var(--space-l) var(--space-s);
+    border: 2px dashed var(--color-border-strong);
+    border-radius: var(--radius-surface);
+    text-align: center;
+  }
+
+  .configurator__dropzone[data-state="dragover"] {
+    border-color: var(--color-action);
+    background-color: var(--color-surface-sunken);
+  }
+}

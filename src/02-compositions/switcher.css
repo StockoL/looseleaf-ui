@@ -9,7 +9,7 @@
 .switcher {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gutter, 1rem);
+  gap: var(--gutter);
 }
 
 .switcher > * {

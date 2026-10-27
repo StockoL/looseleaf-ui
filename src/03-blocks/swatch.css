@@ -1,0 +1,44 @@
+/* ==========================================================================
+   BLOCK: SWATCH
+   A colour tile with its name and, optionally, its value:
+   <div class="swatch" style="--swatch-color: var(--color-action)">
+     <span class="swatch__tile"></span>
+     <span class="swatch__label">action</span>
+     <code class="swatch__hex">#0072dd</code>
+   </div>
+   ========================================================================== */
+
+.swatch {
+  --swatch-color: var(--color-surface-sunken);
+
+  display: grid;
+  gap: var(--space-3xs);
+  padding: var(--space-3xs);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface-raised);
+  font-size: var(--text-small);
+}
+
+.swatch__tile {
+  display: block;
+  block-size: var(--swatch-tile-size, 2.5rem);
+  border: 1px solid color-mix(in oklch, var(--color-text) 12%, transparent);
+  border-radius: var(--radius-control);
+  background-color: var(--swatch-color);
+}
+
+.swatch__label {
+  font-weight: var(--weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.swatch__hex {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+/* CUBE Exception: a value set by hand rather than derived (configurator) */
+.swatch[data-state="overridden"] {
+  border-color: var(--color-action);
+}

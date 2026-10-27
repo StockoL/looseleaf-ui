@@ -16,3 +16,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* --- Size steps (semantic) --- */
+.text-small {
+  font-size: var(--text-small);
+}
+
+.text-lead {
+  font-size: var(--text-lead);
+}

@@ -1,0 +1,6 @@
+{% if errors %}<div class="alert" data-status="danger" role="alert">{% for error in errors %}
+  <p>{{ error }}</p>{% endfor %}
+</div>
+{% endif %}<div class="flow">{% for field, field_errors in fields %}
+{% include "looseleaf/forms/field.html" with field=field %}{% endfor %}
+</div>{% for field in hidden_fields %}{{ field }}{% endfor %}

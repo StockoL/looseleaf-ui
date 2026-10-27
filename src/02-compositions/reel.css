@@ -9,11 +9,13 @@
  */
 .reel {
   display: flex;
-  gap: var(--gutter, 1rem);
+  gap: var(--gutter);
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  padding-block-end: 1rem; /* Intrinsic padding for the native scrollbar */
+  scroll-padding-inline: var(--safe-left) var(--safe-right); /* snapped items clear the notch in landscape */
+  overscroll-behavior: contain;
+  padding-block-end: var(--space-xs); /* Room for the native scrollbar */
 }
 
 .reel > * {

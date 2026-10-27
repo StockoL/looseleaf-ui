@@ -1,19 +1,58 @@
 /* ==========================================================================
    BLOCK: MODAL (Native Dialog)
+   Enters via @starting-style; display and overlay transition discretely so
+   the dialog stays in the top layer until its exit animation finishes.
    ========================================================================== */
 
 .modal {
-  padding: var(--spacing-lg);
+  padding: var(--inset-surface);
   border: none;
-  border-radius: 8px;
-  background-color: var(--colors-surface-base);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  max-inline-size: var(--layout-measure);
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-overlay);
+  max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
+  overscroll-behavior: contain;
+
+  /* Closed state (also the exit target) */
+  opacity: 0;
+  transform: translateY(var(--space-xs)) scale(0.97);
+  transition-property: opacity, transform, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.modal[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: translateY(var(--space-xs)) scale(0.97);
+  }
 }
 
 .modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
+  transition-property: background-color, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.modal[open]::backdrop {
+  background-color: var(--color-backdrop);
+}
+
+@starting-style {
+  .modal[open]::backdrop {
+    background-color: transparent;
+  }
 }

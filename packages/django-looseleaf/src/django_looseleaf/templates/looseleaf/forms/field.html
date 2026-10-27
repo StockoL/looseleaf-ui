@@ -1,0 +1,10 @@
+{% load looseleaf %}{% ll_field_kind field as kind %}{% if kind == "choices" %}<fieldset class="fieldset field"{% if field.errors %} data-status="danger"{% endif %}{% ll_described_by field %}>
+  <legend class="legend">{{ field.label }}</legend>
+  {% ll_widget field %}
+  {% include "looseleaf/forms/field_feedback.html" %}
+</fieldset>{% else %}<div class="field"{% if field.errors %} data-status="danger"{% endif %}>{% if kind == "checkbox" %}
+  <label class="choice"{% if field.id_for_label %} for="{{ field.id_for_label }}"{% endif %}>{% ll_widget field %} {{ field.label }}</label>{% else %}{% if field.label %}
+  <label class="label"{% if field.id_for_label %} for="{{ field.id_for_label }}"{% endif %}>{{ field.label }}</label>{% endif %}
+  {% ll_widget field %}{% endif %}
+  {% include "looseleaf/forms/field_feedback.html" %}
+</div>{% endif %}

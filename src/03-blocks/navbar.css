@@ -3,92 +3,121 @@
    ========================================================================== */
 
 .navbar {
-  --navbar-bg: var(--colors-surface-base);
-  --navbar-border: var(--colors-border-subtle);
+  --navbar-bg: var(--color-surface);
+  --navbar-border: var(--color-border);
 
+  container: navbar / inline-size;
   background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
-  z-index: 50;
-  padding-block: var(--spacing-md);
+  z-index: var(--layer-nav);
+  padding-block: var(--space-s);
+}
+
+/* CUBE Exception: stays at the top while the page scrolls, clear of the notch */
+.navbar[data-sticky] {
+  position: sticky;
+  inset-block-start: 0;
+  padding-block-start: calc(var(--space-s) + var(--safe-top));
 }
 
 .navbar__brand {
-  font-weight: 800;
-  font-size: var(--typography-step-1);
-  color: var(--colors-text-base);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lead);
+  color: var(--color-text);
   text-decoration: none;
   letter-spacing: -0.02em;
 }
 
 .navbar__link {
-  color: var(--colors-text-muted);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  color: var(--color-text-muted);
   text-decoration: none;
-  font-weight: 500;
-  font-size: var(--typography-step-0);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: 4px;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-body);
+  padding: var(--inset-control);
+  border-radius: var(--radius-control);
   background: transparent;
   border: none;
   cursor: pointer;
+  touch-action: manipulation;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    color var(--duration-quick) var(--ease-standard),
+    background-color var(--duration-quick) var(--ease-standard);
 }
 
-.navbar__link:hover,
 .navbar__link:focus-visible {
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-sunken);
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
 }
 
-/* Mobile Toggle Behavior */
-@media (max-width: 44.99rem) {
+@media (hover: hover) {
+  .navbar__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-sunken);
+  }
+}
+
+/*
+ * Menu: a wrapping row of links. It owns its own layout, so the markup
+ * needs no inner composition.
+ */
+.navbar__menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--navbar-menu-space, var(--space-2xs));
+}
+
+/* Toggle: only shown once the navbar is too narrow for the menu */
+.navbar__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-2xs);
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/*
+ * Collapsed navbar (narrower than 45rem, the documented menu-collapse
+ * constant). Driven by the navbar's own width, not the viewport, so it
+ * also collapses inside a narrow column or iframe.
+ */
+@container navbar (width < 45rem) {
+  .navbar__toggle {
+    display: inline-flex;
+  }
+
   .navbar__menu {
     display: none;
     flex-basis: 100%;
-    padding-block-start: var(--spacing-md);
+    flex-direction: column;
+    align-items: stretch;
+    padding-block-start: var(--space-s);
   }
 
   .navbar__menu[data-state="open"] {
-    display: block;
-    animation: fadeIn var(--transitions-dur-fast) var(--transitions-spring-smooth);
-  }
-
-  /* Force vertical stacking on mobile by adjusting the inner cluster */
-  .navbar__menu .cluster {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: var(--colors-text-base);
-    cursor: pointer;
-    padding: var(--spacing-xs);
+    display: flex;
+    animation: ll-navbar-reveal var(--duration-quick) var(--ease-standard);
   }
 }
 
-@media (min-width: 45rem) {
-  .navbar__toggle {
-    display: none;
-  }
-  .navbar__menu {
-    display: block !important;
-  }
-}
-
-@keyframes fadeIn {
+@keyframes ll-navbar-reveal {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(calc(var(--space-2xs) * -1));
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }

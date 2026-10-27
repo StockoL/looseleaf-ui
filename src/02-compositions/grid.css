@@ -8,7 +8,7 @@
  */
 .grid {
   display: grid;
-  gap: var(--gutter, 1rem);
+  gap: var(--gutter);
   grid-template-columns: repeat(
     var(--grid-placement, auto-fit),
     minmax(min(var(--grid-min-item-size, 15rem), 100%), 1fr)

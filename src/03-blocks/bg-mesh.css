@@ -1,0 +1,58 @@
+/* ==========================================================================
+   BLOCK: BG MESH
+   An ambient, slowly drifting wash of the action and accent hues behind a
+   section's content. Decorative only; it stops under reduced motion.
+   ========================================================================== */
+
+.bg-mesh {
+  --mesh-duration: calc(var(--duration-slow) * 40);
+  --mesh-strength: 8%;
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* own stacking context, so the wash sits behind content */
+  background-color: var(--color-surface);
+}
+
+.bg-mesh::before,
+.bg-mesh::after {
+  content: "";
+  position: absolute;
+  inline-size: 150%;
+  block-size: 150%;
+  inset-block-start: -25%;
+  inset-inline-start: -25%;
+  z-index: calc(var(--layer-raised) * -1);
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-action) var(--mesh-strength), transparent) 0%,
+    transparent 60%
+  );
+  animation: ll-mesh-drift var(--mesh-duration) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.bg-mesh::after {
+  inset-block-start: 10%;
+  inset-inline-start: 20%;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-accent) var(--mesh-strength), transparent) 0%,
+    transparent 50%
+  );
+  animation-duration: calc(var(--mesh-duration) * 1.25);
+  animation-direction: alternate-reverse;
+}
+
+@keyframes ll-mesh-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(5%, 5%) scale(1.1);
+  }
+  100% {
+    transform: translate(-5%, -5%) scale(0.9);
+  }
+}

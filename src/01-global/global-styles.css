@@ -1,51 +1,112 @@
 /* ==========================================================================
    GLOBAL STYLES & BASE TYPOGRAPHY
+   Element defaults from Tier 2 tokens. Blocks build on these; they never
+   remove the focus ring.
    ========================================================================== */
 
-html,
+:root {
+  /* Minimum interactive target (44px, Apple HIG); controls set min-block-size from it */
+  --target-min: 2.75rem;
+
+  /* Notch and home-indicator insets; needs viewport-fit=cover in the viewport meta */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+/* Interactive blocks draw their own pressed and focus states */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  min-height: 100%; /* Better support than min-inline-size */
-  font-family: var(--fonts-body);
-  line-height: 1.5;
-  color: var(--colors-text-base);
-  background-color: var(--colors-surface-base);
+  min-block-size: 100dvh; /* dvh, not vh: tracks mobile browser toolbars */
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  background-color: var(--color-surface);
   overflow-wrap: break-word;
 }
 
-/* 
- * Typographic Measure 
- * Restricts the line length of text elements to an optimal reading width.
+/*
+ * The reset removes only end margins. Vertical rhythm belongs to .flow, so
+ * start margins go too; otherwise the first heading in a card, dialog or
+ * cluster carries a stray user-agent gap.
  */
-p,
-li,
-dl,
-figcaption,
-blockquote {
-  max-width: var(--layout-measure);
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) {
+  margin-block-start: 0;
 }
 
+/* The user-agent 40px side margins squeeze figures and quotes in narrow layouts */
+:where(figure, blockquote) {
+  margin-inline: 0;
+}
+
+/* The one focus style. No block may set outline: none. */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* --- Headings --- */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--fonts-heading);
-  max-width: var(--layout-measure);
-  line-height: 1.2; /* Tighter line height for headings */
-  text-wrap: balance; /* Modern CSS to prevent awkward single-word widows */
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
 }
 
-/* Map heading tags to the fluid scale */
 h1 {
-  font-size: var(--typography-step-4);
+  font-size: var(--heading-1);
 }
 h2 {
-  font-size: var(--typography-step-3);
+  font-size: var(--heading-2);
 }
 h3 {
-  font-size: var(--typography-step-2);
+  font-size: var(--heading-3);
 }
 h4 {
-  font-size: var(--typography-step-1);
+  font-size: var(--heading-4);
+}
+h5,
+h6 {
+  font-size: var(--text-body);
+}
+
+/* --- Code --- */
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+}
+
+/* --- Links: colour and decoration from tokens --- */
+a:not([class]) {
+  color: var(--color-link);
+  text-decoration-line: var(--link-decoration);
+  text-underline-offset: 0.15em;
+}
+
+@media (hover: hover) {
+  a:not([class]):hover {
+    text-decoration-line: var(--link-decoration-hover);
+  }
+}
+
+::selection {
+  background-color: color-mix(in oklch, var(--color-action) 25%, transparent);
+}
+
+/*
+ * Typographic measure
+ * Caps line length for running text inside .prose and .flow only, so
+ * text in navbars, tables and grids is never squeezed by accident.
+ */
+:where(.prose, .flow) :where(p, li, dl, figcaption, blockquote) {
+  max-inline-size: var(--measure);
 }

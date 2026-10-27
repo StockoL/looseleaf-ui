@@ -1,0 +1,88 @@
+/* ==========================================================================
+   BLOCK: CHOICE (checkbox and radio)
+   <label class="choice"><input class="choice__input" type="checkbox"> Text</label>
+   The whole label is the hit area, at least --target-min tall.
+   ========================================================================== */
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-block-size: var(--target-min);
+  line-height: var(--leading-tight);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.choice__input {
+  flex-shrink: 0;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  margin: 0;
+  accent-color: var(--color-action);
+  cursor: inherit;
+}
+
+.choice:has(.choice__input:disabled) {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Choice group: a stack of choices (Django's RadioSelect and
+   CheckboxSelectMultiple render into this)
+   -------------------------------------------------------------------------- */
+.choice-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/*
+ * CUBE Exception: segmented control
+ * Radios hidden visually (still keyboard-operable and announced), with their
+ * labels drawn as adjoining buttons:
+ * <input class="visually-hidden" type="radio" id="a"><label for="a">A</label>
+ */
+.choice-group[data-variant="segmented"] {
+  display: inline-flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+
+.choice-group[data-variant="segmented"] > label {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: background-color var(--duration-quick) var(--ease-standard);
+}
+
+.choice-group[data-variant="segmented"] > label + input + label {
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.choice-group[data-variant="segmented"] > input:checked + label {
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+}
+
+/* The ring sits inside, as the group clips its overflow */
+.choice-group[data-variant="segmented"] > input:focus-visible + label {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .choice-group[data-variant="segmented"] > input:not(:checked) + label:hover {
+    background-color: var(--color-surface-sunken);
+  }
+}

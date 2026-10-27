@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <title>LooseLeaf UI — Token Configurator</title>
+    <!-- The tool's own chrome uses the shipped tokens; draft tokens only ever reach the preview -->
+    <link rel="stylesheet" href="../dist/looseleaf.css" />
+    <link rel="stylesheet" href="configure.css" />
+    <!-- Classic scripts, not modules: browsers block module scripts from file:// -->
+    <script src="tokens-lib.js"></script>
+    <script src="current-tokens.js"></script>
+    <script src="configure.js" defer></script>
+    <!-- The shipped behaviours: export menu, import dialog -->
+    <script src="../dist/looseleaf.js" defer></script>
+  </head>
+  <body>
+    <svg class="visually-hidden" aria-hidden="true">
+      <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></symbol>
+      <symbol id="icon-undo" viewBox="0 0 24 24"><path d="M3 7v6h6" /><path d="M21 17a9 9 0 0 0-15-6.7L3 13" /></symbol>
+    </svg>
+
+    <header class="navbar configurator__toolbar" data-sticky>
+      <div class="cluster" style="--cluster-justify: space-between; --gutter: var(--space-xs); padding-inline: var(--space-s);">
+        <span class="navbar__brand">Token Configurator</span>
+
+        <div class="cluster" style="--gutter: var(--space-xs);">
+          <fieldset class="choice-group" data-variant="segmented">
+            <legend class="visually-hidden">Preview colour scheme</legend>
+            <input class="visually-hidden" type="radio" name="scheme" id="scheme-light" value="light" />
+            <label for="scheme-light">Light</label>
+            <input class="visually-hidden" type="radio" name="scheme" id="scheme-dark" value="dark" />
+            <label for="scheme-dark">Dark</label>
+            <input class="visually-hidden" type="radio" name="scheme" id="scheme-auto" value="auto" checked />
+            <label for="scheme-auto">Auto</label>
+          </fieldset>
+
+          <div class="field__controls configurator__viewport">
+            <label class="label" for="viewport-number">Viewport</label>
+            <input class="input" type="range" id="viewport-range" min="320" max="1600" step="10" aria-label="Viewport width" />
+            <div class="input-group">
+              <input class="input" type="number" id="viewport-number" min="320" max="1600" step="10" />
+              <span class="input-group__addon">px</span>
+            </div>
+            <span class="text-muted configurator__scale" id="viewport-scale" aria-live="polite"></span>
+          </div>
+
+          <div class="cluster" style="--gutter: var(--space-2xs);">
+            <button class="button" type="button" data-open-dialog="import-dialog">Import</button>
+            <div class="dropdown-wrapper">
+              <button class="button" type="button" id="export-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export <svg class="icon" aria-hidden="true"><use href="#icon-chevron" /></svg>
+              </button>
+              <div class="dropdown" data-align="end" role="menu" style="--dropdown-width: 16rem;">
+                <button class="dropdown__item" type="button" role="menuitem" data-export="bundle">Theme bundle (.zip)</button>
+                <button class="dropdown__item" type="button" role="menuitem" data-export="source">Tokens source (design-tokens.json)</button>
+                <hr class="dropdown__divider" />
+                <button class="dropdown__item" type="button" role="menuitem" data-export="css">Copy tokens CSS</button>
+              </div>
+            </div>
+            <button class="button" type="button" id="copy-link">
+              <span data-label="idle">Copy link</span>
+              <span data-label="copied">Copied</span>
+            </button>
+            <button class="button" type="button" id="reset">Reset</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="sidebar configurator__shell" data-sticky style="--sidebar-target-width: 24rem; --gutter: 0;">
+      <aside class="configurator__controls flow" style="--flow-space: var(--space-s);" aria-label="Token controls">
+        <div class="alert" data-status="danger" id="errors" role="alert" hidden></div>
+
+        <div class="accordion">
+          <details class="accordion__item" name="config" open>
+            <summary class="accordion__trigger">Type scale <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="type"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Space scale <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="space"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Palette <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="palette"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Contrast <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="contrast">
+              <p class="field__hint">WCAG 2.x ratio. Green ≥ 4.5 (AA), amber ≥ 3, red below.</p>
+              <div class="table-wrapper">
+                <table class="table" data-density="compact">
+                  <thead>
+                    <tr>
+                      <th scope="col">Pair</th>
+                      <th scope="col">Light</th>
+                      <th scope="col">Dark</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contrast-rows"></tbody>
+                </table>
+              </div>
+            </div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Fonts <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="fonts"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Shape and motion <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="shape"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Layout <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="layout"></div>
+          </details>
+          <details class="accordion__item" name="config">
+            <summary class="accordion__trigger">Defaults <svg class="icon accordion__icon" aria-hidden="true"><use href="#icon-chevron" /></svg></summary>
+            <div class="accordion__content flow" data-section="defaults"></div>
+          </details>
+        </div>
+      </aside>
+
+      <main class="configurator__preview" id="preview">
+        <iframe class="configurator__frame" id="preview-frame" src="../examples/index.html" title="Live preview of the design system"></iframe>
+      </main>
+    </div>
+
+    <dialog class="modal flow" id="import-dialog" aria-labelledby="import-title">
+      <div class="cluster" style="--cluster-justify: space-between;">
+        <h2 id="import-title">Import tokens</h2>
+        <button class="button" type="button" data-close-dialog aria-label="Close">
+          <svg class="icon"><use href="#icon-close" /></svg>
+        </button>
+      </div>
+      <p>Load a <code>design-tokens.json</code>. A file without <code>$utopia</code> / <code>$palette</code> inputs loads with every value marked overridden.</p>
+      <label class="configurator__dropzone" id="dropzone">
+        <span>Drop a file here, or choose one</span>
+        <input class="input" type="file" id="import-file" accept="application/json,.json" />
+      </label>
+      <p class="field__error" id="import-error" role="alert" hidden></p>
+    </dialog>
+  </body>
+</html>

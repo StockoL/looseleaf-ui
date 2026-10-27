@@ -1,5 +1,8 @@
 /* ==========================================================================
    BLOCK: DROPDOWN
+   Hooks (set on the dropdown or any ancestor):
+     --dropdown-width   minimum menu width (default 12rem)
+     --dropdown-offset  gap between trigger and menu (default --space-2xs)
    ========================================================================== */
 
 .dropdown-wrapper {
@@ -8,60 +11,78 @@
 }
 
 .dropdown {
-  --dropdown-width: 12rem;
-  --dropdown-offset: var(--spacing-xs);
-
   position: absolute;
-  top: calc(100% + var(--dropdown-offset));
-  left: 0;
-  z-index: 100;
-  min-inline-size: var(--dropdown-width);
-  background-color: var(--colors-surface-base);
-  border: 1px solid var(--colors-border-subtle);
-  border-radius: 8px;
-  padding: var(--spacing-xs);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  inset-block-start: calc(100% + var(--dropdown-offset, var(--space-2xs)));
+  inset-inline-start: 0;
+  z-index: var(--layer-popover);
+  min-inline-size: var(--dropdown-width, 12rem);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  padding: var(--space-2xs);
+  box-shadow: var(--shadow-raised);
 
   /* Hidden State Physics */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(calc(var(--spacing-xs) * -1));
+  transform: translateY(calc(var(--space-2xs) * -1));
   transition:
-    opacity var(--transitions-dur-base) var(--transitions-spring-smooth),
-    transform var(--transitions-dur-base) var(--transitions-spring-snappy),
-    visibility var(--transitions-dur-base);
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-spring),
+    visibility var(--duration-base);
   will-change: transform, opacity;
 }
 
-/* CUBE Exception */
+/* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
+.dropdown[data-align="end"] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* CUBE Exception: open */
 .dropdown-wrapper[data-state="open"] .dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
+/* Items may be links or buttons; buttons lose their native chrome */
 .dropdown__item {
-  display: block;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  color: var(--colors-text-base);
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--target-min);
+  touch-action: manipulation;
+  padding: var(--inset-control);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+  color: var(--color-text);
   text-decoration: none;
-  border-radius: 4px;
-  font-size: var(--typography-step-0);
-  font-weight: 500;
+  border-radius: var(--radius-control);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    background-color var(--duration-quick) var(--ease-standard),
+    color var(--duration-quick) var(--ease-standard);
 }
 
-.dropdown__item:hover,
 .dropdown__item:focus-visible {
-  background-color: var(--colors-surface-sunken);
-  color: var(--colors-action-primary);
-  outline: none;
+  background-color: var(--color-surface-sunken);
+  color: var(--color-action);
+}
+
+@media (hover: hover) {
+  .dropdown__item:hover {
+    background-color: var(--color-surface-sunken);
+    color: var(--color-action);
+  }
 }
 
 .dropdown__divider {
   border: none;
-  border-top: 1px solid var(--colors-border-subtle);
-  margin-block: var(--spacing-xs);
+  border-top: 1px solid var(--color-border);
+  margin-block: var(--space-2xs);
 }

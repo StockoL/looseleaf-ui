@@ -1,0 +1,27 @@
+/* ==========================================================================
+   BLOCK: SKIP LINK
+   First focusable element on the page; parked above the viewport until it
+   receives keyboard focus.
+   ========================================================================== */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: calc(var(--space-xs) + var(--safe-top, 0px));
+  inset-inline-start: calc(var(--space-xs) + var(--safe-left, 0px));
+  z-index: var(--layer-popover);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  border-radius: var(--radius-control);
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--space-l)));
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+
+.skip-link:focus {
+  transform: none;
+}

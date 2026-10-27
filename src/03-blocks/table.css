@@ -1,0 +1,66 @@
+/* ==========================================================================
+   BLOCK: TABLE
+   Wrap in .table-wrapper so a wide table scrolls by itself instead of the
+   page: <div class="table-wrapper" role="region" aria-label="…" tabindex="0">
+   ========================================================================== */
+
+.table-wrapper {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+}
+
+/* Rendered prose tables share these rules (see prose.css) */
+:is(.table, .prose table) {
+  --table-cell-padding: var(--space-2xs) var(--space-xs);
+
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table caption,
+.prose caption {
+  caption-side: top;
+  padding-block-end: var(--space-2xs);
+  text-align: start;
+  font-weight: var(--weight-semibold);
+}
+
+.table :is(th, td),
+.prose :is(th, td) {
+  padding: var(--table-cell-padding);
+  border-block-end: 1px solid var(--color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table thead th,
+.prose thead th {
+  border-block-end-color: var(--color-border-strong);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+/* Numbers line up on the right: <td data-align="end"> */
+.table :is(th, td)[data-align="end"] {
+  text-align: end;
+}
+
+/* CUBE Exception: zebra rows */
+.table[data-striped] tbody tr:nth-child(even) {
+  background-color: var(--color-surface-sunken);
+}
+
+/* CUBE Exception: highlight the row under the pointer */
+@media (hover: hover) {
+  .table[data-hover] tbody tr:hover {
+    background-color: color-mix(in oklch, var(--color-action) 8%, transparent);
+  }
+}
+
+/* CUBE Exception: dense data */
+.table[data-density="compact"] {
+  --table-cell-padding: var(--space-3xs) var(--space-2xs);
+  font-size: var(--text-small);
+}
