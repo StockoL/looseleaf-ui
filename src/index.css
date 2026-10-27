@@ -36,6 +36,7 @@
 @import "03-blocks/input.css" layer(blocks);
 @import "03-blocks/select.css" layer(blocks);
 @import "03-blocks/textarea.css" layer(blocks);
+@import "03-blocks/choice.css" layer(blocks);
 @import "03-blocks/badge.css" layer(blocks);
 @import "03-blocks/accordion.css" layer(blocks);
 @import "03-blocks/dropdown.css" layer(blocks);
