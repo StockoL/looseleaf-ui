@@ -184,8 +184,8 @@ Semantic colour roles. The only colour tokens blocks may use.
 | `--color-text` | Semantic | `#18181d` | `#f4f4fc` |  |
 | `--color-text-muted` | Semantic | `#74747a` | `#a1a1a8` |  |
 | `--color-text-inverse` | Semantic | `#ffffff` | `#07070b` |  |
-| `--color-border` | Semantic | `#e4e4eb` | `#26262b` |  |
-| `--color-border-strong` | Semantic | `#d3d3db` | `#3f3f45` |  |
+| `--color-border` | Semantic | `#e4e4eb` | `#3f3f45` |  |
+| `--color-border-strong` | Semantic | `#d3d3db` | `#525258` |  |
 | `--color-link` | Semantic | `#0072dd` |  |  |
 | `--color-action` | Semantic | `#0072dd` |  |  |
 | `--color-action-hover` | Semantic | `#0051a0` |  |  |
@@ -350,9 +350,9 @@ Style of a .button with no data-variant: outlined (transparent) or filled (actio
 | --- | --- | --- | --- | --- |
 | `--button-default-bg` | Semantic | `transparent` |  |  |
 | `--button-default-text` | Semantic | `#18181d` | `#f4f4fc` |  |
-| `--button-default-border` | Semantic | `#e4e4eb` | `#26262b` |  |
+| `--button-default-border` | Semantic | `#e4e4eb` | `#3f3f45` |  |
 | `--button-default-bg-hover` | Semantic | `#f4f4fc` | `#26262b` |  |
-| `--button-default-border-hover` | Semantic | `#d3d3db` | `#3f3f45` |  |
+| `--button-default-border-hover` | Semantic | `#d3d3db` | `#525258` |  |
 
 ### link
 

@@ -660,7 +660,7 @@
     "name": "--color-border",
     "tier": 2,
     "light": "#e4e4eb",
-    "dark": "#26262b",
+    "dark": "#3f3f45",
     "themed": true,
     "overridden": false,
     "purpose": "Semantic colour roles. The only colour tokens blocks may use."
@@ -669,7 +669,7 @@
     "name": "--color-border-strong",
     "tier": 2,
     "light": "#d3d3db",
-    "dark": "#3f3f45",
+    "dark": "#525258",
     "themed": true,
     "overridden": false,
     "purpose": "Semantic colour roles. The only colour tokens blocks may use."
@@ -1209,7 +1209,7 @@
     "name": "--button-default-border",
     "tier": 2,
     "light": "#e4e4eb",
-    "dark": "#26262b",
+    "dark": "#3f3f45",
     "themed": true,
     "overridden": false,
     "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."
@@ -1227,7 +1227,7 @@
     "name": "--button-default-border-hover",
     "tier": 2,
     "light": "#d3d3db",
-    "dark": "#3f3f45",
+    "dark": "#525258",
     "themed": true,
     "overridden": false,
     "purpose": "Style of a .button with no data-variant: outlined (transparent) or filled (action)."

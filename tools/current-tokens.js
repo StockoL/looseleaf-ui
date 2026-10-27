@@ -119,11 +119,11 @@ window.LooseLeafCurrentTokens = {
     },
     "border": {
       "light": "{neutral.200}",
-      "dark": "{neutral.800}"
+      "dark": "{neutral.700}"
     },
     "border-strong": {
       "light": "{neutral.300}",
-      "dark": "{neutral.700}"
+      "dark": "{neutral.600}"
     },
     "link": "{color.action}",
     "action": "{action.500}",

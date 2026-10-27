@@ -329,8 +329,8 @@ textarea:not([rows]) {
     --color-text: var(--neutral-100);
     --color-text-muted: var(--neutral-400);
     --color-text-inverse: var(--neutral-950);
-    --color-border: var(--neutral-800);
-    --color-border-strong: var(--neutral-700);
+    --color-border: var(--neutral-700);
+    --color-border-strong: var(--neutral-600);
     --color-status-success: var(--success-base-dark);
     --color-status-success-surface: var(--success-surface-dark);
     --color-status-success-border: var(--success-border-dark);
@@ -364,8 +364,8 @@ textarea:not([rows]) {
   --color-text: var(--neutral-100);
   --color-text-muted: var(--neutral-400);
   --color-text-inverse: var(--neutral-950);
-  --color-border: var(--neutral-800);
-  --color-border-strong: var(--neutral-700);
+  --color-border: var(--neutral-700);
+  --color-border-strong: var(--neutral-600);
   --color-status-success: var(--success-base-dark);
   --color-status-success-surface: var(--success-surface-dark);
   --color-status-success-border: var(--success-border-dark);
