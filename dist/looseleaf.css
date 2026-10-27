@@ -58,7 +58,6 @@ ol[role="list"] {
 
 /* Set core body defaults */
 body {
-  min-height: 100vh;
   line-height: 1.5;
 }
 
@@ -411,6 +410,7 @@ html {
 }
 
 body {
+  min-block-size: 100dvh; /* dvh, not vh: tracks mobile browser toolbars */
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--leading-body);
@@ -648,6 +648,8 @@ a:not([class]) {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--safe-left) var(--safe-right); /* snapped items clear the notch in landscape */
+  overscroll-behavior: contain;
   padding-block-end: 1rem; /* Intrinsic padding for the native scrollbar */
 }
 
@@ -1209,6 +1211,7 @@ a:not([class]) {
   max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
+  overscroll-behavior: contain;
 
   /* Closed state (also the exit target) */
   opacity: 0;
@@ -1233,6 +1236,7 @@ a:not([class]) {
 
 .modal::backdrop {
   background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
   transition-property: background-color, overlay, display;
   transition-duration: var(--duration-base);
@@ -1270,6 +1274,9 @@ a:not([class]) {
   border: none;
   background-color: var(--color-surface-raised);
   padding: var(--inset-surface);
+  padding-block: calc(var(--inset-surface) + var(--safe-top)) calc(var(--inset-surface) + var(--safe-bottom));
+  padding-inline-end: calc(var(--inset-surface) + var(--safe-right));
+  overscroll-behavior: contain;
   box-shadow: var(--shadow-overlay);
   color: var(--color-text);
 
@@ -1293,6 +1300,7 @@ a:not([class]) {
 
 .offcanvas::backdrop {
   background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
   transition-property: background-color, overlay, display;
   transition-duration: var(--duration-base);
@@ -1316,6 +1324,8 @@ a:not([class]) {
 
   margin-inline-start: 0;
   margin-inline-end: auto;
+  padding-inline-start: calc(var(--inset-surface) + var(--safe-left));
+  padding-inline-end: var(--inset-surface);
 }
 }
 

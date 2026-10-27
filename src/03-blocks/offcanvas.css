@@ -16,6 +16,9 @@
   border: none;
   background-color: var(--color-surface-raised);
   padding: var(--inset-surface);
+  padding-block: calc(var(--inset-surface) + var(--safe-top)) calc(var(--inset-surface) + var(--safe-bottom));
+  padding-inline-end: calc(var(--inset-surface) + var(--safe-right));
+  overscroll-behavior: contain;
   box-shadow: var(--shadow-overlay);
   color: var(--color-text);
 
@@ -39,6 +42,7 @@
 
 .offcanvas::backdrop {
   background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
   transition-property: background-color, overlay, display;
   transition-duration: var(--duration-base);
@@ -62,4 +66,6 @@
 
   margin-inline-start: 0;
   margin-inline-end: auto;
+  padding-inline-start: calc(var(--inset-surface) + var(--safe-left));
+  padding-inline-end: var(--inset-surface);
 }

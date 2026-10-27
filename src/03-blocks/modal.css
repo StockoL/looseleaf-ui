@@ -14,6 +14,7 @@
   max-inline-size: var(--measure);
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
+  overscroll-behavior: contain;
 
   /* Closed state (also the exit target) */
   opacity: 0;
@@ -38,6 +39,7 @@
 
 .modal::backdrop {
   background-color: transparent;
+  -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
   transition-property: background-color, overlay, display;
   transition-duration: var(--duration-base);

@@ -13,6 +13,8 @@
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--safe-left) var(--safe-right); /* snapped items clear the notch in landscape */
+  overscroll-behavior: contain;
   padding-block-end: 1rem; /* Intrinsic padding for the native scrollbar */
 }
 
