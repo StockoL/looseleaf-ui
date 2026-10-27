@@ -1,0 +1,60 @@
+# Push a tag vX.Y.Z (after `npm run bump -- X.Y.Z`) to release both packages in lockstep.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  versions:
+    name: Tag matches every version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/bump-version.js --check "${{ github.ref_name }}"
+
+  ci:
+    needs: versions
+    uses: ./.github/workflows/ci.yml
+
+  github-release:
+    name: GitHub release with built assets
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: >-
+          gh release create "${{ github.ref_name }}"
+          --title "${{ github.ref_name }}"
+          --generate-notes
+          dist/looseleaf.css
+          dist/looseleaf.js
+          dist/theme.js
+          dist/tokens.resolved.json
+          tools/tokens-lib.js
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  pypi:
+    name: Publish django-looseleaf to PyPI
+    needs: ci
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/django-looseleaf/
+    permissions:
+      id-token: write # trusted publishing (OIDC); no API token is stored
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"] # tags run CI through the release workflow instead
+  pull_request:
+  workflow_call: # the release workflow runs the same checks before publishing
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and check (Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run build
+      - name: Committed build output is up to date
+        run: >-
+          git diff --exit-code --
+          dist/
+          src/01-global/variables.css
+          docs/TOKENS.md
+          tools/current-tokens.js
+          tools/tokens-lib.js
+          packages/django-looseleaf/src/django_looseleaf/static
+          packages/django-looseleaf/src/django_looseleaf/tokens.resolved.json
+
+  django:
+    name: django-looseleaf (Python ${{ matrix.python }}, Django ${{ matrix.django }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.12"]
+        django: ["4.2", "5.2"]
+        include:
+          - python: "3.13"
+            django: "6.1"
+    defaults:
+      run:
+        working-directory: packages/django-looseleaf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install "django~=${{ matrix.django }}.0" "pytest>=8" "pytest-django>=4.8"
+      - run: python -m pip install --no-deps -e .
+      - run: python -m pytest
+      - run: python example/manage.py check
+
+  package:
+    name: Build and check the Python package
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/django-looseleaf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: packages/django-looseleaf/dist/
+          if-no-files-found: error
