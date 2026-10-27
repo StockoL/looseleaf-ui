@@ -1,5 +1,9 @@
 import pytest
-from django.template import Context, Template, TemplateSyntaxError
+from django.contrib import messages
+from django.contrib.messages.storage.cookie import CookieStorage
+from django.core.paginator import Paginator
+from django.template import Context, RequestContext, Template, TemplateSyntaxError
+from django.test import RequestFactory
 
 from django_looseleaf import tokens
 
@@ -39,3 +43,39 @@ def test_ll_token_rejects_unknown_paths_and_schemes():
         render('{% ll_token "color.nope" %}')
     with pytest.raises(TemplateSyntaxError, match="Unknown scheme"):
         render('{% ll_token "color.action" scheme="sepia" %}')
+
+
+def test_pagination_marks_the_current_page_and_keeps_other_parameters():
+    request = RequestFactory().get("/items/", {"q": "cards", "page": "6"})
+    page = Paginator(range(200), 10).page(6)
+    html = Template("{% load looseleaf %}{% ll_pagination page %}").render(RequestContext(request, {"page": page}))
+    assert '<nav class="pagination" aria-label="Pagination">' in html
+    assert '<a class="pagination__link" href="?q=cards&amp;page=6" aria-current="page">6</a>' in html
+    assert 'href="?q=cards&amp;page=5" rel="prev">Previous</a>' in html
+    assert 'href="?q=cards&amp;page=7" rel="next">Next</a>' in html
+    assert html.count('class="pagination__gap"') == 2  # 1 … 4 5 6 7 8 … 20
+
+
+def test_pagination_disables_ends_and_hides_for_a_single_page():
+    first = Template("{% load looseleaf %}{% ll_pagination page %}").render(Context({"page": Paginator(range(30), 10).page(1)}))
+    assert '<a class="pagination__link" aria-disabled="true">Previous</a>' in first
+    assert 'href="?page=2" rel="next"' in first
+    single = Template("{% load looseleaf %}{% ll_pagination page %}").render(Context({"page": Paginator(range(5), 10).page(1)}))
+    assert single.strip() == ""
+
+
+def test_messages_render_as_dismissible_alerts_with_mapped_status():
+    request = RequestFactory().get("/")
+    request._messages = CookieStorage(request)
+    messages.success(request, "Saved.")
+    messages.error(request, "Could not send.")
+    html = Template("{% load looseleaf %}{% ll_messages %}").render(RequestContext(request, {}))
+    assert '<div class="alert" data-status="success" role="status">' in html
+    assert '<div class="alert" data-status="danger" role="alert">' in html
+    assert html.count('class="alert__close"') == 2 and "<p>Could not send.</p>" in html
+
+
+def test_messages_render_nothing_when_there_are_none():
+    request = RequestFactory().get("/")
+    request._messages = CookieStorage(request)
+    assert Template("{% load looseleaf %}{% ll_messages %}").render(RequestContext(request, {})).strip() == ""
