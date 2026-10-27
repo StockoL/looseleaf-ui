@@ -27,6 +27,7 @@
 /* --------------------------------------------------------------------------
    LAYER 3: CUBE BLOCKS (Encapsulated Component Styling)
    -------------------------------------------------------------------------- */
+@import "03-blocks/skip-link.css" layer(blocks);
 @import "03-blocks/button.css" layer(blocks);
 @import "03-blocks/input.css" layer(blocks);
 @import "03-blocks/badge.css" layer(blocks);

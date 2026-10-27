@@ -2,7 +2,8 @@
    UTILITY: ACCESSIBILITY
    ========================================================================== */
 
-.visually-hidden {
+/* Hidden visually, still announced. Reveals itself while focused or active. */
+.visually-hidden:not(:focus):not(:active) {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -12,4 +13,12 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/*
+ * Blocks set display (.badge, .button ...), which beats the user-agent
+ * [hidden] rule. The utilities layer outranks blocks, so this restores it.
+ */
+[hidden]:not([hidden="until-found"]) {
+  display: none;
 }
