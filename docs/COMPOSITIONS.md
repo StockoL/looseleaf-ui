@@ -38,15 +38,19 @@ In traditional frameworks, layout positioning, margins, and component styling ar
 
 ## 🛠️ Composition Primitives Quick Reference
 
-| Primitive    | Class       | Structural Purpose                                                    | Key Custom Properties                  |
-| :----------- | :---------- | :-------------------------------------------------------------------- | :------------------------------------- |
-| **Flow**     | `.flow`     | Manages vertical rhythm between sibling elements via lobotomized owl. | `--flow-space` (Default: `1em`)        |
-| **Cluster**  | `.cluster`  | Groups items horizontally, wrapping naturally with zero overflow.     | `--cluster-space`, `--cluster-justify` |
-| **Sidebar**  | `.sidebar`  | Asymmetric 2-column layout (fixed-target panel + fluid main area).    | `--sidebar-target-width`               |
-| **Switcher** | `.switcher` | Forces items side-by-side until container hits a minimum threshold.   | `--switcher-threshold`                 |
-| **Grid**     | `.grid`     | Auto-filling, intrinsically responsive CSS Grid layout.               | `--grid-min-item-size`                 |
-| **Wrapper**  | `.wrapper`  | Macro page-section container: caps a *site* max-width, auto margins.  | `--wrapper-max-width`, `--wrapper-gutters` |
-| **Center**   | `.center`   | Content primitive: caps a box to the *reading measure*, auto margins. | `--center-max-width`, `--center-gutters` |
+| Primitive | Class | Structural Purpose | Key Custom Properties and Exceptions |
+| :-- | :-- | :-- | :-- |
+| **Wrapper** | `.wrapper` | Macro page-section container: caps a *site* max-width, auto margins. | `--wrapper-max-width`, `--wrapper-gutters` |
+| **Region** | `.region` | Vertical breathing room for a page section; pair with `.wrapper`. | `--region-padding`, `[data-size="small"]`, `[data-size="large"]` |
+| **Center** | `.center` | Content primitive: caps a box to the *reading measure*, auto margins. | `--center-max-width`, `--center-gutters`, `[data-and-text]`, `[data-intrinsic]` |
+| **Flow** | `.flow` | Vertical rhythm between sibling elements via the lobotomised owl. | `--flow-space` (default `1em`) |
+| **Cluster** | `.cluster` | Groups items horizontally, wrapping naturally with zero overflow. | `--cluster-space`, `--cluster-justify`, `--cluster-align` |
+| **Sidebar** | `.sidebar` | Asymmetric two-column layout (target-width panel + fluid main area). | `--sidebar-target-width`, `--sidebar-content-min-width`, `--sidebar-space`, `--sidebar-align`, `[data-side="right"]`, `[data-sticky]` with `--sticky-offset` |
+| **Switcher** | `.switcher` | Side by side until the container drops below a threshold, then stacked. | `--switcher-threshold` |
+| **Grid** | `.grid` | Auto-filling, intrinsically responsive grid. | `--grid-min-item-size`, `--grid-placement` |
+| **Reel** | `.reel` | Horizontal scroll-snap strip (galleries, card rows). | gap from `--gutter` |
+| **Frame** | `.frame` | Crops media to a fixed aspect ratio. | `--frame-ratio` (default `16 / 9`) |
+| **Bento** | `.bento` | Dense intrinsic grid whose items may span tracks once it is wide enough. | `--bento-min`, `--bento-row-min`, `--bento-space`, `[data-span]` and `[data-row-span]` on items |
 
 ### Wrapper vs. Center — which one do I reach for?
 
@@ -73,12 +77,13 @@ A responsive hero section featuring headline copy and CTA buttons on the left, m
 
 #### The Composition Stack
 
-`Wrapper` ➔ `Switcher` ➔ `Flow` + `Cluster`
+`Region` + `Wrapper` ➔ `Switcher` ➔ `Flow` + `Cluster` | `Frame`
 
 #### HTML Implementation
 
 ```html
-<!-- 1. WRAPPER: Constrains maximum section width and centers it -->
+<!-- 1. REGION + WRAPPER: vertical room for the section, then its site-wide edge -->
+<section class="region">
 <div class="wrapper">
   <!-- 2. SWITCHER: Enforces side-by-side layout until container drops below 50rem -->
   <div class="switcher" style="--switcher-threshold: 50rem;">
@@ -97,17 +102,18 @@ A responsive hero section featuring headline copy and CTA buttons on the left, m
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: Media Container -->
-    <div class="hero__media">
+    <!-- RIGHT COLUMN: FRAME crops the media to 4:3 at any width -->
+    <div class="frame" style="--frame-ratio: 4 / 3;">
       <img src="hero-illustration.svg" alt="App Preview" />
     </div>
   </div>
 </div>
+</section>
 ```
 
 #### Why This Works
 
-- No Media Queries: The `Switcher` handles responsiveness intrinsically based on container constraints rahter than arbitrary viewport widths.
+- No Media Queries: The `Switcher` handles responsiveness intrinsically based on container constraints rather than arbitrary viewport widths.
 - No Spacing Leaks: The `Flow` primitive spaces the heading, body text, and button group cleanly without requiring hardcoded `margin-bottom` rules on child tags.
 
 ### <a name="case-study-2"></a> Case Study 2: The Application Dashboard Layout
@@ -143,21 +149,21 @@ A fixed-width sidebar navigation running alongside a fluid main content region. 
       <article class="card">
         <div class="card__body flow">
           <h3>Total Revenue</h3>
-          <p class="text-step-2">$42,850</p>
+          <p class="text-lead">$42,850</p>
         </div>
       </article>
 
       <article class="card">
         <div class="card__body flow">
           <h3>Active Users</h3>
-          <p class="text-step-2">1,240</p>
+          <p class="text-lead">1,240</p>
         </div>
       </article>
 
       <article class="card">
         <div class="card__body flow">
           <h3>Conversion Rate</h3>
-          <p class="text-step-2">3.4%</p>
+          <p class="text-lead">3.4%</p>
         </div>
       </article>
     </div>
@@ -260,14 +266,14 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 
 #### The Composition Stack
 
-`Grid` ➔ `Card` ➔ `Flow`
+`Bento` ➔ `Card` ➔ `Flow`
 
 #### HTML Implementation
 
 ```html
-<div class="grid" style="--grid-min-item-size: 20rem;">
-  <!-- HERO BENTO ITEM (Spans full width via local utility/style) -->
-  <article class="card" style="grid-column: 1 / -1;">
+<div class="bento" style="--bento-min: 16rem;">
+  <!-- HERO BENTO ITEM: spans every track once the bento is at least 45rem wide -->
+  <article class="card" data-span="full">
     <div class="card__body flow">
       <span class="badge" data-status="info">Featured</span>
       <h2>Next-Gen Token Compiler</h2>
@@ -298,7 +304,7 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 
 #### Why This Works
 
-- Dynamic Column Reflow: `--grid-min-item-size` establishes the minimum threshold for secondary cards, allowing them to wrap into clean multi-row grids on tablet viewports without breakpoint maintenance.
+- Dynamic Column Reflow: `--bento-min` sets the narrowest a track may be, so the bento fits as many columns as the space allows with no breakpoints. Spans (`data-span`, `data-row-span`) only apply inside `@container bento (min-width: 45rem)`, so a span can never overflow a single-column phone layout.
 - Encapsulated Content Flow: Wrapping internal card content in `.flow` keeps titles, badges, and copy spaced predictably regardless of column span or card height variations.
 
 ### <a name="case-study-6"></a> Case Study 6: The Media Object/Testimonial Stack
@@ -317,20 +323,16 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 <article class="card">
   <div
     class="card__body sidebar"
-    style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m);"
+    style="--sidebar-target-width: 4rem; --sidebar-space: var(--space-m); --sidebar-align: flex-start;"
   >
     <!-- FIXED AVATAR ANCHOR -->
-    <div class="media-object__avatar">
-      <img
-        src="avatar.jpg"
-        alt="Ada Lovelace"
-        style="border-radius: 50%; aspect-ratio: 1;"
-      />
+    <div class="frame" style="--frame-ratio: 1; border-radius: var(--radius-pill);">
+      <img src="avatar.jpg" alt="Ada Lovelace" />
     </div>
 
     <!-- FLUID COPY CONTENT -->
     <div class="flow">
-      <blockquote class="text-step-0">
+      <blockquote>
         "LooseLeaf UI completely transformed how our engineering team approaches
         design systems."
       </blockquote>
@@ -346,63 +348,63 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 
 - Algorithmic Stacking: Setting a small `--sidebar-target-width` (`4rem`) locks the avatar width while letting the quote fill remaining inline space. If container width becomes constricted, it stacks vertically automatically.
 - Zero Flexbox Hacks: Using `.sidebar` eliminates the need for manual flex-shrink, flex-grow, or media-query overrides on small-screen card previews.
+- Fixed-Ratio Avatar: `--sidebar-align: flex-start` stops the sidebar stretching the avatar to the height of the quote, and `.frame` keeps it square.
 
 ## 3. <a name="block-guidelines"></a> 🧱 Block Architectural Guidelines
 
 Blocks care only about their internal styling (padding, typography, background colors, borders, and interactive transitions). They are completely purged of external positioning or margins.
 
-Below are the architectural definitions for LooseLeaf UI's foundational visual blocks.
+Below are the architectural definitions for four foundational blocks, excerpted from their source files. The [README block table](../README.md#blocks) lists every block with its exceptions and JavaScript hooks.
 
 ### <a name="block-button"></a>The Button Block (`.button`)
 
-#### CSS Implementation (src/03-blocks/button.css)
+#### CSS Implementation (excerpt of `src/03-blocks/button.css`)
 
 ```css
 @layer blocks {
   .button {
-    /* Base Block Parameters */
-    --button-bg: var(--color-surface-sunken);
-    --button-text: var(--color-text);
-    --button-border: var(--color-border);
+    /* Default style is a token choice (outlined or filled), set in the configurator */
+    --button-bg: var(--button-default-bg);
+    --button-text: var(--button-default-text);
+    --button-border: var(--button-default-border);
+    --button-bg-hover: var(--button-default-bg-hover);
+    --button-border-hover: var(--button-default-border-hover);
+    --button-padding: var(--inset-control);
+    --button-font-size: var(--text-body);
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2xs);
-    padding: var(--space-xs) var(--space-m);
-    font-size: var(--text-body);
-    font-weight: 600;
-    line-height: 1.2;
-    text-decoration: none;
-    border-radius: var(--radius-sm, 0.375rem);
+    min-block-size: var(--target-min);
+    padding: var(--button-padding);
     background-color: var(--button-bg);
     color: var(--button-text);
     border: 1px solid var(--button-border);
-    cursor: pointer;
-    transition:
-      transform var(--duration-quick) var(--ease-spring),
-      background-color var(--duration-quick) ease;
+    border-radius: var(--radius-control);
+    font-size: var(--button-font-size);
+    font-weight: var(--weight-semibold);
   }
 
-  .button:hover {
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .button:hover:not(:disabled, [aria-disabled="true"], [data-state="loading"]) {
+      background-color: var(--button-bg-hover);
+      border-color: var(--button-border-hover);
+    }
   }
 
-  .button:focus-visible {
-    outline: 2px solid var(--color-action);
-    outline-offset: 2px;
-  }
-
-  /* CUBE Exceptions (Attribute Driven) */
+  /* CUBE Exceptions only reassign the variables */
   .button[data-variant="primary"] {
     --button-bg: var(--color-action);
-    --button-text: #ffffff;
-    --button-border: transparent;
+    --button-text: var(--color-action-text);
+    --button-border: var(--color-action);
+    --button-bg-hover: var(--color-action-hover);
+    --button-border-hover: var(--color-action-hover);
   }
 
   .button[data-size="small"] {
-    padding: var(--space-2xs) var(--space-xs);
-    font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.95rem);
+    --button-padding: var(--space-3xs) var(--space-xs);
+    --button-font-size: var(--text-small);
   }
 }
 ```
@@ -412,6 +414,7 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 - DRY Parameter Isolation: Instead of duplicating rules across separate classes for each variant or size, all variations modify local custom properties (`--button-bg`, `--button-border`). The core structure (padding, transitions, flex alignment) is written only once.
 - Pure Visual Boundary: The block is completely purged of outer margins, allowing it to sit inside a `.cluster` for horizontal alignment or a `.flow` for vertical stack rhythm without layout conflicts.
 - Semantic Exception Hooks: Using HTML attributes such as `data-variant="primary"` or `data-size="small"` keeps class names clean and avoids specificity wars.
+- Touch-Safe: Hover lives inside `@media (hover: hover)`, so a tapped button never sticks in its hover state, and no size ever drops below the 44px `--target-min`.
 
 ### <a name="block-card"></a> The Card Block (`.card`)
 
@@ -449,53 +452,61 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 
 ### <a name="block-input"></a> The Input Block (`.input` & `.field`)
 
-#### CSS Implementation
+#### CSS Implementation (excerpts of `src/03-blocks/field.css` and `src/03-blocks/input.css`)
 
 ```css
 @layer blocks {
   .field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2xs);
+    display: grid;
+    gap: var(--field-gap, var(--space-3xs));
   }
 
   .label {
     font-size: var(--text-body);
-    font-weight: 500;
-    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
   }
 
-  .input {
-    width: 100%;
-    padding: var(--space-xs) var(--space-m);
-    font-size: var(--text-body);
-    background-color: var(--color-surface);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm, 0.375rem);
-    transition: border-color var(--duration-quick) ease;
+  /* .input, .select and .textarea share one base */
+  :is(.input, .select, .textarea) {
+    --control-bg: var(--color-surface);
+    --control-border: var(--color-border);
+
+    inline-size: 100%;
+    min-block-size: var(--target-min);
+    padding: var(--inset-control);
+    font-size: var(--text-body); /* never smaller: iOS zooms below 16px */
+    background-color: var(--control-bg);
+    border: 1px solid var(--control-border);
+    border-radius: var(--radius-control);
   }
 
-  .input:focus-visible {
-    outline: 2px solid var(--color-action);
-    outline-offset: 1px;
-  }
-
-  /* Validation Exception Hook */
-  .input[aria-invalid="true"] {
-    border-color: #ef4444;
+  /* Validation exception: from the field or the control itself */
+  .field[data-status="danger"] :is(.input, .select, .textarea),
+  :is(.input, .select, .textarea)[aria-invalid="true"] {
+    --control-border: var(--color-status-danger);
+    --control-bg: var(--color-status-danger-surface);
   }
 }
+```
+
+```html
+<div class="field" data-status="danger">
+  <label class="label" for="email">Email address</label>
+  <input class="input" type="email" id="email" aria-invalid="true" aria-describedby="email-error" />
+  <p class="field__error" id="email-error" role="alert">Enter an email address like name@example.com.</p>
+</div>
 ```
 
 #### Why This Works
 
 - Native State Integration: Instead of adding an invalid or error state class, input errors hook directly into the standard `[aria-invalid="true"]` accessibility attribute. This enforces accessible state management in the DOM before visual styling even applies.
-- Decoupled Field Structure: Standardising `.field` as a pure flex column with a local gap keeps the `<label>` and `<input>` grouped predictably without applying vertical margins to individual elements.
+- Decoupled Field Structure: `.field` is a grid with a local gap, so the label, control, `.field__hint` and `.field__error` stay grouped without vertical margins on individual elements.
+- One Control Base: The three control types share their base rule, so a focus, hover or error change lands everywhere at once.
 
 ### <a name="block-badge"></a> The Badge Block (`.badge`)
 
-#### Implementation (`src/03-blocks/badge.css`)
+#### CSS Implementation (excerpt of `src/03-blocks/badge.css`)
 
 ```css
 @layer blocks {
@@ -506,29 +517,27 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
     display: inline-flex;
     align-items: center;
     padding: 0.25em 0.65em;
-    font-size: 0.75em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: var(--weight-semibold);
+    line-height: 1;
+    border-radius: var(--radius-pill);
     background-color: var(--badge-bg);
     color: var(--badge-text);
   }
 
-  /* Status Exception Hooks */
-  .badge[data-status="info"] {
-    --badge-bg: #dbeafe;
-    --badge-text: #1e40af;
-  }
-
+  /* Status Exception Hooks: semantic tokens that re-point in dark mode */
   .badge[data-status="success"] {
-    --badge-bg: #dcfce7;
-    --badge-text: #166534;
+    --badge-bg: var(--color-status-success-surface);
+    --badge-text: var(--color-status-success-text);
   }
 
-  .badge[data-status="danger"] {
-    --badge-bg: #fee2e2;
-    --badge-text: #991b1b;
+  /* Floating placement: straddles the top edge of its positioned parent */
+  .badge[data-placement="floating"] {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--layer-raised);
   }
 }
 ```
@@ -536,4 +545,5 @@ Below are the architectural definitions for LooseLeaf UI's foundational visual b
 #### Why This Works
 
 - Font-Relative Proportions: By defining padding in `em` units (`0.25em 0.65em`) rather than fixed `rem` or `px` values, the badge scales fluidly to match whatever parent typography step it sits inside (e.g., inside an `<h1>` or a small paragraph).
-- Pill-Radius Resilience: Setting `border-radius: 999px` guarantees a perfectly rounded pill shape regardless of the text length or font size inside the badge.
+- Pill-Radius Resilience: `--radius-pill` guarantees a perfectly rounded pill shape regardless of the text length or font size inside the badge.
+- Scheme-Aware Status: Status colours come from the semantic `--color-status-*` tokens, so a badge is legible in light and dark without any dark-mode rules of its own.
