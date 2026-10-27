@@ -6,8 +6,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const tokenSourcePath = path.join(__dirname, "design-tokens.json");
-const cssOutputPath = path.join(__dirname, "src", "01-global", "variables.css");
+const rootDir = path.join(__dirname, "..");
+const tokenSourcePath = path.join(rootDir, "design-tokens.json");
+const cssOutputPath = path.join(rootDir, "src", "01-global", "variables.css");
 
 try {
   if (!fs.existsSync(tokenSourcePath)) {

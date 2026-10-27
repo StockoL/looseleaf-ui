@@ -1,11 +1,24 @@
 {
   "name": "looseleaf-ui",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Bespoke, architecture-first CUBE CSS design system template library.",
-  "main": "src/index.css",
+  "main": "dist/looseleaf.css",
+  "style": "dist/looseleaf.css",
+  "exports": {
+    ".": "./dist/looseleaf.css",
+    "./css": "./dist/looseleaf.css",
+    "./src/*": "./src/*",
+    "./design-tokens.json": "./design-tokens.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "design-tokens.json"
+  ],
   "scripts": {
-    "build:tokens": "node build-tokens.js",
-    "build:css": "node build-css.js",
+    "build:tokens": "node scripts/build-tokens.js",
+    "build:css": "node scripts/build-css.js",
     "build": "npm run build:tokens && npm run build:css"
   },
   "keywords": [
@@ -15,7 +28,7 @@
     "responsive-design",
     "accessibility"
   ],
-  "author": "Louis Mannix",
+  "author": "Louis Stockton",
   "license": "MIT",
   "repository": {
     "type": "git",

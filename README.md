@@ -98,7 +98,7 @@ JSON Example:
 }
 ```
 
-### 2. The Compiler (build-tokens.js)
+### 2. The Compiler (scripts/build-tokens.js)
 
 A lightweight, zero-dependency Node.js compiler reads design-tokens.json, filters out inline documentation comments, formats semantic CSS Custom Properties, and auto-generates src/01-global/variables.css.
 
@@ -119,7 +119,7 @@ The repository maintains a strict boundary between Build Tooling Engine (root di
 ```text
 looseleaf-ui/
 ├── design-tokens.json <-- Single Source of Truth (JSON Tokens)
-├── build-tokens.js <-- Compiler Engine (Vanilla Node.js)
+├── scripts/build-tokens.js <-- Compiler Engine (Vanilla Node.js)
 ├── package.json <-- Project Manifest & Build Commands
 │
 └── src/

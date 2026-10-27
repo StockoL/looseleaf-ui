@@ -1,14 +1,15 @@
 /**
  * LooseLeaf UI - CSS Bundler
- * Inlines the @import chain from src/index.css into a single dist/styles.css.
+ * Inlines the @import chain from src/index.css into a single dist/looseleaf.css.
  */
 
 const fs = require("fs");
 const path = require("path");
 
-const srcDir = path.join(__dirname, "src");
+const rootDir = path.join(__dirname, "..");
+const srcDir = path.join(rootDir, "src");
 const entryPath = path.join(srcDir, "index.css");
-const cssOutputPath = path.join(__dirname, "dist", "styles.css");
+const cssOutputPath = path.join(rootDir, "dist", "looseleaf.css");
 
 const importPattern = /@import\s+"([^"]+)"\s+layer\(([^)]+)\)\s*;/g;
 
@@ -48,7 +49,7 @@ try {
   }
 
   fs.writeFileSync(cssOutputPath, header + bundled, "utf8");
-  console.log("✨ LooseLeaf UI stylesheets bundled cleanly to dist/styles.css");
+  console.log("✨ LooseLeaf UI stylesheets bundled cleanly to dist/looseleaf.css");
 } catch (error) {
   console.error(`❌ CSS bundling failed: ${error.message}`);
   process.exit(1);
