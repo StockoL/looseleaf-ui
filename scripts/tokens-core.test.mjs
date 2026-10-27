@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { compile, contrastReport, RAMP_KEYS } from "./tokens-core.mjs";
+import { compile, contrastReport, resolvedTokens, themeStylesheet, RAMP_KEYS } from "./tokens-core.mjs";
 
 const palette = {
   neutral: { hue: 286, chroma: 0.01 },
@@ -118,4 +118,22 @@ test("contrastReport rates both schemes against WCAG AA", () => {
   const rows = contrastReport(tokens);
   assert.deepEqual(rows.map((r) => r.scheme), ["light", "dark"]);
   assert.ok(rows.every((r) => r.passes && r.ratio > 12));
+});
+
+test("resolvedTokens puts metadata first and keys tokens by path", () => {
+  const { tokens } = compile({ $palette: palette, color: { surface: { light: "{neutral.0}", dark: "{neutral.950}" } } });
+  const resolved = resolvedTokens(tokens, { $version: "2.0.0", $generated: "2026-10-27" });
+  assert.deepEqual(Object.keys(resolved).slice(0, 2), ["$version", "$generated"]);
+  assert.equal(resolved["color.surface"].name, "--color-surface");
+  assert.equal(resolved["color.surface"].light, "#ffffff");
+  assert.equal(resolved["color.surface"].themed, true);
+});
+
+test("themeStylesheet wraps tokens in the global layer with imports first", () => {
+  const { css } = compile({ gutter: "1rem" });
+  const fontImport = '@import url("https://fonts.example/inter.css");\n';
+  const sheet = themeStylesheet(css, fontImport);
+  assert.ok(sheet.startsWith(`${fontImport}@layer global {\n`));
+  assert.ok(sheet.trimEnd().endsWith("}"));
+  assert.match(sheet, /--gutter: 1rem;/);
 });

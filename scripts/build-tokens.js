@@ -27,22 +27,6 @@ function write(file, content) {
   fs.writeFileSync(file, content, "utf8");
 }
 
-function resolvedJson(tokens) {
-  const entries = tokens.map((token) => [
-    token.path,
-    {
-      name: token.name,
-      tier: token.tier,
-      light: token.light,
-      dark: token.dark,
-      themed: token.themed,
-      overridden: token.overridden,
-      purpose: token.purpose,
-    },
-  ]);
-  return JSON.stringify(Object.fromEntries(entries), null, 2) + "\n";
-}
-
 function markdownCell(value) {
   return value === undefined || value === null ? "" : String(value).replace(/\|/g, "\\|");
 }
@@ -111,7 +95,7 @@ function renderMarkdown(tokens, report, target) {
 }
 
 async function main() {
-  const { compile, contrastReport, CONTRAST_TARGET } = await import(
+  const { compile, contrastReport, resolvedTokens, CONTRAST_TARGET } = await import(
     pathToFileURL(path.join(__dirname, "tokens-core.mjs")).href
   );
 
@@ -124,7 +108,9 @@ async function main() {
   const report = contrastReport(tokens);
 
   write(outputs.css, css);
-  write(outputs.resolved, resolvedJson(tokens));
+  // No $generated date here: rebuilding unchanged tokens must not produce a diff.
+  const { version } = JSON.parse(fs.readFileSync(path.join(rootDir, "package.json"), "utf8"));
+  write(outputs.resolved, JSON.stringify(resolvedTokens(tokens, { $version: version }), null, 2) + "\n");
   write(outputs.docs, renderMarkdown(tokens, report, CONTRAST_TARGET));
   write(
     outputs.configurator,

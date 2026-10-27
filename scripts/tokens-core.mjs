@@ -300,6 +300,35 @@ export function compile(json) {
   return { css: renderCss(tokens), tokens };
 }
 
+/**
+ * The tokens.resolved.json object: metadata keys ("$version", "$generated") first,
+ * then one entry per token path with its resolved light and dark values.
+ */
+export function resolvedTokens(tokens, meta = {}) {
+  const resolved = { ...meta };
+  for (const token of tokens) {
+    resolved[token.path] = {
+      name: token.name,
+      tier: token.tier,
+      light: token.light,
+      dark: token.dark,
+      themed: token.themed,
+      overridden: token.overridden,
+      purpose: token.purpose,
+    };
+  }
+  return resolved;
+}
+
+/**
+ * A theme stylesheet: compiled tokens wrapped in @layer global, so loaded after
+ * looseleaf.css they replace the shipped variables by source order alone.
+ * Any @import (web fonts) must precede every other rule, so it goes first.
+ */
+export function themeStylesheet(css, imports = "") {
+  return `${imports}@layer global {\n${css}}\n`;
+}
+
 /** WCAG ratios for the semantic pairings in CONTRAST_PAIRS, for both schemes. */
 export function contrastReport(tokens) {
   const byPath = new Map(tokens.map((token) => [token.path, token]));

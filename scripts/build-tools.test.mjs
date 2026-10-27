@@ -18,4 +18,8 @@ test("the classic-script bundle compiles byte-identically to the ES modules", ()
   assert.equal(typeof lib.contrastReport, "function");
   assert.equal(typeof lib.oklchToHex, "function");
   assert.equal(typeof lib.typeScale, "function");
+  assert.equal(typeof lib.zip, "function");
+  assert.equal(typeof lib.themeStylesheet, "function");
+  const { version } = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  assert.equal(lib.VERSION, version);
 });

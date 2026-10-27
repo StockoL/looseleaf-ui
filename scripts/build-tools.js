@@ -14,7 +14,7 @@ const rootDir = path.join(__dirname, "..");
 const outputPath = path.join(rootDir, "tools", "tokens-lib.js");
 
 // Dependency order: each module may only import from those before it.
-const MODULES = ["utopia.mjs", "color.mjs", "tokens-core.mjs"];
+const MODULES = ["utopia.mjs", "color.mjs", "tokens-core.mjs", "zip.mjs"];
 
 const importPattern = /^import\s*\{([^}]+)\}\s*from\s*"\.\/([\w.-]+\.mjs)";[ \t]*$/gm;
 const exportPattern = /^export\s+((?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*))/gm;
@@ -41,6 +41,8 @@ function wrapModule(file, source, available) {
 }
 
 function bundle() {
+  // The looseleaf-ui version, stamped into theme exports
+  const { version } = JSON.parse(fs.readFileSync(path.join(rootDir, "package.json"), "utf8"));
   const available = new Set();
   const wrapped = MODULES.map((file) => {
     // Git may check sources out with CRLF or LF; the bundle is always LF.
@@ -57,7 +59,7 @@ function bundle() {
 
 ${wrapped.join("\n\n")}
 
-  global.LooseLeafTokens = Object.assign({}, ${MODULES.map((m) => `modules["${m}"]`).join(", ")});
+  global.LooseLeafTokens = Object.assign({ VERSION: ${JSON.stringify(version)} }, ${MODULES.map((m) => `modules["${m}"]`).join(", ")});
 })(typeof window !== "undefined" ? window : globalThis);
 `;
 }
