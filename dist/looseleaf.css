@@ -130,13 +130,13 @@ textarea:not([rows]) {
 /* ==========================================================================
    AUTO-GENERATED CUSTOM PROPERTIES - DO NOT EDIT DIRECTLY
    ==========================================================================
-   Generated on: 2026-10-27
-   Source Document: design-tokens.json
+   Source: design-tokens.json, compiled by scripts/tokens-core.mjs
    ========================================================================== */
 
 :root {
+  color-scheme: light;
 
-  /* --- COLORS --- */
+  /* --- colors --- */
   --colors-neutral-0: #ffffff;
   --colors-neutral-50: #fafafa;
   --colors-neutral-100: #f4f4f5;
@@ -174,33 +174,47 @@ textarea:not([rows]) {
   --colors-info-border: #bfdbfe;
   --colors-info-text: #1e3a8a;
 
-  /* --- SPACING --- */
+  /* --- spacing --- */
   --spacing-xs: clamp(0.50rem, 0.45rem + 0.25vw, 0.63rem);
   --spacing-sm: clamp(0.75rem, 0.65rem + 0.50vw, 1.00rem);
   --spacing-md: clamp(1.13rem, 0.98rem + 0.75vw, 1.50rem);
   --spacing-lg: clamp(1.50rem, 1.30rem + 1.00vw, 2.00rem);
   --spacing-xl: clamp(2.00rem, 1.75rem + 1.25vw, 2.75rem);
 
-  /* --- TYPOGRAPHY --- */
+  /* --- typography --- */
   --typography-step-0: clamp(1.00rem, 0.93rem + 0.36vw, 1.20rem);
   --typography-step-1: clamp(1.20rem, 1.07rem + 0.63vw, 1.55rem);
   --typography-step-2: clamp(1.44rem, 1.24rem + 1.02vw, 2.01rem);
   --typography-step-3: clamp(1.73rem, 1.42rem + 1.53vw, 2.59rem);
   --typography-step-4: clamp(2.07rem, 1.63rem + 2.21vw, 3.33rem);
 
-  /* --- TRANSITIONS --- */
+  /* --- transitions --- */
   --transitions-spring-snappy: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --transitions-spring-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --transitions-dur-fast: 150ms;
   --transitions-dur-base: 250ms;
 
-  /* --- LAYOUT --- */
+  /* --- layout --- */
   --layout-measure: 60ch;
   --layout-wrapper-max-width: 80rem;
 
-  /* --- FONTS --- */
+  /* --- fonts --- */
   --fonts-heading: system-ui, sans-serif;
   --fonts-body: system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+
 }
 }
 
