@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <title>LooseLeaf UI — Live Demo</title>
+    <!-- Blocking on purpose: applies the stored theme before first paint -->
+    <script src="../src/scripts/theme.js"></script>
     <link rel="stylesheet" href="../src/index.css" />
     <!-- Configurator preview contract: tools/configure.html posts compiled tokens here -->
     <style id="tokens"></style>
@@ -42,12 +44,8 @@
         <div class="cluster" style="--cluster-justify: space-between;">
           <a href="#main" class="navbar__brand">LooseLeaf UI</a>
 
-          <button
-            class="navbar__toggle"
-            aria-expanded="false"
-            aria-controls="primary-nav"
-          >
-            Menu
+          <button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">
+            <svg class="icon" aria-hidden="true"><use href="#icon-menu" /></svg>
           </button>
 
           <nav id="primary-nav" class="navbar__menu">
@@ -55,7 +53,11 @@
             <a href="#compositions" class="navbar__link">Compositions</a>
             <a href="#blocks" class="navbar__link">Blocks</a>
             <a href="#utilities" class="navbar__link">Utilities</a>
-            <button class="button" data-variant="primary">Get Started</button>
+            <button class="button" type="button" data-variant="ghost" data-theme-toggle>
+              <svg class="icon" aria-hidden="true"><use href="#icon-moon" /></svg>
+              <span data-theme-label>Auto</span>
+            </button>
+            <button class="button" type="button" data-variant="primary">Get Started</button>
           </nav>
         </div>
       </div>
