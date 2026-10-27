@@ -1,8 +1,12 @@
 /* ==========================================================================
    BLOCK: OFFCANVAS (Drawer via Native Dialog)
+   Slides in via @starting-style; display and overlay transition discretely
+   so the drawer stays in the top layer until it has slid back out.
    ========================================================================== */
 
 .offcanvas {
+  --offcanvas-hidden: translateX(100%);
+
   margin: 0;
   margin-inline-start: auto; /* Aligns to the right edge by default */
   height: 100dvh;
@@ -15,29 +19,47 @@
   box-shadow: var(--shadow-overlay);
   color: var(--color-text);
 
-  /* Animation defaults */
-  transform: translateX(100%);
-  transition: transform var(--duration-base) var(--ease-standard);
+  /* Closed state (also the exit target) */
+  transform: var(--offcanvas-hidden);
+  transition-property: transform, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
 }
 
-/* The native [open] attribute triggers the transformation */
 .offcanvas[open] {
-  transform: translateX(0);
+  transform: none;
+}
+
+@starting-style {
+  .offcanvas[open] {
+    transform: var(--offcanvas-hidden);
+  }
 }
 
 .offcanvas::backdrop {
-  background-color: var(--color-backdrop);
+  background-color: transparent;
   backdrop-filter: blur(4px);
+  transition-property: background-color, overlay, display;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+  transition-behavior: allow-discrete;
+}
+
+.offcanvas[open]::backdrop {
+  background-color: var(--color-backdrop);
+}
+
+@starting-style {
+  .offcanvas[open]::backdrop {
+    background-color: transparent;
+  }
 }
 
 /* CUBE Exception: Left Alignment */
 .offcanvas[data-position="left"] {
+  --offcanvas-hidden: translateX(-100%);
+
   margin-inline-start: 0;
   margin-inline-end: auto;
-  transform: translateX(-100%);
-  box-shadow: var(--shadow-overlay);
-}
-
-.offcanvas[data-position="left"][open] {
-  transform: translateX(0);
 }

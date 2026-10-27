@@ -36,6 +36,7 @@
 @import "03-blocks/card.css" layer(blocks);
 @import "03-blocks/navbar.css" layer(blocks);
 @import "03-blocks/modal.css" layer(blocks);
+@import "03-blocks/offcanvas.css" layer(blocks);
 @import "03-blocks/alert.css" layer(blocks);
 @import "03-blocks/bento.css" layer(blocks);
 
