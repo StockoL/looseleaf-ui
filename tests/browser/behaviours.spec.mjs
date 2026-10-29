@@ -50,7 +50,7 @@ test.describe("tabs", () => {
 test.describe("toast", () => {
   test("appears in a live region, pauses while hovered, then dismisses itself", async ({ page }) => {
     await page.clock.install();
-    await page.getByRole("button", { name: "Save" }).click();
+    await page.getByRole("button", { name: "Save", exact: true }).click();
     const region = page.locator(".toast-region");
     await expect(region).toHaveAttribute("aria-live", "polite");
     const toast = region.locator(".toast", { hasText: "Your changes were saved." });
@@ -168,4 +168,74 @@ test("motion toggle reduces motion, is remembered, and undoes", async ({ page })
   await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
   await page.locator("[data-motion-toggle]").click();
   await expect(page.locator("html")).not.toHaveAttribute("data-motion", "reduced");
+});
+
+test.describe("done state", () => {
+  test("a copy shows the checkmark, then clears after two seconds", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.clock.install();
+    const button = page.locator("[data-copy]").first();
+    await button.click();
+    await expect(button).toHaveAttribute("data-state", "done");
+    await expect(button.locator("[data-done-icon]")).toBeVisible();
+    await page.clock.runFor(2100);
+    await expect(button).not.toHaveAttribute("data-state", "done");
+  });
+
+  test("the looseleaf:done event marks any control", async ({ page }) => {
+    const save = page.getByRole("button", { name: "Save draft" });
+    await save.click();
+    await expect(save).toHaveAttribute("data-state", "done");
+  });
+});
+
+test.describe("sound", () => {
+  // Counts AudioContexts instead of making a noise
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.__contexts = 0;
+      window.AudioContext = class extends window.AudioContext {
+        constructor(...args) {
+          super(...args);
+          window.__contexts++;
+        }
+      };
+    });
+    await page.goto(DEMO);
+  });
+
+  test("is off until the visitor turns it on, and never starts at load", async ({ page }) => {
+    expect(await page.evaluate(() => window.__contexts)).toBe(0);
+    await page.getByRole("button", { name: "Click", exact: true }).click();
+    expect(await page.evaluate(() => window.__contexts)).toBe(0);
+    const toggle = page.locator("[data-sound-toggle]");
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("html")).toHaveAttribute("data-sound-on", "");
+    await page.getByRole("button", { name: "Click", exact: true }).click();
+    expect(await page.evaluate(() => window.__contexts)).toBe(1);
+  });
+
+  test("refuses to play without a toggle on the page, even when turned on", async ({ page }) => {
+    await page.locator("[data-sound-toggle]").click();
+    await page.evaluate(() => document.querySelectorAll("[data-sound-toggle]").forEach((toggle) => toggle.remove()));
+    await page.getByRole("button", { name: "Click", exact: true }).click();
+    expect(await page.evaluate(() => window.__contexts)).toBe(0);
+  });
+
+  test("needs the site's opt-in as well as the visitor's", async ({ page }) => {
+    await page.locator("[data-sound-toggle]").click();
+    await page.evaluate(() => document.documentElement.removeAttribute("data-sound"));
+    await page.getByRole("button", { name: "Click", exact: true }).click();
+    expect(await page.evaluate(() => window.__contexts)).toBe(0);
+  });
+});
+
+test("a switch toggles from the keyboard and reports itself as a switch", async ({ page }) => {
+  const sw = page.getByRole("switch", { name: "Weekly summary" });
+  await expect(sw).not.toBeChecked();
+  await sw.focus();
+  await page.keyboard.press("Space");
+  await expect(sw).toBeChecked();
 });
