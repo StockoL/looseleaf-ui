@@ -209,7 +209,9 @@ function contrast(hexA, hexB) {
  *
  * A damped spring (mass, stiffness, damping) is pulled from 0 to 1 and simulated
  * with a fixed 1 ms step until it settles. The motion becomes a CSS linear() easing:
- * the samples, normalised to the settle time, simplified to at most 40 stops.
+ * the samples, normalised to the settle time, simplified to about 25 stops
+ * (never more than 40), each with an explicit percentage. A spring too loose to
+ * settle is clamped to a damping ratio of 0.1 so it always comes to rest.
  * linear() is in every Baseline browser (Chrome 113, Safari 17.2, Firefox 112).
  */
 
@@ -218,7 +220,8 @@ const SETTLE_DISTANCE = 0.001; // within 0.1% of the target...
 const SETTLE_HOLD = 0.05; // ...for 50 ms
 const MAX_TIME = 10; // an undamped spring never settles; stop here
 const MAX_STOPS = 40;
-const TOLERANCE = 0.005; // drop points within 0.5% of the chord between kept points
+const TOLERANCE = 0.003; // drop points within 0.3% of the chord between kept points
+const MIN_DAMPING_RATIO = 0.1; // below this a spring rings for seconds; zero never settles
 
 function validate({ mass, stiffness, damping }) {
   for (const [name, value, min] of [["mass", mass, 0], ["stiffness", stiffness, 0], ["damping", damping, -1]]) {
@@ -232,8 +235,14 @@ function validate({ mass, stiffness, damping }) {
  * Simulates the spring. Returns { samples: [{ t, x }] (t in seconds), settle (seconds) }.
  * Semi-implicit Euler at 1 ms is stable well past the stiffness range the configurator offers.
  */
+/** The damping actually used: at least MIN_DAMPING_RATIO of critical damping. */
+function effectiveDamping({ mass = 1, stiffness = 180, damping = 12 } = {}) {
+  return Math.max(damping, MIN_DAMPING_RATIO * 2 * Math.sqrt(stiffness * mass));
+}
+
 function simulateSpring({ mass = 1, stiffness = 180, damping = 12 } = {}) {
   validate({ mass, stiffness, damping });
+  damping = effectiveDamping({ mass, stiffness, damping });
   const samples = [{ t: 0, x: 0 }];
   let x = 0;
   let v = 0;
@@ -287,7 +296,8 @@ const fixed = (value, digits) => String(Number(value.toFixed(digits)));
 
 /**
  * The spring as a CSS easing.
- * Returns { easing: "linear(…)", settleMs, overshoot, points: [{ t, x }] (t normalised to 0..1) }.
+ * Returns { easing: "linear(…)", settleMs, overshoot, damping (as used, after clamping),
+ * points: [{ t, x }] (t normalised to 0..1) }.
  */
 function springEasing(spring) {
   const { samples, settle } = simulateSpring(spring);
@@ -310,12 +320,13 @@ function springEasing(spring) {
   return {
     easing: `linear(${stops.join(", ")})`,
     settleMs: Math.round(settle * 1000),
+    damping: effectiveDamping(spring),
     overshoot: Math.max(...samples.map((s) => s.x)) - 1,
     points,
   };
 }
 
-  return { simulateSpring, springEasing };
+  return { effectiveDamping, simulateSpring, springEasing };
   })();
 
   modules["tokens-core.mjs"] = (() => {
