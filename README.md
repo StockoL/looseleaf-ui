@@ -9,26 +9,26 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [🚀 Quick Start](#quick-start)
-2. [📐 Planning & Pre-Production Workflow](#planning)
-3. [📖 The CUBE CSS Architectural Paradigm](#architecture)
-4. [⚙️ The Token Engine & Workflow](#token-engine)
-5. [📂 Directory & Layer Structure](#directory)
-6. [🧩 Tier Breakdown & Implementation Guide](#tiers)
+1. [Quick Start](#quick-start)
+2. [Planning & Pre-Production Workflow](#planning)
+3. [The CUBE CSS Architectural Paradigm](#architecture)
+4. [The Token Engine & Workflow](#token-engine)
+5. [Directory & Layer Structure](#directory)
+6. [Tier Breakdown & Implementation Guide](#tiers)
    - [Tier 1: Global Layer & Reset](#tier-1)
    - [Tier 2: Compositions](#compositions)
    - [Tier 3: Blocks](#blocks)
    - [Tier 4: Utilities](#utilities)
-7. [⚡ Behaviours & Theme Scripts](#behaviors)
-8. [🛠️ Commands](#commands)
-9. [🏷️ Versioning & Releases](#versioning)
-10. [🤝 Authors & Acknowledgements](#authors)
+7. [Behaviours & Theme Scripts](#behaviors)
+8. [Commands](#commands)
+9. [Versioning & Releases](#versioning)
+10. [Authors & Acknowledgements](#authors)
 
 ---
 
-## 1. <a name="quick-start"></a> 🚀 Quick Start
+## 1. <a name="quick-start"></a> Quick Start
 
 ### Plain HTML
 
@@ -161,7 +161,7 @@ npm run bump -- 2.0.1  # when it's ready to ship; then commit and push the tag
 
 ---
 
-## 2. <a name="planning"></a> 📐 Planning & Pre-Production Workflow
+## 2. <a name="planning"></a> Planning & Pre-Production Workflow
 
 A primary tenet of the LooseLeaf philosophy—derived from Andy Bell’s Complete CSS milestones—is that writing CSS code is the final step, not the first. Jumping directly into an IDE to write styles without pre-production planning leads to specificity battles, arbitrary media queries, and high technical debt.
 
@@ -192,7 +192,7 @@ Inject micro-interactions, hardware-accelerated transitions (`.anim-lift`), ambi
 
 ---
 
-## 3. <a name="architecture"></a> 📖 The CUBE CSS Architectural Paradigm
+## 3. <a name="architecture"></a> The CUBE CSS Architectural Paradigm
 
 Traditional frameworks couple layout positioning directly with component styling, forcing developers to write non-DRY utility strings or override margins constantly. LooseLeaf UI enforces strict CUBE CSS boundaries:
 
@@ -210,7 +210,7 @@ Layout responds to the space a component actually has, not the viewport: composi
 
 ---
 
-## 4. <a name="token-engine"></a> ⚙️ The Token Engine & Workflow
+## 4. <a name="token-engine"></a> The Token Engine & Workflow
 
 To maintain a true Single Source of Truth across the entire tech stack (including front-end stylesheets and back-end templates such as Python/Django), design decisions are extracted out of the CSS and stored in a platform-agnostic JSON document.
 
@@ -255,7 +255,7 @@ A zero-dependency Node.js wrapper around `scripts/tokens-core.mjs`, a pure compi
 
 ---
 
-## 5. <a name="directory"></a> 📂 Directory & Layer Structure
+## 5. <a name="directory"></a> Directory & Layer Structure
 
 ```text
 looseleaf-ui/
@@ -298,7 +298,7 @@ The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `bl
 
 ---
 
-## 6. <a name="tiers"></a> 🧩 Tier Breakdown & Implementation Guide
+## 6. <a name="tiers"></a> Tier Breakdown & Implementation Guide
 
 ### <a name="tier-1"></a> Tier 1: Global Layer & Reset (src/01-global/)
 
@@ -372,7 +372,7 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 ---
 
-## 7. <a name="behaviors"></a> ⚡ Behaviours & Theme Scripts
+## 7. <a name="behaviors"></a> Behaviours & Theme Scripts
 
 ### dist/looseleaf.js (src/scripts/behaviors.js)
 
@@ -398,7 +398,7 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 
 ---
 
-## 8. <a name="commands"></a> 🛠️ Commands
+## 8. <a name="commands"></a> Commands
 
 | Command | What it does |
 | --- | --- |
@@ -418,7 +418,7 @@ Screenshots are compared pixel for pixel against committed baselines in `tests/b
 
 ---
 
-## 9. <a name="versioning"></a> 🏷️ Versioning & Releases
+## 9. <a name="versioning"></a> Versioning & Releases
 
 The npm package and `django-looseleaf` share one version and follow [semantic versioning](https://semver.org/):
 
@@ -435,7 +435,7 @@ To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pypro
 
 ---
 
-## 10. <a name="authors"></a> 🤝 Authors & Acknowledgements
+## 10. <a name="authors"></a> Authors & Acknowledgements
 
 LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 
