@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-sound>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -364,9 +364,16 @@
             </button>
             <button class="button" type="button" data-copy="npm install looseleaf-ui">
               <svg class="icon" aria-hidden="true"><use href="#icon-copy" /></svg>
-              <span data-label="idle">Copy install command</span>
-              <span data-label="copied">Copied</span>
+              Copy install command
             </button>
+            <button class="button" type="button" data-demo-done>Save draft</button>
+            <script>
+              // Demo only: a save that "succeeds", announced to looseleaf.js with the looseleaf:done event
+              document.addEventListener("click", (event) => {
+                const button = event.target instanceof Element && event.target.closest("[data-demo-done]");
+                if (button) button.dispatchEvent(new CustomEvent("looseleaf:done", { bubbles: true }));
+              });
+            </script>
           </div>
         </div>
       </section>
@@ -442,6 +449,14 @@
                 <div class="choice-group">
                   <label class="choice"><input class="choice__input" type="radio" name="contact" checked /> Email</label>
                   <label class="choice"><input class="choice__input" type="radio" name="contact" /> Phone</label>
+                </div>
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="legend">Notifications</legend>
+                <div class="choice-group">
+                  <label class="choice" data-variant="switch"><input class="choice__input" type="checkbox" role="switch" switch checked data-sound="toggle" /><span class="choice__thumb" aria-hidden="true"></span> Email me about replies</label>
+                  <label class="choice" data-variant="switch"><input class="choice__input" type="checkbox" role="switch" switch data-sound="toggle" /><span class="choice__thumb" aria-hidden="true"></span> Weekly summary</label>
                 </div>
               </fieldset>
 
@@ -700,6 +715,40 @@
         </div>
       </section>
 
+      <!-- SKELETON -->
+      <section class="region" data-size="small" aria-labelledby="block-skeleton">
+        <div class="wrapper flow">
+          <h3 id="block-skeleton">Skeleton</h3>
+          <p class="text-muted">Placeholder shapes while content loads. The container is <code>aria-busy="true"</code> and the shapes are hidden from assistive tech. The shimmer stops under reduced motion.</p>
+          <article class="card" style="max-inline-size: 24rem;" aria-busy="true" aria-label="Loading a profile">
+            <div class="card__body flow">
+              <div class="cluster">
+                <span class="skeleton" data-shape="avatar" aria-hidden="true"></span>
+                <span class="skeleton" data-shape="title" aria-hidden="true" style="flex: 1;"></span>
+              </div>
+              <span class="skeleton" data-shape="text" aria-hidden="true"></span>
+              <span class="skeleton" data-shape="text" aria-hidden="true" style="inline-size: 80%;"></span>
+              <span class="skeleton" data-shape="block" aria-hidden="true"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section class="region bg-surface-sunken" data-size="small" aria-labelledby="block-progress">
+        <div class="wrapper flow">
+          <h3 id="block-progress">Progress and meter</h3>
+          <div class="flow" style="max-inline-size: 30rem;">
+            <label class="label" for="demo-progress">Upload, 40%</label>
+            <progress class="progress" id="demo-progress" value="40" max="100">40%</progress>
+            <label class="label" for="demo-indeterminate">Waiting for the server</label>
+            <progress class="progress" id="demo-indeterminate">Loading</progress>
+            <label class="label" for="demo-meter">Storage used, 70%</label>
+            <meter class="progress" id="demo-meter" value="0.7" low="0.6" high="0.85" optimum="0.2">70%</meter>
+          </div>
+        </div>
+      </section>
+
       <!-- TABLE -->
       <section class="region" data-size="small" aria-labelledby="block-table">
         <div class="wrapper flow">
@@ -855,6 +904,9 @@
             <button class="button" type="button" commandfor="demo-modal" command="show-modal">Open a dialog</button>
             <span class="badge anim-lift" data-status="info">Hover to lift</span>
             <button class="button" type="button" data-variant="ghost" data-motion-toggle>Motion: <span data-motion-label>On</span></button>
+            <button class="button" type="button" data-variant="ghost" data-sound-toggle>Sound: <span data-sound-label>Off</span></button>
+            <button class="button" type="button" data-sound="click">Click</button>
+            <button class="button" type="button" data-sound="success">Success</button>
           </div>
 
           <div class="grid" style="--grid-min-item-size: 14rem;" data-reveal-stagger>
@@ -925,6 +977,7 @@
                 <p class="text-small">.text-small</p>
                 <p class="text-lead">.text-lead</p>
                 <p class="truncate" style="max-width: 10ch;">.truncate a long sentence</p>
+                <p class="clamp" style="--clamp-lines: 2;">.clamp cuts a longer passage after a set number of lines, two here, and ends it with an ellipsis instead of letting it run on.</p>
               </div>
             </article>
             <article class="card">
