@@ -11,6 +11,7 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 ### Fixed
 
 - Muted text (`--color-text-muted`) now meets WCAG AA on sunken surfaces in the light scheme: it uses `neutral.600` (about 7:1 on `--color-surface-sunken`) instead of `neutral.500` (4.24:1). The contrast report and the configurator's contrast table now include this pairing.
+- The demo's scrolling `.reel` is keyboard-focusable, and the README and the composition's comments say how to make any scrolling reel accessible.
 
 ### Changed
 

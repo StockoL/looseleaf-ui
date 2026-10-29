@@ -6,6 +6,8 @@
  * The Reel
  * Creates a horizontally scrollable container that snaps elements into place.
  * Excellent for image galleries, product cards, or horizontal menus.
+ * A reel that scrolls must be reachable by keyboard, which CSS can't do:
+ * <div class="reel" role="region" aria-label="…" tabindex="0">
  */
 .reel {
   display: flex;

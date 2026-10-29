@@ -229,7 +229,7 @@ Compositions govern spacing and alignment without injecting aesthetic styling. T
 | `.sidebar` | Target-width panel beside fluid content, stacking when space runs out | `--sidebar-target-width`, `--sidebar-content-min-width`, `--sidebar-space`, `--sidebar-align`, `[data-side="right"]`, `[data-sticky]` (with `--sticky-offset`) |
 | `.switcher` | Row that becomes a stack below a threshold | `--switcher-threshold` |
 | `.grid` | Auto-filling intrinsic grid | `--grid-min-item-size`, `--grid-placement` |
-| `.reel` | Horizontal scroll-snap strip | gap from `--gutter` |
+| `.reel` | Horizontal scroll-snap strip; give a scrolling reel `tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it | gap from `--gutter` |
 | `.frame` | Crops media to an aspect ratio | `--frame-ratio` |
 | `.bento` | Dense intrinsic grid with spanning items | `--bento-min`, `--bento-row-min`, `--bento-space`; items take `[data-span]` and `[data-row-span]` |
 
