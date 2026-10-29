@@ -7,11 +7,19 @@ LooseLeaf UI is a lightweight, dependency-free, architecture-first CSS design sy
 
 By decoupling intrinsic macro-layouts from visual block aesthetics and storing design parameters in a platform-agnostic JSON engine, LooseLeaf UI allows lean engineering teams to compose resilient, highly accessible, and performance-first user interfaces with zero framework overhead.
 
+### Make your theme in the browser
+
+**[Open the token configurator](https://stockol.github.io/looseleaf-ui/)** to set your type scale, spacing, colours, fonts and shapes while every block previews live, in light and dark, at any width. Export a theme bundle and drop it into your project; no build step needed. New to it? Read the [configurator walkthrough](docs/CONFIGURATOR.md).
+
+[![The LooseLeaf token configurator: controls on the left, a live preview of every block on the right](docs/images/configurator-overview.png)](https://stockol.github.io/looseleaf-ui/)
+
 ---
 
 ## Table of Contents
 
 1. [Quick Start](#quick-start)
+   - [Theming: from the configurator to your project](#theming)
+   - [Configurator walkthrough](docs/CONFIGURATOR.md) (separate page, with screenshots)
 2. [Planning & Pre-Production Workflow](#planning)
 3. [The CUBE CSS Architectural Paradigm](#architecture)
 4. [The Token Engine & Workflow](#token-engine)
@@ -61,9 +69,19 @@ Every project gets its own colours, type scale, spacing, fonts and shapes withou
 
 #### Step 1 (everyone): make a theme
 
+The [configurator walkthrough](docs/CONFIGURATOR.md) explains every control in detail. In short:
+
 1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/). It previews every block live, in light and dark, at any viewport width, and the contrast table flags any text that drops below WCAG AA.
-2. Adjust the type scale, spacing, palette hues, fonts, radii and defaults until the preview looks like your site.
-3. **Export → Theme bundle** downloads `looseleaf-theme.zip` containing three files:
+2. Adjust the type scale, spacing, palette hues, fonts, radii and defaults until the preview looks like your site. Each palette is just a hue and a chroma, and the contrast table shows straight away whether text stays readable:
+
+   <img src="docs/images/configurator-palette.png" alt="Palette controls: a hue and chroma slider, with the generated colour ramp as swatches" width="49%"> <img src="docs/images/configurator-contrast.png" alt="Contrast table: every text and background pairing with its ratio in light and dark" width="49%">
+
+3. Check the preview in both schemes and at a phone width with the toolbar's **Light / Dark / Auto** switch and **Viewport** field.
+4. **Export → Theme bundle** downloads `looseleaf-theme.zip`:
+
+   ![The Export menu: Theme bundle, Tokens source, Copy tokens CSS](docs/images/configurator-export.png)
+
+   The bundle contains three files:
 
    | File | What it is | Who reads it |
    | --- | --- | --- |
@@ -146,7 +164,7 @@ npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/
 
 #### Updating a theme later
 
-Open the configurator, **Import** your `design-tokens.json`, change what you need, **Export** the bundle again and replace the three files. Upgrading LooseLeaf (`pip install -U django-looseleaf`, or bumping the jsDelivr tag) never touches your theme; within a major version any token your theme doesn't know falls back to the default, and across majors `django-looseleaf` warns (`W004`) so you know to re-export.
+Open the [configurator](https://stockol.github.io/looseleaf-ui/), **Import** your `design-tokens.json`, change what you need, **Export** the bundle again and replace the three files. Upgrading LooseLeaf (`pip install -U django-looseleaf`, or bumping the jsDelivr tag) never touches your theme; within a major version any token your theme doesn't know falls back to the default, and across majors `django-looseleaf` warns (`W004`) so you know to re-export.
 
 #### Changing this repository's defaults (maintainers)
 
@@ -243,7 +261,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get.
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -290,6 +308,8 @@ looseleaf-ui/
 ├── .github/workflows/         <-- ci.yml, release.yml, pages.yml
 ├── docs/
 │   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
+│   ├── CONFIGURATOR.md        <-- Configurator walkthrough
+│   ├── images/                <-- Configurator screenshots
 │   └── TOKENS.md              <-- Generated token reference
 └── packages/django-looseleaf/ <-- Django package
 ```
