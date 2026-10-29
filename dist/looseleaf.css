@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.1.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.2.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /* ==========================================================================
    AUTO-GENERATED BUNDLE - DO NOT EDIT DIRECTLY
    ==========================================================================
@@ -205,6 +205,32 @@ textarea:not([rows]) {
   --space-m-l: clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem);
   --space-l-xl: clamp(2rem, 1.52rem + 2.39vw, 3.38rem);
 
+  /* --- duration: Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits. --- */
+  --duration-quick: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-spring: 1132ms;
+  --duration-page: var(--duration-base);
+  --duration-enter: var(--duration-base);
+  --duration-exit: var(--duration-quick);
+
+  /* --- ease: Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits. --- */
+  --ease-spring: linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- press: Scale of a pressed button or choice, from $motion.press. --- */
+  --press-scale: 0.97;
+
+  /* --- lift: How far .anim-lift and interactive cards rise on hover, from $motion.lift. --- */
+  --lift-distance: var(--space-3xs);
+
+  /* --- reveal: Scroll reveal for [data-reveal]: the animation, or none when $motion.reveal is off. --- */
+  --reveal-animation: ll-reveal;
+
+  /* --- navbar: Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off. --- */
+  --navbar-stuck-padding: var(--space-2xs);
+
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-0);
   --color-surface-raised: var(--neutral-0);
@@ -285,24 +311,6 @@ textarea:not([rows]) {
   /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
   --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
   --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
-
-  /* --- duration: Motion durations. Entrances run slower than exits. --- */
-  --duration-quick: 150ms;
-  --duration-base: 250ms;
-  --duration-slow: 400ms;
-  --duration-enter: var(--duration-base);
-  --duration-exit: var(--duration-quick);
-
-  /* --- ease: Motion easing curves. Out-expo is for exits. --- */
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* --- press-scale: Scale of a pressed button or choice (:active feedback). --- */
-  --press-scale: 0.97;
-
-  /* --- lift-distance: How far .anim-lift and interactive cards rise on hover. --- */
-  --lift-distance: var(--space-3xs);
 
   /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
   --reveal-distance: var(--space-s);
@@ -1493,6 +1501,66 @@ a:not([class]) {
 
 @layer blocks {
 /* ==========================================================================
+   BLOCK: TABS
+   <div class="tabs">
+     <nav class="tabs__list" aria-label="…">
+       <a class="tabs__tab" href="#panel-one">One</a> …
+     </nav>
+     <section class="tabs__panel" id="panel-one">…</section> …
+   </div>
+   Without JavaScript it is a jump list of in-page links, and every panel
+   shows, one after another. tabs.js turns it into a tab list (roles, arrow
+   keys, roving tabindex) and marks the block [data-js]; only then are the
+   inactive panels hidden.
+   ========================================================================== */
+
+.tabs {
+  display: grid;
+  gap: var(--space-s);
+}
+
+.tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  margin-block-end: -1px; /* the selected tab's edge sits on the list's border */
+  border-block-end: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    border-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+}
+
+.tabs__tab[aria-selected="true"] {
+  color: var(--color-text);
+  border-color: var(--color-action);
+}
+
+@media (hover: hover) {
+  .tabs__tab:hover {
+    color: var(--color-text);
+  }
+}
+
+/* Only once tabs.js has taken over: one panel at a time */
+.tabs[data-js] > .tabs__panel:not([data-state="active"]) {
+  display: none;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
    BLOCK: DROPDOWN (native details/summary: opens and closes with no JavaScript)
    <details class="dropdown-wrapper">
      <summary class="button">Options</summary>
@@ -1951,6 +2019,111 @@ button.navbar__toggle {
 
 @layer blocks {
 /* ==========================================================================
+   BLOCK: TOAST
+   <div class="toast-region" aria-live="polite">
+     <div class="toast" data-status="success"><p class="toast__message">Saved.</p></div>
+   </div>
+   Without JavaScript the region sits where it is in the page and its toasts
+   read like alerts. toast.js marks the region [data-js] and floats it at the
+   bottom of the viewport (in the top layer, so toasts stay above an open
+   dialog), adds a close button to each toast and dismisses them on a timer.
+   ========================================================================== */
+
+.toast-region {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+/* Floating, once toast.js has taken over (it is a manual popover by then) */
+.toast-region[data-js] {
+  position: fixed;
+  inset: auto;
+  inset-block-end: calc(var(--space-s) + var(--safe-bottom));
+  inset-inline-end: calc(var(--space-s) + var(--safe-right));
+  z-index: var(--layer-popover);
+  inline-size: min(24rem, calc(100% - var(--space-s) * 2));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  overflow: visible;
+}
+
+.toast-region[data-js] > .toast[data-state="queued"] {
+  display: none;
+}
+
+.toast {
+  --toast-accent: var(--color-border-strong);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding: var(--inset-control);
+  padding-inline-start: var(--space-s);
+  border: 1px solid var(--color-border);
+  border-inline-start: 4px solid var(--toast-accent);
+  border-radius: var(--radius-surface);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-raised);
+  transition:
+    opacity calc(var(--duration-exit) * var(--motion-scale)) var(--ease-out-expo),
+    translate calc(var(--duration-exit) * var(--motion-scale)) var(--ease-out-expo);
+}
+
+.toast[data-status="info"] {
+  --toast-accent: var(--color-status-info);
+}
+
+.toast[data-status="success"] {
+  --toast-accent: var(--color-status-success);
+}
+
+.toast[data-status="warning"] {
+  --toast-accent: var(--color-status-warning);
+}
+
+.toast[data-status="danger"] {
+  --toast-accent: var(--color-status-danger);
+}
+
+.toast__message {
+  flex: 1;
+  align-self: center;
+}
+
+.toast__close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  min-block-size: var(--target-min);
+  min-inline-size: var(--target-min);
+  padding: var(--space-2xs);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .toast__close:hover {
+    background-color: var(--color-surface-sunken);
+  }
+}
+
+/* CUBE Exception: leaving */
+.toast[data-state="removing"] {
+  opacity: 0;
+  translate: var(--space-s) 0;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
    BLOCK: TABLE
    Wrap in .table-wrapper so a wide table scrolls by itself instead of the
    page: <div class="table-wrapper" role="region" aria-label="…" tabindex="0">
@@ -2382,7 +2555,7 @@ button.navbar__toggle {
 @layer motion {
 /* ==========================================================================
    MOTION: ENTRANCES AND EXITS
-   Menus and dialogs animate in; dialogs animate out too. Without this file
+   Menus, toasts and dialogs animate in; dialogs animate out too. Without this file
    they simply appear and disappear. Every duration goes through
    --motion-scale, so both reduced-motion switches make them instant.
    ========================================================================== */
@@ -2396,6 +2569,18 @@ button.navbar__toggle {
   .navbar:has(.navbar__toggle[open]) .navbar__menu,
   .navbar__menu[data-state="open"] {
     animation: ll-drop-in calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+/* Toasts slide in as they appear (and again when one leaves the queue) */
+.toast-region[data-js] > .toast:not([data-state]) {
+  animation: ll-slide-in calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+}
+
+@keyframes ll-slide-in {
+  from {
+    opacity: 0;
+    translate: var(--space-s) 0;
   }
 }
 
@@ -2567,7 +2752,7 @@ button.navbar__toggle {
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: calc(var(--duration-base) * var(--motion-scale));
+    animation-duration: calc(var(--duration-page) * var(--motion-scale));
     animation-timing-function: var(--ease-standard);
   }
 
@@ -2590,7 +2775,10 @@ button.navbar__toggle {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion="reduced"]) [data-reveal] {
-      animation: ll-reveal linear both;
+      /* Longhands: in the shorthand, a name of "none" would be read as the fill mode */
+      animation-name: var(--reveal-animation);
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: entry 0% entry 40%;
     }
@@ -2623,7 +2811,7 @@ button.navbar__toggle {
 
   @container navbar scroll-state(stuck: top) {
     .navbar > * {
-      --navbar-padding: var(--space-2xs);
+      --navbar-padding: var(--navbar-stuck-padding);
     }
   }
 }

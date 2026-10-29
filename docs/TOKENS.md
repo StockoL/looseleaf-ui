@@ -174,6 +174,62 @@ Raw Utopia fluid space scale and one-up pairs, derived from $utopia.space.
 | `--space-m-l` | Raw | `clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem)` |  | derived |
 | `--space-l-xl` | Raw | `clamp(2rem, 1.52rem + 2.39vw, 3.38rem)` |  | derived |
 
+### duration
+
+Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--duration-quick` | Semantic | `150ms` |  | derived |
+| `--duration-base` | Semantic | `250ms` |  | derived |
+| `--duration-slow` | Semantic | `400ms` |  | derived |
+| `--duration-spring` | Semantic | `1132ms` |  | derived |
+| `--duration-page` | Semantic | `250ms` |  | derived |
+| `--duration-enter` | Semantic | `250ms` |  |  |
+| `--duration-exit` | Semantic | `150ms` |  |  |
+
+### ease
+
+Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--ease-spring` | Semantic | `linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1)` |  | derived |
+| `--ease-standard` | Semantic | `cubic-bezier(0.4, 0, 0.2, 1)` |  |  |
+| `--ease-out-expo` | Semantic | `cubic-bezier(0.16, 1, 0.3, 1)` |  |  |
+
+### press
+
+Scale of a pressed button or choice, from $motion.press.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--press-scale` | Semantic | `0.97` |  | derived |
+
+### lift
+
+How far .anim-lift and interactive cards rise on hover, from $motion.lift.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--lift-distance` | Semantic | `clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)` |  | derived |
+
+### reveal
+
+Scroll reveal for [data-reveal]: the animation, or none when $motion.reveal is off.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--reveal-animation` | Semantic | `ll-reveal` |  | derived |
+
+### navbar
+
+Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--navbar-stuck-padding` | Semantic | `clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem)` |  | derived |
+
 ### color
 
 Semantic colour roles. The only colour tokens blocks may use.
@@ -314,44 +370,6 @@ Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas.
 | --- | --- | --- | --- | --- |
 | `--shadow-raised` | Semantic | `0 10px 25px -5px rgb(0 0 0 / 0.1)` | `0 10px 25px -5px rgb(0 0 0 / 0.5)` |  |
 | `--shadow-overlay` | Semantic | `0 10px 25px rgb(0 0 0 / 0.15)` | `0 10px 25px rgb(0 0 0 / 0.6)` |  |
-
-### duration
-
-Motion durations. Entrances run slower than exits.
-
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--duration-quick` | Semantic | `150ms` |  |  |
-| `--duration-base` | Semantic | `250ms` |  |  |
-| `--duration-slow` | Semantic | `400ms` |  |  |
-| `--duration-enter` | Semantic | `250ms` |  |  |
-| `--duration-exit` | Semantic | `150ms` |  |  |
-
-### ease
-
-Motion easing curves. Out-expo is for exits.
-
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--ease-standard` | Semantic | `cubic-bezier(0.4, 0, 0.2, 1)` |  |  |
-| `--ease-spring` | Semantic | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` |  |  |
-| `--ease-out-expo` | Semantic | `cubic-bezier(0.16, 1, 0.3, 1)` |  |  |
-
-### press-scale
-
-Scale of a pressed button or choice (:active feedback).
-
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--press-scale` | Semantic | `0.97` |  |  |
-
-### lift-distance
-
-How far .anim-lift and interactive cards rise on hover.
-
-| Token | Tier | Light | Dark | Notes |
-| --- | --- | --- | --- | --- |
-| `--lift-distance` | Semantic | `clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)` |  |  |
 
 ### reveal-distance
 

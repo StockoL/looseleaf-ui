@@ -12,10 +12,13 @@
  *   - "$" keys are inputs/metadata ($utopia, $palette, $purpose, $tier); "_" keys are comments.
  *   - Raw groups (neutral, action, accent, status hues, step, space) are derived from
  *     $palette / $utopia. An explicit value in one of those groups wins and is flagged overridden.
+ *   - Motion tokens (duration, ease.spring, press, lift, reveal, navbar.stuck-padding) are
+ *     derived from $motion, the configurator's Motion panel. They are tier 2 (semantic).
  */
 
 import { typeScale, spaceScale } from "./utopia.mjs";
 import { oklchToHex, isHex, contrast } from "./color.mjs";
+import { springEasing } from "./spring.mjs";
 
 export const RAMP_KEYS = ["0", "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
 export const BRAND_KEYS = ["500", "600"];
@@ -38,6 +41,15 @@ export const CONTRAST_PAIRS = [
   ...STATUS_NAMES.map((status) => [`color.status-${status}-text`, `color.status-${status}-surface`]),
   ["color.link", "color.surface"],
 ];
+
+// Motion presets: a spring and three durations that suit each other
+export const MOTION_PRESETS = {
+  calm: { spring: { mass: 1, stiffness: 120, damping: 20 }, durations: { quick: 200, base: 320, slow: 500 } },
+  snappy: { spring: { mass: 1, stiffness: 180, damping: 12 }, durations: { quick: 150, base: 250, slow: 400 } },
+  playful: { spring: { mass: 1, stiffness: 220, damping: 8 }, durations: { quick: 180, base: 300, slow: 450 } },
+};
+export const DURATION_KEYS = ["quick", "base", "slow"];
+export const LIFT_SIZES = ["none", "3xs", "2xs", "xs", "s"];
 
 /* --------------------------------------------------------------------------
    DERIVATION
@@ -63,7 +75,41 @@ function statusEntries({ hue, chroma = DEFAULT_STATUS_CHROMA }, recipes) {
   return entries;
 }
 
-/** Raw groups computed from $palette and $utopia, in output order. */
+function motionGroups(motion) {
+  const preset = MOTION_PRESETS.snappy;
+  const { spring = preset.spring, durations = {}, press = 0.97, lift = "3xs", reveal = true, pageTransition = true, stuck = true } = motion;
+  const { easing, settleMs } = springEasing(spring);
+
+  const ms = DURATION_KEYS.map((key) => {
+    const value = durations[key] ?? preset.durations[key];
+    if (!Number.isFinite(value) || value < 0) throw new Error(`$motion.durations.${key} must be a number of milliseconds, 0 or more`);
+    return { key, value: `${value}ms` };
+  });
+  if (!Number.isFinite(press) || press <= 0 || press > 1) throw new Error("$motion.press must be a scale above 0 and at most 1");
+  if (!LIFT_SIZES.includes(lift)) throw new Error(`$motion.lift must be one of ${LIFT_SIZES.join(", ")}`);
+
+  const group = (name, purpose, entries) => ({ name, tier: 2, purpose, entries });
+  return [
+    group("duration", "Motion durations, derived from $motion. Spring is the spring's settle time; page is 0ms when page transitions are off.", [
+      ...ms,
+      { key: "spring", value: `${settleMs}ms` },
+      { key: "page", value: pageTransition ? "{duration.base}" : "0ms" },
+    ]),
+    group("ease", "Easing curves. Spring is a linear() curve simulated from $motion.spring.", [{ key: "spring", value: easing }]),
+    group("press", "Scale of a pressed button or choice, from $motion.press.", [{ key: "scale", value: String(press) }]),
+    group("lift", "How far .anim-lift and interactive cards rise on hover, from $motion.lift.", [
+      { key: "distance", value: lift === "none" ? "0px" : `{space.${lift}}` },
+    ]),
+    group("reveal", "Scroll reveal for [data-reveal]: the animation, or none when $motion.reveal is off.", [
+      { key: "animation", value: reveal ? "ll-reveal" : "none" },
+    ]),
+    group("navbar", "Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off.", [
+      { key: "stuck-padding", value: stuck ? "{space.2xs}" : "{space.s}" },
+    ]),
+  ];
+}
+
+/** Groups computed from the $palette, $utopia and $motion inputs, in output order. */
 export function deriveGroups(json) {
   const groups = [];
   const palette = json.$palette;
@@ -116,6 +162,8 @@ export function deriveGroups(json) {
     }
   }
 
+  if (json.$motion) groups.push(...motionGroups(json.$motion));
+
   return groups;
 }
 
@@ -167,7 +215,7 @@ function collectEntries(json) {
 
   for (const group of derived) {
     const explicit = json[group.name] ?? {};
-    const context = { tier: 1, purpose: explicit.$purpose ?? group.purpose };
+    const context = { tier: group.tier ?? 1, purpose: explicit.$purpose ?? group.purpose };
     const derivedKeys = new Set(group.entries.map((entry) => entry.key));
 
     for (const { key, value } of group.entries) {

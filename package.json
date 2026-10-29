@@ -1,6 +1,6 @@
 {
   "name": "looseleaf-ui",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Bespoke, architecture-first CUBE CSS design system template library.",
   "main": "dist/looseleaf.css",
   "style": "dist/looseleaf.css",
@@ -21,7 +21,8 @@
     "scripts/cli.js",
     "scripts/tokens-core.mjs",
     "scripts/utopia.mjs",
-    "scripts/color.mjs"
+    "scripts/color.mjs",
+    "scripts/spring.mjs"
   ],
   "scripts": {
     "build:tokens": "node scripts/build-tokens.js",

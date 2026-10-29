@@ -75,6 +75,18 @@ def test_messages_render_as_dismissible_alerts_with_mapped_status():
     assert html.count('class="alert__close"') == 2 and "<p>Could not send.</p>" in html
 
 
+def test_messages_render_as_a_toast_region_on_request():
+    request = RequestFactory().get("/")
+    request._messages = CookieStorage(request)
+    messages.success(request, "Saved.")
+    messages.error(request, "Could not send.")
+    html = Template('{% load looseleaf %}{% ll_messages style="toast" %}').render(RequestContext(request, {}))
+    assert '<div class="toast-region" aria-live="polite">' in html
+    assert '<div class="toast" data-status="success"><p class="toast__message">Saved.</p></div>' in html
+    assert '<div class="toast" data-status="danger" role="alert">' in html
+    assert "alert__close" not in html  # looseleaf.js adds the close buttons; without it there is nothing to press
+
+
 def test_messages_render_nothing_when_there_are_none():
     request = RequestFactory().get("/")
     request._messages = CookieStorage(request)

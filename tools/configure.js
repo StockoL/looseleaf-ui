@@ -20,10 +20,12 @@
 
   const EASINGS = [
     { label: "Standard", value: "cubic-bezier(0.4, 0, 0.2, 1)" },
-    { label: "Spring", value: "cubic-bezier(0.175, 0.885, 0.32, 1.275)" },
     { label: "Ease out", value: "cubic-bezier(0, 0, 0.2, 1)" },
+    { label: "Ease in out", value: "cubic-bezier(0.65, 0, 0.35, 1)" },
     { label: "Linear", value: "linear" },
   ];
+
+  const { MOTION_PRESETS, DURATION_KEYS, LIFT_SIZES } = lib;
 
   const BUTTON_STYLES = {
     outlined: {
@@ -241,6 +243,18 @@
       const value = read();
       inputs.forEach((input) => (input.checked = input.value === value));
     });
+  }
+
+  function toggle(container, { label, hint, read, write }) {
+    const checkbox = el("input", { class: "choice__input", type: "checkbox" });
+    checkbox.addEventListener("change", () => {
+      write(checkbox.checked);
+      changed();
+    });
+    container.append(
+      el("div", { class: "field" }, el("label", { class: "choice" }, checkbox, ` ${label}`), hint ? el("p", { class: "field__hint" }, hint) : null),
+    );
+    syncers.push(() => (checkbox.checked = Boolean(read())));
   }
 
   // Binding factories
@@ -471,33 +485,230 @@
   }
 
   /* ------------------------------------------------------------------------
-     6. SHAPE AND MOTION
+     6. SHAPE
      ------------------------------------------------------------------------ */
   function buildShape() {
     const section = dom.section("shape");
-    heading(section, "Radius");
     slider(section, { label: "Control radius", unit: "px", min: 0, max: 24, step: 1, ...unitToken(["radius", "control"], "px") });
     slider(section, { label: "Surface radius", unit: "px", min: 0, max: 32, step: 1, ...unitToken(["radius", "surface"], "px") });
     section.append(el("p", { class: "field__hint" }, "Pill is fixed at 999px."));
-
-    heading(section, "Duration");
-    for (const key of ["quick", "base", "slow"]) {
-      slider(section, { label: `${capitalise(key)} duration`, unit: "ms", min: 0, max: 1000, step: 10, ...unitToken(["duration", key], "ms") });
-    }
-
-    heading(section, "Easing");
-    for (const key of ["standard", "spring"]) {
-      select(section, {
-        label: `${capitalise(key)} easing`,
-        options: EASINGS,
-        read: () => getToken(["ease", key]),
-        write: (value) => setToken(["ease", key], value),
-      });
-    }
   }
 
   /* ------------------------------------------------------------------------
-     7. LAYOUT
+     7. MOTION
+     Every value lives in $motion; the compiler derives the duration, ease,
+     press, lift, reveal and stuck-navbar tokens from it. Nothing here
+     exports a script: a per-project script would never receive later fixes.
+     ------------------------------------------------------------------------ */
+  const LEGACY_MOTION = [["duration", "quick"], ["duration", "base"], ["duration", "slow"], ["ease", "spring"], ["press-scale"], ["lift-distance"]];
+
+  // What a draft from before $motion (explicit motion tokens) amounts to as $motion
+  function legacyMotion() {
+    const preset = MOTION_PRESETS.snappy;
+    const number = (path, fallback) => {
+      const value = parseFloat(getToken(path));
+      return Number.isFinite(value) ? value : fallback;
+    };
+    const lift = String(getToken(["lift-distance"]) ?? "").match(/^\{space\.(.+)\}$/)?.[1];
+    return {
+      preset: "custom",
+      spring: { ...preset.spring },
+      durations: Object.fromEntries(DURATION_KEYS.map((key) => [key, number(["duration", key], preset.durations[key])])),
+      press: number(["press-scale"], 0.97),
+      lift: LIFT_SIZES.includes(lift) ? lift : "3xs",
+      reveal: true,
+      pageTransition: true,
+      stuck: true,
+    };
+  }
+
+  const motionView = () => draft.$motion ?? legacyMotion();
+
+  // The first edit moves an older draft's explicit motion tokens into $motion
+  function motionDraft() {
+    if (!draft.$motion) {
+      draft.$motion = legacyMotion();
+      LEGACY_MOTION.forEach(deletePath);
+    }
+    return draft.$motion;
+  }
+
+  function springPreview(section) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "configurator__spring-plot");
+    svg.setAttribute("viewBox", "0 0 200 100");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("role", "img");
+    const target = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    target.setAttribute("class", "configurator__spring-target");
+    const curve = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    curve.setAttribute("class", "configurator__spring-curve");
+    svg.append(target, curve);
+
+    const ball = el("div", { class: "configurator__spring-ball" });
+    const track = el("div", { class: "configurator__spring-track" }, ball);
+    const play = el("button", { class: "button", type: "button", "data-size": "small" }, "Play");
+    const summary = el("p", { class: "field__hint", "aria-live": "polite" });
+    section.append(svg, summary, el("div", { class: "flow", style: "--flow-space: var(--space-2xs);" }, track, play));
+
+    let spring = null;
+    const bounce = () => {
+      if (!spring) return;
+      const distance = track.clientWidth - ball.offsetWidth - 2 * parseFloat(getComputedStyle(track).paddingInlineStart);
+      ball.getAnimations().forEach((animation) => animation.cancel());
+      ball.animate([{ translate: "0" }, { translate: `${distance}px` }], { duration: Math.min(spring.settleMs, 2000), easing: spring.easing, fill: "forwards" });
+    };
+    play.addEventListener("click", bounce);
+
+    let replay = 0;
+    renderers.push(() => {
+      try {
+        spring = lib.springEasing(motionView().spring);
+      } catch (error) {
+        spring = null;
+        summary.textContent = error.message;
+        return;
+      }
+      const { samples } = lib.simulateSpring(motionView().spring);
+      const top = Math.max(1, ...samples.map((sample) => sample.x));
+      const bottom = Math.min(0, ...samples.map((sample) => sample.x));
+      const y = (x) => 95 - ((x - bottom) / (top - bottom)) * 90;
+      const step = Math.max(1, Math.floor(samples.length / 200));
+      const points = samples.filter((_, index) => index % step === 0 || index === samples.length - 1);
+      const end = samples[samples.length - 1].t;
+      curve.setAttribute("points", points.map((p) => `${((p.t / end) * 200).toFixed(1)},${y(p.x).toFixed(1)}`).join(" "));
+      for (const [name, value] of [["x1", 0], ["x2", 200], ["y1", y(1)], ["y2", y(1)]]) target.setAttribute(name, value);
+
+      const overshoot = Math.round(spring.overshoot * 100);
+      const label = `Settles in ${spring.settleMs} ms${overshoot > 0 ? `, overshooting by ${overshoot}%` : " with no overshoot"}.`;
+      summary.textContent = `${label} Exported as a linear() curve of ${spring.points.length} points.`;
+      svg.setAttribute("aria-label", `Spring curve. ${label}`);
+
+      // Replays as the spring changes, unless this browser asks for reduced motion
+      clearTimeout(replay);
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) replay = setTimeout(bounce, 250);
+    });
+  }
+
+  function buildMotion() {
+    const section = dom.section("motion");
+    section.append(
+      el(
+        "p",
+        { class: "field__hint" },
+        "Everything here exports as tokens. Visitors who ask their device for reduced motion, or pages with ",
+        el("code", {}, 'data-motion="reduced"'),
+        ", get none of it.",
+      ),
+    );
+
+    let syncPreset = null;
+    const custom = (motion) => {
+      motion.preset = "custom";
+      syncPreset?.();
+    };
+
+    segmented(section, {
+      legend: "Preset",
+      options: Object.keys(MOTION_PRESETS).map((key) => ({ value: key, label: capitalise(key) })),
+      read: () => motionView().preset,
+      write: (value) => {
+        const motion = motionDraft();
+        motion.preset = value;
+        motion.spring = { ...MOTION_PRESETS[value].spring };
+        motion.durations = { ...MOTION_PRESETS[value].durations };
+        syncControls();
+      },
+    });
+    syncPreset = syncers[syncers.length - 1];
+
+    heading(section, "Spring");
+    springPreview(section);
+    for (const [key, label, min, max, step, hint] of [
+      ["mass", "Mass", 0.1, 5, 0.1, "Heavier springs move more slowly and swing further."],
+      ["stiffness", "Stiffness", 10, 600, 5, "Stiffer springs are quicker and snappier."],
+      ["damping", "Damping", 0, 60, 0.5, "Less damping, more bounce. 0 never settles."],
+    ]) {
+      slider(section, {
+        label,
+        min,
+        max,
+        step,
+        hint,
+        read: () => motionView().spring?.[key],
+        write: (value) => {
+          const motion = motionDraft();
+          motion.spring = { ...MOTION_PRESETS.snappy.spring, ...motion.spring, [key]: value };
+          custom(motion);
+        },
+      });
+    }
+
+    heading(section, "Durations");
+    for (const key of DURATION_KEYS) {
+      slider(section, {
+        label: `${capitalise(key)} duration`,
+        unit: "ms",
+        min: 0,
+        max: 1000,
+        step: 10,
+        read: () => motionView().durations?.[key],
+        write: (value) => {
+          const motion = motionDraft();
+          motion.durations = { ...MOTION_PRESETS.snappy.durations, ...motion.durations, [key]: value };
+          custom(motion);
+        },
+      });
+    }
+    select(section, {
+      label: "Standard easing",
+      options: EASINGS,
+      hint: "For colour and opacity changes. Movement uses the spring.",
+      read: () => getToken(["ease", "standard"]),
+      write: (value) => setToken(["ease", "standard"], value),
+    });
+
+    heading(section, "Feedback");
+    slider(section, {
+      label: "Press scale",
+      min: 0.85,
+      max: 1,
+      step: 0.01,
+      hint: "How far buttons and choices shrink while pressed. 1 turns it off.",
+      read: () => motionView().press,
+      write: (value) => (motionDraft().press = value),
+    });
+    select(section, {
+      label: "Lift distance",
+      options: LIFT_SIZES.map((size) => ({ value: size, label: size === "none" ? "None" : `--space-${size}` })),
+      hint: "How far .anim-lift and interactive cards rise on hover.",
+      read: () => motionView().lift,
+      write: (value) => (motionDraft().lift = value),
+    });
+
+    heading(section, "Enhancements");
+    toggle(section, {
+      label: "Scroll reveal",
+      hint: "Elements with data-reveal fade in as they scroll into view.",
+      read: () => motionView().reveal !== false,
+      write: (value) => (motionDraft().reveal = value),
+    });
+    toggle(section, {
+      label: "Page transitions",
+      hint: "Pages on the same site cross-fade as they load.",
+      read: () => motionView().pageTransition !== false,
+      write: (value) => (motionDraft().pageTransition = value),
+    });
+    toggle(section, {
+      label: "Compact sticky navbar",
+      hint: "A sticky navbar tightens once it is stuck to the top.",
+      read: () => motionView().stuck !== false,
+      write: (value) => (motionDraft().stuck = value),
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     8. LAYOUT
      ------------------------------------------------------------------------ */
   function buildLayout() {
     const section = dom.section("layout");
@@ -506,7 +717,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     8. DEFAULTS
+     9. DEFAULTS
      ------------------------------------------------------------------------ */
   function ensureGroup(name, purpose) {
     if (typeof draft[name] !== "object" || draft[name] === null) draft[name] = { $purpose: purpose };
@@ -811,12 +1022,13 @@
     renderers.length = 0;
     swatchGrids.clear();
     swatches.clear();
-    for (const name of ["type", "space", "palette", "fonts", "shape", "layout", "defaults"]) dom.section(name).replaceChildren();
+    for (const name of ["type", "space", "palette", "fonts", "shape", "motion", "layout", "defaults"]) dom.section(name).replaceChildren();
     buildType();
     buildSpace();
     buildPalette();
     buildFonts();
     buildShape();
+    buildMotion();
     buildLayout();
     buildDefaults();
     syncControls();

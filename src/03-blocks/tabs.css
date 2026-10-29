@@ -1,0 +1,57 @@
+/* ==========================================================================
+   BLOCK: TABS
+   <div class="tabs">
+     <nav class="tabs__list" aria-label="…">
+       <a class="tabs__tab" href="#panel-one">One</a> …
+     </nav>
+     <section class="tabs__panel" id="panel-one">…</section> …
+   </div>
+   Without JavaScript it is a jump list of in-page links, and every panel
+   shows, one after another. tabs.js turns it into a tab list (roles, arrow
+   keys, roving tabindex) and marks the block [data-js]; only then are the
+   inactive panels hidden.
+   ========================================================================== */
+
+.tabs {
+  display: grid;
+  gap: var(--space-s);
+}
+
+.tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-min);
+  padding: var(--inset-control);
+  margin-block-end: -1px; /* the selected tab's edge sits on the list's border */
+  border-block-end: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    border-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+}
+
+.tabs__tab[aria-selected="true"] {
+  color: var(--color-text);
+  border-color: var(--color-action);
+}
+
+@media (hover: hover) {
+  .tabs__tab:hover {
+    color: var(--color-text);
+  }
+}
+
+/* Only once tabs.js has taken over: one panel at a time */
+.tabs[data-js] > .tabs__panel:not([data-state="active"]) {
+  display: none;
+}

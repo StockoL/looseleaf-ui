@@ -122,13 +122,17 @@ MESSAGE_STATUS = {"debug": "info", "info": "info", "success": "success", "warnin
 
 
 @register.inclusion_tag("looseleaf/messages.html", takes_context=True)
-def ll_messages(context):
-    """django.contrib.messages as dismissible .alert blocks (error -> danger)."""
+def ll_messages(context, style="alert"):
+    """django.contrib.messages as dismissible .alert blocks (error -> danger).
+
+    style="toast" renders a .toast-region instead: with looseleaf.js the messages
+    float as toasts and dismiss themselves; without it they read like alerts.
+    """
     messages = context.get("messages")
     if messages is None and context.get("request") is not None:
         messages = get_messages(context["request"])
     items = [{"text": str(m), "status": MESSAGE_STATUS.get(m.level_tag, "info")} for m in (messages or [])]
-    return {"items": items}
+    return {"items": items, "toast": style == "toast"}
 
 
 # ---------------------------------------------------------------------------

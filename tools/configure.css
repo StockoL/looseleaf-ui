@@ -90,6 +90,43 @@
     cursor: pointer;
   }
 
+  /* Spring designer: the simulated curve and a swatch that moves along it */
+  .configurator__spring-plot {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 2 / 1;
+    background-color: var(--color-surface-sunken);
+    border-radius: var(--radius-surface);
+    overflow: visible;
+  }
+
+  .configurator__spring-curve {
+    fill: none;
+    stroke: var(--color-action);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .configurator__spring-target {
+    stroke: var(--color-border-strong);
+    stroke-dasharray: 4 4;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .configurator__spring-track {
+    padding: var(--space-2xs);
+    background-color: var(--color-surface-sunken);
+    border-radius: var(--radius-pill);
+  }
+
+  .configurator__spring-ball {
+    inline-size: var(--space-m);
+    block-size: var(--space-m);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-action);
+  }
+
   /* Import drop target */
   .configurator__dropzone {
     display: grid;

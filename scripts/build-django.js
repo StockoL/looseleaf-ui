@@ -35,6 +35,15 @@ try {
     copied.push(file);
   }
 
+  // The behaviour modules, one by one, for projects that import them selectively
+  const behavioursSource = path.join(distDir, "behaviours");
+  if (fs.existsSync(behavioursSource)) {
+    const behavioursTarget = path.join(staticDir, "behaviours");
+    fs.rmSync(behavioursTarget, { recursive: true, force: true });
+    fs.cpSync(behavioursSource, behavioursTarget, { recursive: true });
+    copied.push("behaviours/");
+  }
+
   if (copied.length === 0) {
     throw new Error(`No built assets found in ${distDir}. Run npm run build:css first.`);
   }

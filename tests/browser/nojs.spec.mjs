@@ -52,6 +52,17 @@ for (const width of [360, 1280]) {
       await expect(item.locator(".accordion__content")).toBeVisible();
     });
 
+    test("tabs are a jump list with every panel showing", async ({ page }) => {
+      for (const tabs of await page.locator(".tabs").all()) {
+        await expect(tabs).not.toHaveAttribute("data-js", "");
+        for (const panel of await tabs.locator(".tabs__panel").all()) await expect(panel).toBeVisible();
+        for (const link of await tabs.locator(".tabs__tab").all()) {
+          const id = (await link.getAttribute("href")).slice(1);
+          await expect(page.locator(`[id="${id}"]`)).toHaveCount(1); // every link has a target
+        }
+      }
+    });
+
     test("the form submits", async ({ page }) => {
       const form = page.locator("form").first();
       await form.locator('[type="submit"]').click();

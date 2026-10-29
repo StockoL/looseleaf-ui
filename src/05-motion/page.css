@@ -15,7 +15,7 @@
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: calc(var(--duration-base) * var(--motion-scale));
+    animation-duration: calc(var(--duration-page) * var(--motion-scale));
     animation-timing-function: var(--ease-standard);
   }
 

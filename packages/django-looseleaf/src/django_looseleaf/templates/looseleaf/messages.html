@@ -1,4 +1,6 @@
-{% load i18n %}{% if items %}<div class="flow" style="--flow-space: var(--space-xs);">{% for message in items %}
+{% load i18n %}{% if items and toast %}<div class="toast-region" aria-live="polite">{% for message in items %}
+  <div class="toast" data-status="{{ message.status }}"{% if message.status == 'danger' %} role="alert"{% endif %}><p class="toast__message">{{ message.text }}</p></div>{% endfor %}
+</div>{% elif items %}<div class="flow" style="--flow-space: var(--space-xs);">{% for message in items %}
   <div class="alert" data-status="{{ message.status }}" role="{% if message.status == 'danger' %}alert{% else %}status{% endif %}">
     <div class="cluster" style="--cluster-justify: space-between; --cluster-align: flex-start;">
       <p>{{ message.text }}</p>
