@@ -4,6 +4,34 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+### Added
+
+- Layered, tinted shadows derived from a new `$shape.shadow` input (strength, softness, light direction) and the neutral hue: `--shadow-color`, and `--shadow-raised` (cards, focused inputs), the new `--shadow-floating` (menus, toasts, lifted cards) and `--shadow-overlay` (dialogs), with three, four and five layers. The configurator's Shape panel has Shadow strength, Shadow softness and Light from controls.
+- `glass.css`: `.navbar[data-glass]`, a translucent, blurred navbar whose blur reaches below its edge.
+- `micro.css`:
+  - `.badge[data-pulse]` and `.badge[data-bump]`;
+  - `[data-underline="slide"]` on links;
+  - `[data-reveal-stagger]`;
+  - the focus ring easing in;
+  - `[data-dropped]` for drag libraries;
+  - the theme toggle's sun and moon trading places.
+- Theme reveal: `theme.js` changes the theme inside a view transition, and the new theme grows as a circle from the toggle.
+- `.grid[data-subgrid]`: items take their rows from the grid, so titles, bodies and footers line up across a row.
+- `.badge[data-interactive]` gets press feedback.
+- `--scheme-dark` token: 0 in the light scheme, 1 in the dark, for CSS that calculates with the scheme.
+- `.prose`: numbered list markers that line up, and `text-wrap: pretty` paragraphs where supported.
+- `docs/SUPPORT.md` states the support policy and lists the new enhancements.
+- The demo navbar is sticky and glass, with sliding underlines; the Motion section reports the glass and theme reveal.
+
+### Changed
+
+- Alerts, toasts and menus enter on partial keyframes (`ll-enter`; menus grow from their trigger with `ll-grow`), which more specific rules and inline styles can't cancel; `@starting-style` is kept for dialogs.
+- Lift uses standard easing instead of the spring, and fades in a `::after` shadow instead of animating `box-shadow`. `.anim-lift` no longer scales.
+- `.card` no longer clips its content (`overflow: hidden`): flush media rounds its own corners, so a lifted card's shadow and a floating badge both show.
+- Cards carry `--shadow-raised` at rest; menus and toasts use `--shadow-floating`.
+- A page with a sticky navbar gets a matching `scroll-padding`, so in-page links land below it.
+- A glass navbar doesn't take the page transition's `view-transition-name` (it would stop the blur from seeing the page), so it fades with the page.
+
 ## [2.2.0] - 2026-10-29
 
 ### Added

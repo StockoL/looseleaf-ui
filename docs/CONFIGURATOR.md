@@ -67,6 +67,7 @@ To use a web font, type its name (for example `Inter`) in the optional family fi
 ## 6. Shape
 
 - **Radius**: corner rounding for controls (buttons, inputs) and surfaces (cards, dialogs). Badges are always fully rounded.
+- **Shadows**: every shadow is several layers, tinted with the neutral hue so it darkens the page's own colour rather than greying it, all lit from one direction. **Shadow strength** sets how dark they are, **Shadow softness** how blurred, and **Light from** where the light comes from. They apply at three elevations: raised (cards, a focused input), floating (menus, toasts, a lifted card) and overlay (dialogs).
 
 ## 7. Motion
 

@@ -246,6 +246,7 @@ To maintain a true Single Source of Truth across the entire tech stack (includin
 
 - `$utopia` holds the [Utopia](https://utopia.fyi/) settings (viewports, base sizes, ratios, space multipliers). The fluid `--step-*` type scale and `--space-*` scale are derived from them at build time.
 - `$palette` holds OKLCH hues and chromas. The `--neutral-*` ramp, the `--action-*` and `--accent-*` steps and every status colour (light and dark) are derived from it.
+- `$shape.shadow` holds the shadow strength, softness and light direction. `--shadow-color` (the neutral hue, darkened, as OKLCH components) and the layered `--shadow-raised`, `--shadow-floating` and `--shadow-overlay` are derived from it, one light source for all three.
 - `$motion` holds a spring (mass, stiffness, damping), three durations, the press scale, the lift distance and three switches. `--ease-spring` is simulated from the spring as a CSS `linear()` curve, and the `--duration-*`, `--press-scale`, `--lift-distance`, `--reveal-animation` and `--navbar-stuck-padding` tokens are derived from the rest.
 - Everything else is a semantic token named by purpose. Colour roles carry a light and a dark value, and `{group.key}` references another token.
 
@@ -304,7 +305,8 @@ looseleaf-ui/
 │   │                              navbar, modal, offcanvas, alert, table, prose,
 │   │                              pagination, breadcrumb, marquee, bg-mesh, swatch
 │   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors
-│   ├── 05-motion/             <-- entrances, press, height, page, reveal, stuck, lift
+│   ├── 05-motion/             <-- entrances, press, height, page, reveal, stuck, lift,
+│   │                              glass, micro
 │   └── scripts/               <-- theme.js, behaviours/ (one module each, joined into looseleaf.js)
 ├── dist/                      <-- looseleaf.css, looseleaf.js, behaviours/, theme.js, tokens.resolved.json
 ├── examples/index.html        <-- Living demo (also the configurator's preview)
@@ -348,7 +350,7 @@ Compositions govern spacing and alignment without injecting aesthetic styling. T
 | `.cluster` | Wrapping horizontal group | `--cluster-space`, `--cluster-justify`, `--cluster-align` |
 | `.sidebar` | Target-width panel beside fluid content, stacking when space runs out | `--sidebar-target-width`, `--sidebar-content-min-width`, `--sidebar-space`, `--sidebar-align`, `[data-side="right"]`, `[data-sticky]` (with `--sticky-offset`) |
 | `.switcher` | Row that becomes a stack below a threshold | `--switcher-threshold` |
-| `.grid` | Auto-filling intrinsic grid | `--grid-min-item-size`, `--grid-placement` |
+| `.grid` | Auto-filling intrinsic grid | `--grid-min-item-size`, `--grid-placement`; `[data-subgrid]` lines up the parts of every item in a row (each spans `--subgrid-rows` rows, default 3) |
 | `.reel` | Horizontal scroll-snap strip; give a scrolling reel `tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it | gap from `--gutter` |
 | `.frame` | Crops media to an aspect ratio | `--frame-ratio` |
 | `.bento` | Dense intrinsic grid with spanning items | `--bento-min`, `--bento-row-min`, `--bento-space`; items take `[data-span]` and `[data-row-span]` |
@@ -369,11 +371,11 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.textarea` | Multi-line input, vertical resize only | `[aria-invalid="true"]` | — |
 | `.choice` | Checkbox or radio with its label (`.choice__input`); `.choice-group` stacks them | `.choice-group[data-variant="segmented"]` | — |
 | `.input-group` | Input joined to `.input-group__addon` or a button | — | — |
-| `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | — |
+| `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | —; `[data-pulse]` (a ring that pulses), `[data-bump]` (pops on the spring when rendered), `[data-interactive]` (press feedback) |
 | `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
 | `.dropdown` | Menu inside a native `<details class="dropdown-wrapper">` whose `<summary>` is the trigger (`.dropdown__item`, `.dropdown__divider`); opens without JavaScript | `[open]` on the wrapper; `[data-align="end"]` | optional: Escape, outside click, arrow keys |
 | `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped; `[data-interactive]` lifts on hover | — |
-| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[open]` on the toggle; `--navbar-padding` (on its children) | optional: Escape |
+| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[data-glass]` (translucent, blurs what scrolls under it); `[data-underline="slide"]` on links; `[open]` on the toggle; `--navbar-padding` (on its children) | optional: Escape |
 | `.modal` | Native `<dialog>`, animated in and out | `[open]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
@@ -395,13 +397,15 @@ Motion is an enhancement: the system is complete without this folder. Its `motio
 
 | File | What it does | Tokens |
 | --- | --- | --- |
-| `entrances.css` | Menus drop in as they open; dialogs and drawers animate in and out | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
-| `press.css` | Buttons and choices shrink slightly while pressed | `--press-scale` |
+| `entrances.css` | Alerts, toasts and menus come in on partial keyframes (menus grow from their trigger); dialogs and drawers animate in and out with `@starting-style` | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
+| `press.css` | Buttons, choices and `.badge[data-interactive]` shrink slightly while pressed | `--press-scale` |
 | `height.css` | Accordion items open and close smoothly | `--duration-base` |
-| `page.css` | Same-site page loads cross-fade; a sticky navbar holds still | `--duration-base` |
+| `page.css` | Same-site page loads cross-fade (a sticky, non-glass navbar holds still); a theme change grows as a circle from the toggle | `--duration-page`, `--duration-slow` |
 | `reveal.css` | `[data-reveal]` elements fade in as they scroll into view (opt-in; never hidden without support) | `--reveal-distance` |
 | `stuck.css` | A sticky navbar tightens once it is stuck to the top | `--navbar-padding` |
-| `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover | `--lift-distance`, `--ease-spring` |
+| `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover, with standard easing (a hover the pointer cuts short shouldn't spring); a `::after` with `--shadow-floating` fades in, so the layered shadow is never animated | `--lift-distance`, `--shadow-floating` |
+| `glass.css` | `.navbar[data-glass]`: translucent and blurred, with the blur reaching below the edge so there's no hard line | — |
+| `micro.css` | Pulse and bump badges, the sliding underline, staggered reveals (`[data-reveal-stagger]`), the focus ring easing in, `[data-dropped]` settling after a drag, and the theme toggle's sun and moon trading places | `--scheme-dark`, `--ease-spring` |
 
 The demo's Motion section shows each one and reports whether the current browser runs it.
 
@@ -502,11 +506,15 @@ The 2.0 markup still works through 2.x, with one console warning per kind; it st
 
 Load it as a blocking script in `<head>` (or inline it) so the saved choices are applied before first paint. It also sets `data-js` on `<html>` first of all.
 
-- Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system.
+- Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system. Where view transitions exist and motion isn't reduced, the new theme grows as a circle from the toggle. Put both icons in a `[data-theme-icons]` span (`data-theme-icon="light"` and `"dark"`) and they trade places with a turn.
 - Any `[data-motion-toggle]` button switches between following the operating system and reducing motion on this site, which sets `data-motion="reduced"` on `<html>` (every duration becomes 0). `aria-pressed` is true while motion is reduced, and `[data-motion-label]` reads "On" or "Reduced".
 
 ```html
 <button class="button" type="button" data-variant="ghost" data-theme-toggle>
+  <span data-theme-icons aria-hidden="true">
+    <svg class="icon" data-theme-icon="light"><use href="#icon-sun" /></svg>
+    <svg class="icon" data-theme-icon="dark"><use href="#icon-moon" /></svg>
+  </span>
   Theme: <span data-theme-label>Auto</span>
 </button>
 <button class="button" type="button" data-variant="ghost" data-motion-toggle>
