@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.2.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Dismissible alerts
  * Why script: removing an element from the page needs script; no attribute does it.

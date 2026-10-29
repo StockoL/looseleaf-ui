@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.2.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Form feedback
  * Why script: native validation shows its message in a browser bubble that
