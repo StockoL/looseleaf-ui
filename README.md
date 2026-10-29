@@ -32,7 +32,8 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
 7. [Behaviours & Theme Scripts](#behaviors)
 8. [Commands](#commands)
 9. [Versioning & Releases](#versioning)
-10. [Authors & Acknowledgements](#authors)
+10. [Crediting LooseLeaf UI in your project](#credit)
+11. [Authors & Acknowledgements](#authors)
 
 ---
 
@@ -504,7 +505,30 @@ To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pypro
 
 ---
 
-## 10. <a name="authors"></a> Authors & Acknowledgements
+## 10. <a name="credit"></a> Crediting LooseLeaf UI in your project
+
+The MIT licence asks only that the licence notice at the top of `looseleaf.css` (and of the scripts) stays in place. Credit anywhere else is a courtesy, and appreciated. To say what your site is built on, copy and adapt this:
+
+```markdown
+This site is built on [LooseLeaf UI](https://github.com/StockoL/looseleaf-ui), a CSS foundation rather than a kit of ready-made components. It follows the CUBE CSS method, keeping layout, utilities and components apart, and its design tokens are named by purpose, so a colour is "surface" or "action" rather than "blue-500".
+
+- **Accessible by default.** Every control shows a visible focus ring, text colours are checked against WCAG AA contrast before the theme is exported, touch targets are at least 44 px, and animation stops for anyone whose device asks for reduced motion.
+- **Progressively enhanced.** Menus, navigation and forms work without JavaScript. Scripts add keyboard shortcuts and polish, and the page is complete without them.
+- **Light and dark.** It follows your device's colour scheme, or the choice you make on the site.
+- **No framework.** Plain HTML and CSS with a few small scripts, so pages stay light and fast.
+
+LooseLeaf UI builds on Andy Bell's CUBE CSS, Heydon Pickering's Every Layout, James Gilyead and Trys Mudford's Utopia fluid scales, Alla Kholmatova's Design Systems and Björn Ottosson's OKLCH colour space, and is released under the MIT licence.
+```
+
+Or, for a footer:
+
+```markdown
+Built with [LooseLeaf UI](https://github.com/StockoL/looseleaf-ui) (MIT).
+```
+
+---
+
+## 11. <a name="authors"></a> Authors & Acknowledgements
 
 LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 
