@@ -463,7 +463,7 @@
       text(section, {
         label: `${title} family (optional)`,
         placeholder: "e.g. Inter",
-        hint: "A non-system family is loaded from Google Fonts in the preview only. Your project must load it; Export notes this.",
+        hint: "A non-system family loads from Google Fonts: the theme bundle's CSS imports it for you. With the tokens source alone, your project must load it.",
         read: () => parseFont(getToken(["font", role])).family,
         write: (family) => setToken(["font", role], composeFont(family, parseFont(getToken(["font", role])).stack)),
       });
