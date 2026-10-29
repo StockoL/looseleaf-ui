@@ -461,6 +461,35 @@
               </div>
             </form>
           </article>
+
+          <article class="card" style="max-inline-size: 40rem;">
+            <form class="card__body flow" action="#" aria-labelledby="live-form-title">
+              <h4 id="live-form-title">Live feedback</h4>
+              <p class="text-muted">
+                This form has no <code>novalidate</code>, so the browser validates it. With JavaScript, each message appears under its field
+                as you leave it, Send moves focus to the first problem, the password gets a Show button and the bio counts characters.
+                Without JavaScript, the browser's own validation still runs.
+              </p>
+              <div class="field">
+                <label class="label" for="live-email">Email address</label>
+                <input class="input" type="email" id="live-email" required autocomplete="email" inputmode="email" autocapitalize="none" />
+              </div>
+              <div class="field">
+                <label class="label" for="live-password">Password</label>
+                <div class="input-group">
+                  <input class="input" type="password" id="live-password" required minlength="12" autocomplete="new-password" aria-describedby="live-password-hint" data-reveal-password />
+                </div>
+                <p class="field__hint" id="live-password-hint">At least 12 characters.</p>
+              </div>
+              <div class="field">
+                <label class="label" for="live-bio">Short bio</label>
+                <textarea class="textarea" id="live-bio" rows="3" maxlength="140" data-maxlength-counter></textarea>
+              </div>
+              <div class="cluster">
+                <button class="button" type="submit" data-variant="primary">Send</button>
+              </div>
+            </form>
+          </article>
         </div>
       </section>
 
@@ -505,6 +534,23 @@
               <p>Something went wrong. Please try again.</p>
               <button class="alert__close" type="button" aria-label="Dismiss"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOAST -->
+      <section class="region" data-size="small" aria-labelledby="block-toast">
+        <div class="wrapper flow">
+          <h3 id="block-toast">Toast</h3>
+          <p class="text-muted">
+            Toasts float at the bottom of the screen and dismiss themselves after five seconds, pausing while the pointer or focus is on
+            them; danger toasts stay until dismissed. Without JavaScript, a server-rendered <code>.toast-region</code> stays where it is in
+            the page and its toasts read like alerts.
+          </p>
+          <div class="cluster">
+            <button class="button" type="button" data-toast="Your changes were saved." data-toast-status="success">Save</button>
+            <button class="button" type="button" data-toast="A new version is available." data-toast-status="info">Check for updates</button>
+            <button class="button" type="button" data-toast="Could not reach the server." data-toast-status="danger">Fail</button>
           </div>
         </div>
       </section>
@@ -564,6 +610,30 @@
                 <p>Not when they share a <code>name</code>: the browser closes the others.</p>
               </div>
             </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABS -->
+      <section class="region" data-size="small" aria-labelledby="block-tabs">
+        <div class="wrapper flow">
+          <h3 id="block-tabs">Tabs</h3>
+          <p class="text-muted">Without JavaScript this is a jump list and every panel shows. With it, one panel at a time, and the arrow keys move between tabs.</p>
+          <div class="tabs">
+            <nav class="tabs__list" aria-label="Ways to install">
+              <a class="tabs__tab" href="#install-html">Plain HTML</a>
+              <a class="tabs__tab" href="#install-django">Django</a>
+              <a class="tabs__tab" href="#install-build">Build step</a>
+            </nav>
+            <section class="tabs__panel flow" id="install-html">
+              <p>Link <code>looseleaf.css</code> and your theme's <code>looseleaf-tokens.css</code>, then compose with the classes on this page.</p>
+            </section>
+            <section class="tabs__panel flow" id="install-django">
+              <p>Install <code>django-looseleaf</code>, add it to <code>INSTALLED_APPS</code> and set <code>LOOSELEAF_THEME</code>.</p>
+            </section>
+            <section class="tabs__panel flow" id="install-build">
+              <p>Run <code>npx looseleaf-ui compile design-tokens.json</code> in your pipeline and serve the output.</p>
+            </section>
           </div>
         </div>
       </section>
@@ -757,6 +827,7 @@
             </details>
             <button class="button" type="button" commandfor="demo-modal" command="show-modal">Open a dialog</button>
             <span class="badge anim-lift" data-status="info">Hover to lift</span>
+            <button class="button" type="button" data-variant="ghost" data-motion-toggle>Motion: <span data-motion-label>On</span></button>
           </div>
 
           <div class="grid" style="--grid-min-item-size: 14rem;">
