@@ -506,6 +506,50 @@ function compile(json) {
   return { css: renderCss(tokens), tokens };
 }
 
+/* --------------------------------------------------------------------------
+   FONTS
+   A font token is a system stack, or "'<Family>', <stack>" when a web font is
+   layered on top; web fonts are loaded from Google Fonts by the theme CSS.
+   -------------------------------------------------------------------------- */
+
+// Modern Font Stacks (modernfontstacks.com): the system stacks the configurator offers
+const FONT_STACKS = [
+  { label: "System UI", stack: "system-ui, sans-serif" },
+  { label: "Humanist", stack: "Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif" },
+  { label: "Transitional", stack: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif" },
+  { label: "Geometric humanist", stack: "Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif" },
+  { label: "Monospace", stack: "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace" },
+];
+
+function parseFont(value = "") {
+  for (const { stack } of FONT_STACKS) {
+    if (value === stack) return { stack, family: "" };
+    const match = value.match(/^\s*(['"])(.+?)\1\s*,\s*(.+)$/);
+    if (match && match[3] === stack) return { stack, family: match[2] };
+  }
+  return { stack: value, family: "" };
+}
+
+function composeFont(family, stack) {
+  return family ? `'${family.replace(/['"]/g, "")}', ${stack}` : stack;
+}
+
+const leafValue = (node) => (node && typeof node === "object" && "$value" in node ? node.$value : node);
+
+/** Web font families named by the body and heading font tokens. */
+function webFonts(json) {
+  const families = ["body", "heading"].map((role) => parseFont(leafValue(json.font?.[role])).family).filter(Boolean);
+  return [...new Set(families)];
+}
+
+/** The Google Fonts @import for those families, or "" when only system stacks are used. */
+function fontImports(json) {
+  const families = webFonts(json);
+  if (!families.length) return "";
+  const query = families.map((family) => `family=${encodeURIComponent(family).replace(/%20/g, "+")}:wght@400;500;600;700`).join("&");
+  return `@import url("https://fonts.googleapis.com/css2?${query}&display=swap");\n`;
+}
+
 /**
  * The tokens.resolved.json object: metadata keys ("$version", "$generated") first,
  * then one entry per token path with its resolved light and dark values.
@@ -554,7 +598,7 @@ function contrastReport(tokens) {
   return rows;
 }
 
-  return { RAMP_KEYS, BRAND_KEYS, STATUS_NAMES, RAW_GROUPS, CONTRAST_TARGET, CONTRAST_PAIRS, deriveGroups, compile, resolvedTokens, themeStylesheet, contrastReport };
+  return { RAMP_KEYS, BRAND_KEYS, STATUS_NAMES, RAW_GROUPS, CONTRAST_TARGET, CONTRAST_PAIRS, deriveGroups, compile, FONT_STACKS, parseFont, composeFont, webFonts, fontImports, resolvedTokens, themeStylesheet, contrastReport };
   })();
 
   modules["zip.mjs"] = (() => {

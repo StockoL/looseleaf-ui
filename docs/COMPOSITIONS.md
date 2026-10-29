@@ -8,17 +8,17 @@ In traditional frameworks, layout positioning, margins, and component styling ar
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [📖 Golden Rules of CUBE Architecture](#golden-rules)
-2. [🏗️ Macro-Composition Case Studies](#case-studies)
+1. [Golden Rules of CUBE Architecture](#golden-rules)
+2. [Macro-Composition Case Studies](#case-studies)
    - [Case Study 1: The Marketing Hero Section](#case-study-1)
    - [Case Study 2: The Application Dashboard](#case-study-2)
    - [Case Study 3: The Multi-Group Navigation Bar](#case-study-3)
    - [Case Study 4: The Off-Canvas Drawer / Mobile Nav](#case-study-4)
    - [Case Study 5: The Bento Feature Grid](#case-study-5)
    - [Case Study 6: The Media Object / Testimonial Stack](#case-study-6)
-3. [🧱 Block Architectural Guidelines](#block-guidelines)
+3. [Block Architectural Guidelines](#block-guidelines)
    - [The Button Block (`.button`)](#block-button)
    - [The Card Block (`.card`)](#block-card)
    - [The Input Block (`.input` & `.field`)](#block-input)
@@ -26,7 +26,7 @@ In traditional frameworks, layout positioning, margins, and component styling ar
 
 ---
 
-## 1. <a name="golden-rules"></a> 📖 Golden Rules of CUBE Architecture
+## 1. <a name="golden-rules"></a> Golden Rules of CUBE Architecture
 
 1. **Purely Structural:** Compositions govern spacing, wrapping, and alignment. They **never** declare background colours, borders, shadows, or typography styles.
 2. **Zero Outer Margins on Blocks:** Visual blocks (`.card`, `.button`, `.input`) care _only_ about their internal padding and aesthetics. They are completely purged of external margins.
@@ -36,7 +36,7 @@ In traditional frameworks, layout positioning, margins, and component styling ar
 
 ---
 
-## 🛠️ Composition Primitives Quick Reference
+## Composition Primitives Quick Reference
 
 | Primitive | Class | Structural Purpose | Key Custom Properties and Exceptions |
 | :-- | :-- | :-- | :-- |
@@ -63,7 +63,7 @@ A common pattern is nesting them: `.wrapper` for the section's site-wide edge ma
 
 ---
 
-## 2. <a name="case-studies"></a> 🏗️ Macro-Composition Case Studies
+## 2. <a name="case-studies"></a> Macro-Composition Case Studies
 
 Below are standard, real-world layout challenges solved entirely by layering LooseLeaf UI compositions without writing custom layout CSS.
 
@@ -77,7 +77,7 @@ A responsive hero section featuring headline copy and CTA buttons on the left, m
 
 #### The Composition Stack
 
-`Region` + `Wrapper` ➔ `Switcher` ➔ `Flow` + `Cluster` | `Frame`
+`Region` + `Wrapper` → `Switcher` → `Flow` + `Cluster` | `Frame`
 
 #### HTML Implementation
 
@@ -124,7 +124,7 @@ A fixed-width sidebar navigation running alongside a fluid main content region. 
 
 #### The Composition Stack
 
-`Sidebar` ➔ `Grid` ➔ `Flow`
+`Sidebar` → `Grid` → `Flow`
 
 #### HTML Implementation
 
@@ -184,7 +184,7 @@ A header containing a brand logo on the left, primary navigation links in the ce
 
 #### The Composition Stack
 
-`Wrapper` ➔ `Cluster` (Outer) ➔ `Cluster` (Inner)
+`Wrapper` → `Cluster` (Outer) → `Cluster` (Inner)
 
 #### HTML Implementation
 
@@ -227,7 +227,7 @@ A slide-out mobile menu or filter drawer using the native HTML5 `<dialog>` eleme
 
 #### The Composition Stack
 
-`Dialog` ➔ `Wrapper` ➔ `Cluster` + `Flow`
+`Dialog` → `Wrapper` → `Cluster` + `Flow`
 
 #### HTML Implementation
 
@@ -266,7 +266,7 @@ An asymmetric feature showcase grid where individual cards calculate their layou
 
 #### The Composition Stack
 
-`Bento` ➔ `Card` ➔ `Flow`
+`Bento` → `Card` → `Flow`
 
 #### HTML Implementation
 
@@ -315,7 +315,7 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 
 #### The Composition Stack
 
-`Sidebar` ➔ `Flow`
+`Sidebar` → `Flow`
 
 #### HTML Implementation
 
@@ -350,7 +350,7 @@ A fixed-size avatar or image situated next to fluid, multi-line copy that automa
 - Zero Flexbox Hacks: Using `.sidebar` eliminates the need for manual flex-shrink, flex-grow, or media-query overrides on small-screen card previews.
 - Fixed-Ratio Avatar: `--sidebar-align: flex-start` stops the sidebar stretching the avatar to the height of the quote, and `.frame` keeps it square.
 
-## 3. <a name="block-guidelines"></a> 🧱 Block Architectural Guidelines
+## 3. <a name="block-guidelines"></a> Block Architectural Guidelines
 
 Blocks care only about their internal styling (padding, typography, background colors, borders, and interactive transitions). They are completely purged of external positioning or margins.
 

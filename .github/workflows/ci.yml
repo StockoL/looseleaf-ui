@@ -20,6 +20,14 @@ jobs:
           node-version: 22
       - run: npm test
       - run: npm run build
+      - name: The packed npm package's CLI runs
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          cd "$RUNNER_TEMP"
+          npm init -y > /dev/null
+          npm install ./looseleaf-ui-*.tgz
+          npx looseleaf-ui compile "$GITHUB_WORKSPACE/design-tokens.json" --out theme
+          test -s theme/looseleaf-tokens.css && test -s theme/tokens.resolved.json
       - name: Committed build output is up to date
         run: >-
           git diff --exit-code --

@@ -7,28 +7,36 @@ LooseLeaf UI is a lightweight, dependency-free, architecture-first CSS design sy
 
 By decoupling intrinsic macro-layouts from visual block aesthetics and storing design parameters in a platform-agnostic JSON engine, LooseLeaf UI allows lean engineering teams to compose resilient, highly accessible, and performance-first user interfaces with zero framework overhead.
 
+### Make your theme in the browser
+
+**[Open the token configurator](https://stockol.github.io/looseleaf-ui/)** to set your type scale, spacing, colours, fonts and shapes while every block previews live, in light and dark, at any width. Export a theme bundle and drop it into your project; no build step needed. New to it? Read the [configurator walkthrough](docs/CONFIGURATOR.md).
+
+[![The LooseLeaf token configurator: controls on the left, a live preview of every block on the right](docs/images/configurator-overview.png)](https://stockol.github.io/looseleaf-ui/)
+
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [🚀 Quick Start](#quick-start)
-2. [📐 Planning & Pre-Production Workflow](#planning)
-3. [📖 The CUBE CSS Architectural Paradigm](#architecture)
-4. [⚙️ The Token Engine & Workflow](#token-engine)
-5. [📂 Directory & Layer Structure](#directory)
-6. [🧩 Tier Breakdown & Implementation Guide](#tiers)
+1. [Quick Start](#quick-start)
+   - [Theming: from the configurator to your project](#theming)
+   - [Configurator walkthrough](docs/CONFIGURATOR.md) (separate page, with screenshots)
+2. [Planning & Pre-Production Workflow](#planning)
+3. [The CUBE CSS Architectural Paradigm](#architecture)
+4. [The Token Engine & Workflow](#token-engine)
+5. [Directory & Layer Structure](#directory)
+6. [Tier Breakdown & Implementation Guide](#tiers)
    - [Tier 1: Global Layer & Reset](#tier-1)
    - [Tier 2: Compositions](#compositions)
    - [Tier 3: Blocks](#blocks)
    - [Tier 4: Utilities](#utilities)
-7. [⚡ Behaviours & Theme Scripts](#behaviors)
-8. [🛠️ Commands](#commands)
-9. [🏷️ Versioning & Releases](#versioning)
-10. [🤝 Authors & Acknowledgements](#authors)
+7. [Behaviours & Theme Scripts](#behaviors)
+8. [Commands](#commands)
+9. [Versioning & Releases](#versioning)
+10. [Authors & Acknowledgements](#authors)
 
 ---
 
-## 1. <a name="quick-start"></a> 🚀 Quick Start
+## 1. <a name="quick-start"></a> Quick Start
 
 ### Plain HTML
 
@@ -55,19 +63,123 @@ Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade lay
 
 Django projects use the `django-looseleaf` package in [packages/django-looseleaf/](packages/django-looseleaf/README.md). One `INSTALLED_APPS` entry ships the CSS and JS, template tags for the head and the theme, and a form renderer that outputs LooseLeaf markup from `{{ form }}`. A theme bundle drops into `static/` and is switched on with one setting, `LOOSELEAF_THEME`. See its README for setup.
 
-### <a name="theming"></a> Theming
+### <a name="theming"></a> Theming: from the configurator to your project
 
-Every project gets its own colours, type scale, spacing, fonts and shapes without touching this repository or running a build:
+Every project gets its own colours, type scale, spacing, fonts and shapes without cloning this repository. The configurator does the compiling in your browser, so for most projects there is no build step at all. Pick the route that matches your project.
 
-1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against a live preview of every block, in light and dark, at any viewport width. A live contrast table flags any text that drops below WCAG AA.
-2. Choose **Export → Theme bundle** to download `looseleaf-theme.zip`: the compiled `looseleaf-tokens.css`, `tokens.resolved.json`, and your `design-tokens.json` for re-importing later.
-3. Load `looseleaf-tokens.css` after `looseleaf.css` (plain HTML), or unzip the bundle into `static/theme/` and set `LOOSELEAF_THEME = "theme"` (Django).
+#### Step 1 (everyone): make a theme
 
-The theme's tokens live in the same cascade layer as the defaults, so loading them second is the whole mechanism.
+The [configurator walkthrough](docs/CONFIGURATOR.md) explains every control in detail. In short:
+
+1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/). It previews every block live, in light and dark, at any viewport width, and the contrast table flags any text that drops below WCAG AA.
+2. Adjust the type scale, spacing, palette hues, fonts, radii and defaults until the preview looks like your site. Each palette is just a hue and a chroma, and the contrast table shows straight away whether text stays readable:
+
+   <img src="docs/images/configurator-palette.png" alt="Palette controls: a hue and chroma slider, with the generated colour ramp as swatches" width="49%"> <img src="docs/images/configurator-contrast.png" alt="Contrast table: every text and background pairing with its ratio in light and dark" width="49%">
+
+3. Check the preview in both schemes and at a phone width with the toolbar's **Light / Dark / Auto** switch and **Viewport** field.
+4. **Export → Theme bundle** downloads `looseleaf-theme.zip`:
+
+   ![The Export menu: Theme bundle, Tokens source, Copy tokens CSS](docs/images/configurator-export.png)
+
+   The bundle contains three files:
+
+   | File | What it is | Who reads it |
+   | --- | --- | --- |
+   | `looseleaf-tokens.css` | Your tokens compiled, wrapped in `@layer global` | the browser |
+   | `tokens.resolved.json` | Every token's final light and dark value | `django-looseleaf` (meta tags, `ll_token`) |
+   | `design-tokens.json` | The source: your inputs and overrides | the configurator, when you re-import to keep editing |
+
+   Keep all three in the project and commit them. `design-tokens.json` is the only one you ever edit, and only through the configurator (**Import**, change, **Export** again).
+
+#### Route A: Django
+
+```bash
+pip install django-looseleaf
+```
+
+Unzip the bundle into any app's `static/theme/` (or a `STATICFILES_DIRS` entry), then:
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    "django.forms",
+    "django_looseleaf",
+]
+FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"
+LOOSELEAF_THEME = "theme"   # the static prefix you unzipped into
+```
+
+```django
+{# templates/base.html #}
+{% load looseleaf %}<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    {% looseleaf_meta %}     {# viewport with safe areas, color-scheme, theme-color from YOUR tokens #}
+    <title>{% block title %}My site{% endblock %}</title>
+    {% looseleaf_theme %}    {# applies the stored light/dark choice before first paint #}
+    {% looseleaf_css %}      {# looseleaf.css, then theme/looseleaf-tokens.css #}
+    {% looseleaf_js %}
+  </head>
+  <body>
+    {% ll_messages %}
+    {% block content %}{% endblock %}
+  </body>
+</html>
+```
+
+`python manage.py check` confirms the theme is wired (`looseleaf.E002` if the CSS can't be found, `W003` if the JSON is missing). `{{ form }}` now renders LooseLeaf markup. Full tag and renderer reference: [packages/django-looseleaf/README.md](packages/django-looseleaf/README.md).
+
+#### Route B: plain HTML or any other backend
+
+Put `looseleaf-tokens.css` wherever you serve static files and load it **after** the base stylesheet:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<link rel="stylesheet" href="/css/looseleaf-tokens.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+```
+
+Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
+
+#### Route C: you only have `design-tokens.json`
+
+If you exported **Tokens source** rather than the bundle, or want the compile step in your own pipeline (CI, a monorepo, a watch task), compile it with the same code the configurator and this repo use:
+
+```bash
+npx looseleaf-ui compile design-tokens.json --out static/theme/
+```
+
+That writes `looseleaf-tokens.css` and `tokens.resolved.json` into the folder, and you continue with Route A or B. Node 20+ is the only requirement. For the same `design-tokens.json`, the CSS is byte-identical to the configurator's export; the JSON differs only in its `$generated` timestamp.
+
+The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub:
+
+```bash
+npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/
+```
+
+#### Updating a theme later
+
+Open the [configurator](https://stockol.github.io/looseleaf-ui/), **Import** your `design-tokens.json`, change what you need, **Export** the bundle again and replace the three files. Upgrading LooseLeaf (`pip install -U django-looseleaf`, or bumping the jsDelivr tag) never touches your theme; within a major version any token your theme doesn't know falls back to the default, and across majors `django-looseleaf` warns (`W004`) so you know to re-export.
+
+#### Changing this repository's defaults (maintainers)
+
+The repo's own `design-tokens.json` is a theme like any other. Export **Tokens source** from the configurator, save it over the file at the repo root, then:
+
+```bash
+npm run build          # recompiles variables.css, dist/, the Django package's static copies and docs/TOKENS.md
+npm run bump -- 2.0.1  # when it's ready to ship; then commit and push the tag
+```
+
+`npm run check` and the Django package's `test_build_sync` fail if the committed build output is out of date, so a forgotten build can't ship.
 
 ---
 
-## 2. <a name="planning"></a> 📐 Planning & Pre-Production Workflow
+## 2. <a name="planning"></a> Planning & Pre-Production Workflow
 
 A primary tenet of the LooseLeaf philosophy—derived from Andy Bell’s Complete CSS milestones—is that writing CSS code is the final step, not the first. Jumping directly into an IDE to write styles without pre-production planning leads to specificity battles, arbitrary media queries, and high technical debt.
 
@@ -98,7 +210,7 @@ Inject micro-interactions, hardware-accelerated transitions (`.anim-lift`), ambi
 
 ---
 
-## 3. <a name="architecture"></a> 📖 The CUBE CSS Architectural Paradigm
+## 3. <a name="architecture"></a> The CUBE CSS Architectural Paradigm
 
 Traditional frameworks couple layout positioning directly with component styling, forcing developers to write non-DRY utility strings or override margins constantly. LooseLeaf UI enforces strict CUBE CSS boundaries:
 
@@ -116,7 +228,7 @@ Layout responds to the space a component actually has, not the viewport: composi
 
 ---
 
-## 4. <a name="token-engine"></a> ⚙️ The Token Engine & Workflow
+## 4. <a name="token-engine"></a> The Token Engine & Workflow
 
 To maintain a true Single Source of Truth across the entire tech stack (including front-end stylesheets and back-end templates such as Python/Django), design decisions are extracted out of the CSS and stored in a platform-agnostic JSON document.
 
@@ -149,7 +261,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get.
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -161,7 +273,7 @@ A zero-dependency Node.js wrapper around `scripts/tokens-core.mjs`, a pure compi
 
 ---
 
-## 5. <a name="directory"></a> 📂 Directory & Layer Structure
+## 5. <a name="directory"></a> Directory & Layer Structure
 
 ```text
 looseleaf-ui/
@@ -196,6 +308,8 @@ looseleaf-ui/
 ├── .github/workflows/         <-- ci.yml, release.yml, pages.yml
 ├── docs/
 │   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
+│   ├── CONFIGURATOR.md        <-- Configurator walkthrough
+│   ├── images/                <-- Configurator screenshots
 │   └── TOKENS.md              <-- Generated token reference
 └── packages/django-looseleaf/ <-- Django package
 ```
@@ -204,7 +318,7 @@ The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `bl
 
 ---
 
-## 6. <a name="tiers"></a> 🧩 Tier Breakdown & Implementation Guide
+## 6. <a name="tiers"></a> Tier Breakdown & Implementation Guide
 
 ### <a name="tier-1"></a> Tier 1: Global Layer & Reset (src/01-global/)
 
@@ -278,7 +392,7 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 ---
 
-## 7. <a name="behaviors"></a> ⚡ Behaviours & Theme Scripts
+## 7. <a name="behaviors"></a> Behaviours & Theme Scripts
 
 ### dist/looseleaf.js (src/scripts/behaviors.js)
 
@@ -304,7 +418,7 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 
 ---
 
-## 8. <a name="commands"></a> 🛠️ Commands
+## 8. <a name="commands"></a> Commands
 
 | Command | What it does |
 | --- | --- |
@@ -324,7 +438,7 @@ Screenshots are compared pixel for pixel against committed baselines in `tests/b
 
 ---
 
-## 9. <a name="versioning"></a> 🏷️ Versioning & Releases
+## 9. <a name="versioning"></a> Versioning & Releases
 
 The npm package and `django-looseleaf` share one version and follow [semantic versioning](https://semver.org/):
 
@@ -341,7 +455,7 @@ To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pypro
 
 ---
 
-## 10. <a name="authors"></a> 🤝 Authors & Acknowledgements
+## 10. <a name="authors"></a> Authors & Acknowledgements
 
 LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 

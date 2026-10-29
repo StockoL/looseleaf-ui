@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { compile, contrastReport, resolvedTokens, themeStylesheet, RAMP_KEYS } from "./tokens-core.mjs";
+import { compile, contrastReport, resolvedTokens, themeStylesheet, fontImports, parseFont, webFonts, RAMP_KEYS } from "./tokens-core.mjs";
 
 const palette = {
   neutral: { hue: 286, chroma: 0.01 },
@@ -136,4 +136,17 @@ test("themeStylesheet wraps tokens in the global layer with imports first", () =
   assert.ok(sheet.startsWith(`${fontImport}@layer global {\n`));
   assert.ok(sheet.trimEnd().endsWith("}"));
   assert.match(sheet, /--gutter: 1rem;/);
+});
+
+test("font helpers find web fonts layered on system stacks", () => {
+  const stack = "system-ui, sans-serif";
+  assert.deepEqual(parseFont(`'Inter', ${stack}`), { stack, family: "Inter" });
+  assert.deepEqual(parseFont(stack), { stack, family: "" });
+  const json = { font: { body: `'Open Sans', ${stack}`, heading: { $value: `'Inter', ${stack}` } } };
+  assert.deepEqual(webFonts(json), ["Open Sans", "Inter"]);
+  assert.equal(
+    fontImports(json),
+    '@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");\n',
+  );
+  assert.equal(fontImports({ font: { body: stack } }), "");
 });
