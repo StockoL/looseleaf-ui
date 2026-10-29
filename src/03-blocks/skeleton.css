@@ -1,0 +1,49 @@
+/* ==========================================================================
+   BLOCK: SKELETON
+   Placeholder shapes while content loads. The container carries
+   aria-busy="true"; each skeleton is aria-hidden="true", so assistive tech
+   hears "busy" rather than a list of empty shapes.
+     <div aria-busy="true">
+       <span class="skeleton" data-shape="title" aria-hidden="true"></span>
+       <span class="skeleton" data-shape="text" aria-hidden="true"></span>
+     </div>
+   The shimmer stops under reduced motion; the shapes stay.
+   ========================================================================== */
+
+.skeleton {
+  --skeleton-base: var(--color-surface-sunken);
+  --skeleton-shine: color-mix(in oklch, var(--color-surface-sunken), var(--color-surface-raised) 70%);
+
+  display: block;
+  inline-size: 100%;
+  block-size: 1em;
+  border-radius: var(--radius-control);
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%) 0 0 / 300% 100%;
+  animation: ll-shimmer calc(var(--duration-slow) * var(--motion-scale) * 4) linear infinite;
+}
+
+.skeleton[data-shape="title"] {
+  inline-size: 60%;
+  block-size: 1.5em;
+}
+
+.skeleton[data-shape="avatar"] {
+  inline-size: 2.5em;
+  block-size: 2.5em;
+  border-radius: var(--radius-pill);
+}
+
+.skeleton[data-shape="block"] {
+  block-size: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-surface);
+}
+
+@keyframes ll-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}

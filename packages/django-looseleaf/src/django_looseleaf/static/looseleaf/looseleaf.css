@@ -215,7 +215,7 @@ textarea:not([rows]) {
   --duration-exit: var(--duration-quick);
 
   /* --- ease: Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits. --- */
-  --ease-spring: linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1);
+  --ease-spring: linear(0, 0.0114 0.97%, 0.0489 2.12%, 0.1131 3.36%, 0.216 4.86%, 0.3894 6.98%, 0.7151 10.78%, 0.8689 12.81%, 0.9813 14.58%, 1.0708 16.34%, 1.1366 18.11%, 1.1795 19.88%, 1.203 21.82%, 1.2044 24.03%, 1.1801 26.68%, 1.1027 31.36%, 1.0199 36.4%, 0.9781 40.28%, 0.9589 44.35%, 0.9623 49.56%, 1.0038 62.9%, 1.0076 72.97%, 0.9983 95.23%, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -319,6 +319,9 @@ textarea:not([rows]) {
 
   /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
   --reveal-distance: var(--space-s);
+
+  /* --- sound-volume: Volume of the opt-in interface sounds (sound.js), from 0 to 1. --- */
+  --sound-volume: 0.3;
 
   /* --- layer: Stacking order. Dialogs use the top layer and need no token. --- */
   --layer-raised: 10;
@@ -1049,7 +1052,36 @@ a:not([class]) {
   cursor: not-allowed;
 }
 
-/* Copied: swaps between two labels after a copy action.
+/*
+ * Done: after a successful action (copy, save), the label steps aside and a
+ * checkmark draws itself in its place, keeping the button's width.
+ * looseleaf.js sets it, adds the checkmark (<svg data-done-icon>) and clears
+ * it after two seconds.
+ */
+.button[data-state="done"] {
+  color: transparent;
+}
+
+.button [data-done-icon] {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  color: var(--button-text); /* .icon strokes in currentColor, and the label's is transparent */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.button [data-done-icon] path {
+  transition: stroke-dashoffset calc(var(--duration-base) * var(--motion-scale)) var(--ease-out-expo);
+}
+
+.button[data-state="done"] [data-done-icon] {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+/* Deprecated in 2.4 (use the done state), removed in 3.0: two labels swapped after a copy.
    <button class="button"><span data-label="idle">Copy</span><span data-label="copied">Copied</span></button> */
 .button [data-label="copied"],
 .button[data-state="copied"] [data-label="idle"] {
@@ -1130,9 +1162,14 @@ a:not([class]) {
   flex: 1 1 8rem;
 }
 
-/* CUBE Exception: error state, from either the field or the control itself */
+/*
+ * CUBE Exception: error state, from the field, the control, or the browser:
+ * :user-invalid matches only once the visitor has interacted, so a control
+ * shows its error after it is left or the form is sent, with no script.
+ */
 .field[data-status="danger"] :is(.input, .select, .textarea),
-:is(.input, .select, .textarea)[aria-invalid="true"] {
+:is(.input, .select, .textarea)[aria-invalid="true"],
+:is(.input, .select, .textarea):user-invalid {
   --control-border: var(--color-status-danger);
   --control-bg: var(--color-status-danger-surface);
 }
@@ -1284,6 +1321,77 @@ a:not([class]) {
   margin: 0;
   accent-color: var(--color-action);
   cursor: inherit;
+}
+
+/*
+ * CUBE Exception: a switch. Safari draws the native switch (and gives iOS
+ * haptics) from the switch attribute; elsewhere .choice__thumb draws a track
+ * and thumb, and role="switch" tells assistive tech what it is.
+ *   <label class="choice" data-variant="switch">
+ *     <input class="choice__input" type="checkbox" role="switch" switch>
+ *     <span class="choice__thumb" aria-hidden="true"></span> Notifications
+ *   </label>
+ */
+.choice[data-variant="switch"] {
+  position: relative;
+}
+
+.choice[data-variant="switch"] .choice__input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice__thumb {
+  --thumb-size: 1.1em;
+
+  position: relative;
+  flex-shrink: 0;
+  inline-size: calc(var(--thumb-size) * 2 + 0.3em);
+  block-size: calc(var(--thumb-size) + 0.3em);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border-strong);
+  transition: background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+}
+
+.choice__thumb::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.15em;
+  inset-inline-start: 0.15em;
+  inline-size: var(--thumb-size);
+  block-size: var(--thumb-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-raised);
+  transition:
+    translate calc(var(--duration-quick) * var(--motion-scale)) var(--ease-spring),
+    scale calc(var(--duration-quick) * var(--motion-scale)) var(--ease-spring);
+}
+
+.choice__input:checked + .choice__thumb {
+  background-color: var(--color-action);
+}
+
+.choice__input:checked + .choice__thumb::before {
+  translate: var(--thumb-size) 0;
+}
+
+.choice__input:focus-visible + .choice__thumb {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Where the native switch exists, use it and drop the drawn one */
+@supports selector(::thumb) {
+  .choice[data-variant="switch"] .choice__input[switch] {
+    position: static;
+    opacity: 1;
+    inline-size: auto;
+  }
+
+  .choice[data-variant="switch"] .choice__input[switch] + .choice__thumb {
+    display: none;
+  }
 }
 
 .choice:has(.choice__input:disabled) {
@@ -2158,6 +2266,153 @@ button.navbar__toggle {
 .toast[data-state="removing"] {
   opacity: 0;
   translate: var(--space-s) 0;
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: SKELETON
+   Placeholder shapes while content loads. The container carries
+   aria-busy="true"; each skeleton is aria-hidden="true", so assistive tech
+   hears "busy" rather than a list of empty shapes.
+     <div aria-busy="true">
+       <span class="skeleton" data-shape="title" aria-hidden="true"></span>
+       <span class="skeleton" data-shape="text" aria-hidden="true"></span>
+     </div>
+   The shimmer stops under reduced motion; the shapes stay.
+   ========================================================================== */
+
+.skeleton {
+  --skeleton-base: var(--color-surface-sunken);
+  --skeleton-shine: color-mix(in oklch, var(--color-surface-sunken), var(--color-surface-raised) 70%);
+
+  display: block;
+  inline-size: 100%;
+  block-size: 1em;
+  border-radius: var(--radius-control);
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%) 0 0 / 300% 100%;
+  animation: ll-shimmer calc(var(--duration-slow) * var(--motion-scale) * 4) linear infinite;
+}
+
+.skeleton[data-shape="title"] {
+  inline-size: 60%;
+  block-size: 1.5em;
+}
+
+.skeleton[data-shape="avatar"] {
+  inline-size: 2.5em;
+  block-size: 2.5em;
+  border-radius: var(--radius-pill);
+}
+
+.skeleton[data-shape="block"] {
+  block-size: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-surface);
+}
+
+@keyframes ll-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+}
+
+@layer blocks {
+/* ==========================================================================
+   BLOCK: PROGRESS
+   Native <progress> and <meter>, styled. Nothing to script.
+     <progress class="progress" value="40" max="100">40%</progress>
+     <progress class="progress" aria-busy="true">Loading</progress>   (indeterminate)
+     <meter class="progress" value="0.7" low="0.3" high="0.8" optimum="1">70%</meter>
+   Give each an accessible name (a <label> or aria-label). An indeterminate
+   progress is busy: pair it with aria-busy="true" on what is loading.
+   ========================================================================== */
+
+.progress {
+  --progress-fill: var(--color-action);
+
+  appearance: none;
+  display: block;
+  inline-size: 100%;
+  block-size: var(--space-2xs);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border); /* the track shows on any surface */
+  color: var(--progress-fill); /* Firefox fills <progress> from color */
+  overflow: hidden;
+}
+
+.progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress::-webkit-progress-value {
+  background-color: var(--progress-fill);
+  border-radius: var(--radius-pill);
+  transition: inline-size calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.progress::-moz-progress-bar {
+  background-color: var(--progress-fill);
+  border-radius: var(--radius-pill);
+}
+
+/* Indeterminate: a band sweeps across; it stops under reduced motion */
+.progress:indeterminate {
+  background-image: linear-gradient(90deg, transparent 0 35%, var(--progress-fill) 35% 65%, transparent 65%);
+  background-size: 200% 100%;
+  animation: ll-indeterminate calc(var(--duration-slow) * var(--motion-scale) * 3) linear infinite;
+}
+
+.progress:indeterminate::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress:indeterminate::-moz-progress-bar {
+  background-color: transparent;
+}
+
+@keyframes ll-indeterminate {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* <meter>: the fill follows the value's standing against low, high and optimum */
+.progress::-webkit-meter-bar {
+  background: none;
+  border: 0;
+}
+
+.progress::-webkit-meter-optimum-value {
+  background: var(--color-status-success);
+}
+
+.progress::-webkit-meter-suboptimum-value {
+  background: var(--color-status-warning);
+}
+
+.progress::-webkit-meter-even-less-good-value {
+  background: var(--color-status-danger);
+}
+
+.progress:-moz-meter-optimum::-moz-meter-bar {
+  background: var(--color-status-success);
+}
+
+.progress:-moz-meter-sub-optimum::-moz-meter-bar {
+  background: var(--color-status-warning);
+}
+
+.progress:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+  background: var(--color-status-danger);
 }
 }
 
@@ -3072,6 +3327,11 @@ button.navbar__toggle {
   }
 }
 
+/* --- Switch: the thumb squashes while pressed, then springs back --- */
+.choice[data-variant="switch"] .choice__input:active + .choice__thumb::before {
+  scale: 1.2 0.85;
+}
+
 /* --- Focus: the ring arrives rather than appears --- */
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion="reduced"]) :focus-visible {
@@ -3221,6 +3481,15 @@ button.navbar__toggle {
 
 .text-lead {
   font-size: var(--text-lead);
+}
+
+/* Cut a block of text after --clamp-lines lines (default 3), with an ellipsis */
+.clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--clamp-lines, 3);
+  line-clamp: var(--clamp-lines, 3);
+  overflow: hidden;
 }
 }
 

@@ -23,6 +23,77 @@
   cursor: inherit;
 }
 
+/*
+ * CUBE Exception: a switch. Safari draws the native switch (and gives iOS
+ * haptics) from the switch attribute; elsewhere .choice__thumb draws a track
+ * and thumb, and role="switch" tells assistive tech what it is.
+ *   <label class="choice" data-variant="switch">
+ *     <input class="choice__input" type="checkbox" role="switch" switch>
+ *     <span class="choice__thumb" aria-hidden="true"></span> Notifications
+ *   </label>
+ */
+.choice[data-variant="switch"] {
+  position: relative;
+}
+
+.choice[data-variant="switch"] .choice__input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice__thumb {
+  --thumb-size: 1.1em;
+
+  position: relative;
+  flex-shrink: 0;
+  inline-size: calc(var(--thumb-size) * 2 + 0.3em);
+  block-size: calc(var(--thumb-size) + 0.3em);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border-strong);
+  transition: background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+}
+
+.choice__thumb::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.15em;
+  inset-inline-start: 0.15em;
+  inline-size: var(--thumb-size);
+  block-size: var(--thumb-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-raised);
+  transition:
+    translate calc(var(--duration-quick) * var(--motion-scale)) var(--ease-spring),
+    scale calc(var(--duration-quick) * var(--motion-scale)) var(--ease-spring);
+}
+
+.choice__input:checked + .choice__thumb {
+  background-color: var(--color-action);
+}
+
+.choice__input:checked + .choice__thumb::before {
+  translate: var(--thumb-size) 0;
+}
+
+.choice__input:focus-visible + .choice__thumb {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Where the native switch exists, use it and drop the drawn one */
+@supports selector(::thumb) {
+  .choice[data-variant="switch"] .choice__input[switch] {
+    position: static;
+    opacity: 1;
+    inline-size: auto;
+  }
+
+  .choice[data-variant="switch"] .choice__input[switch] + .choice__thumb {
+    display: none;
+  }
+}
+
 .choice:has(.choice__input:disabled) {
   color: var(--color-text-muted);
   cursor: not-allowed;

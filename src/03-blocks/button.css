@@ -109,7 +109,36 @@
   cursor: not-allowed;
 }
 
-/* Copied: swaps between two labels after a copy action.
+/*
+ * Done: after a successful action (copy, save), the label steps aside and a
+ * checkmark draws itself in its place, keeping the button's width.
+ * looseleaf.js sets it, adds the checkmark (<svg data-done-icon>) and clears
+ * it after two seconds.
+ */
+.button[data-state="done"] {
+  color: transparent;
+}
+
+.button [data-done-icon] {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  color: var(--button-text); /* .icon strokes in currentColor, and the label's is transparent */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.button [data-done-icon] path {
+  transition: stroke-dashoffset calc(var(--duration-base) * var(--motion-scale)) var(--ease-out-expo);
+}
+
+.button[data-state="done"] [data-done-icon] {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+/* Deprecated in 2.4 (use the done state), removed in 3.0: two labels swapped after a copy.
    <button class="button"><span data-label="idle">Copy</span><span data-label="copied">Copied</span></button> */
 .button [data-label="copied"],
 .button[data-state="copied"] [data-label="idle"] {

@@ -25,3 +25,12 @@
 .text-lead {
   font-size: var(--text-lead);
 }
+
+/* Cut a block of text after --clamp-lines lines (default 3), with an ellipsis */
+.clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--clamp-lines, 3);
+  line-clamp: var(--clamp-lines, 3);
+  overflow: hidden;
+}
