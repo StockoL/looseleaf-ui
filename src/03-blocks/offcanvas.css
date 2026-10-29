@@ -1,7 +1,7 @@
 /* ==========================================================================
    BLOCK: OFFCANVAS (Drawer via Native Dialog)
-   Slides in via @starting-style; display and overlay transition discretely
-   so the drawer stays in the top layer until it has slid back out.
+   The look only. The slide in and out lives in src/05-motion/entrances.css,
+   driven by --offcanvas-hidden.
    ========================================================================== */
 
 .offcanvas {
@@ -21,43 +21,12 @@
   overscroll-behavior: contain;
   box-shadow: var(--shadow-overlay);
   color: var(--color-text);
-
-  /* Closed state (also the exit target) */
-  transform: var(--offcanvas-hidden);
-  transition-property: transform, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.offcanvas[open] {
-  transform: none;
-}
-
-@starting-style {
-  .offcanvas[open] {
-    transform: var(--offcanvas-hidden);
-  }
 }
 
 .offcanvas::backdrop {
-  background-color: transparent;
+  background-color: var(--color-backdrop);
   -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
-  transition-property: background-color, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.offcanvas[open]::backdrop {
-  background-color: var(--color-backdrop);
-}
-
-@starting-style {
-  .offcanvas[open]::backdrop {
-    background-color: transparent;
-  }
 }
 
 /* CUBE Exception: Left Alignment */

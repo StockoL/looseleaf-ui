@@ -40,18 +40,6 @@
   box-shadow: var(--shadow-raised);
 }
 
-/* Entrance: plays each time the details opens (it closes instantly) */
-.dropdown-wrapper[open] > .dropdown {
-  animation: ll-dropdown-enter var(--duration-base) var(--ease-spring);
-}
-
-@keyframes ll-dropdown-enter {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--space-2xs) * -1));
-  }
-}
-
 /* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
 .dropdown[data-align="end"] {
   inset-inline-start: auto;
@@ -77,8 +65,8 @@
   font-size: var(--text-body);
   font-weight: var(--weight-medium);
   transition:
-    background-color var(--duration-quick) var(--ease-standard),
-    color var(--duration-quick) var(--ease-standard);
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .dropdown__item:focus-visible {
@@ -109,9 +97,9 @@
   visibility: hidden;
   transform: translateY(calc(var(--space-2xs) * -1));
   transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-spring),
-    visibility var(--duration-base);
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    transform calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    visibility calc(var(--duration-base) * var(--motion-scale));
 }
 
 .dropdown-wrapper[data-state="open"] .dropdown {

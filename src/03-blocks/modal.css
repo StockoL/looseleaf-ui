@@ -1,7 +1,6 @@
 /* ==========================================================================
    BLOCK: MODAL (Native Dialog)
-   Enters via @starting-style; display and overlay transition discretely so
-   the dialog stays in the top layer until its exit animation finishes.
+   The look only. Entrance and exit live in src/05-motion/entrances.css.
    ========================================================================== */
 
 .modal {
@@ -15,44 +14,10 @@
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
   overscroll-behavior: contain;
-
-  /* Closed state (also the exit target) */
-  opacity: 0;
-  transform: translateY(var(--space-xs)) scale(0.97);
-  transition-property: opacity, transform, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.modal[open] {
-  opacity: 1;
-  transform: none;
-}
-
-@starting-style {
-  .modal[open] {
-    opacity: 0;
-    transform: translateY(var(--space-xs)) scale(0.97);
-  }
 }
 
 .modal::backdrop {
-  background-color: transparent;
+  background-color: var(--color-backdrop);
   -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
-  transition-property: background-color, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.modal[open]::backdrop {
-  background-color: var(--color-backdrop);
-}
-
-@starting-style {
-  .modal[open]::backdrop {
-    background-color: transparent;
-  }
 }

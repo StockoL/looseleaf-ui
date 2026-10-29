@@ -1,0 +1,25 @@
+/* ==========================================================================
+   MOTION: PAGE TRANSITIONS
+   Same-origin page loads cross-fade (cross-document view transitions,
+   Chrome 126+, Safari 18.2+). A sticky navbar is its own transition group,
+   so it holds still while the page changes underneath it. Off for reduced
+   motion; the visitor's switch zeroes the duration through --motion-scale.
+   ========================================================================== */
+
+@supports (view-transition-name: none) {
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: calc(var(--duration-base) * var(--motion-scale));
+    animation-timing-function: var(--ease-standard);
+  }
+
+  .navbar[data-sticky] {
+    view-transition-name: navbar;
+  }
+}

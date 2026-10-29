@@ -10,7 +10,7 @@
    ========================================================================== */
 
 /* 1. Declare explicit layer precedence from lowest to highest priority */
-@layer reset, global, compositions, blocks, utilities;
+@layer reset, global, compositions, blocks, motion, utilities;
 
 /* --------------------------------------------------------------------------
    LAYER 1: RESET & GLOBAL ENVIRONMENT
@@ -286,14 +286,26 @@ textarea:not([rows]) {
   --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
   --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
 
-  /* --- duration: Motion durations. --- */
+  /* --- duration: Motion durations. Entrances run slower than exits. --- */
   --duration-quick: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  --duration-enter: var(--duration-base);
+  --duration-exit: var(--duration-quick);
 
-  /* --- ease: Motion easing curves. --- */
+  /* --- ease: Motion easing curves. Out-expo is for exits. --- */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- press-scale: Scale of a pressed button or choice (:active feedback). --- */
+  --press-scale: 0.97;
+
+  /* --- lift-distance: How far .anim-lift and interactive cards rise on hover. --- */
+  --lift-distance: var(--space-3xs);
+
+  /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
+  --reveal-distance: var(--space-s);
 
   /* --- layer: Stacking order. Dialogs use the top layer and need no token. --- */
   --layer-raised: 10;
@@ -405,6 +417,25 @@ textarea:not([rows]) {
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
+
+  /*
+   * Motion master switch: every duration in LooseLeaf is written as
+   * calc(var(--duration-x) * var(--motion-scale)), so 0 makes all motion
+   * instant at once. Not a token: a theme must never be able to undo it.
+   */
+  --motion-scale: 1;
+}
+
+/* Switch 1: the operating system's reduced-motion setting */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-scale: 0;
+  }
+}
+
+/* Switch 2: the visitor's choice on the site, persisted by theme.js */
+:root[data-motion="reduced"] {
+  --motion-scale: 0;
 }
 
 /* Interactive blocks draw their own pressed and focus states */
@@ -863,7 +894,7 @@ a:not([class]) {
   font-weight: var(--weight-semibold);
   text-decoration: none;
   transform: translateY(calc(-100% - var(--space-l)));
-  transition: transform var(--duration-quick) var(--ease-standard);
+  transition: transform calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .skip-link:focus {
@@ -908,8 +939,8 @@ a:not([class]) {
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition-property: background-color, border-color, color;
-  transition-duration: var(--duration-quick);
+  transition-property: background-color, border-color, color, scale;
+  transition-duration: calc(var(--duration-quick) * var(--motion-scale));
   transition-timing-function: var(--ease-standard);
 }
 
@@ -1011,7 +1042,7 @@ a:not([class]) {
   border: 2px solid var(--button-text);
   border-inline-end-color: transparent;
   border-radius: 50%;
-  animation: ll-button-spin calc(var(--duration-slow) * 2) linear infinite;
+  animation: ll-button-spin calc(var(--duration-slow) * var(--motion-scale) * 2) linear infinite;
 }
 
 @keyframes ll-button-spin {
@@ -1117,7 +1148,7 @@ a:not([class]) {
   background-color: var(--control-bg);
   border: 1px solid var(--control-border);
   border-radius: var(--radius-control);
-  transition: border-color var(--duration-quick) var(--ease-standard);
+  transition: border-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 :is(.input, .select, .textarea)::placeholder {
@@ -1259,7 +1290,9 @@ a:not([class]) {
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: background-color var(--duration-quick) var(--ease-standard);
+  transition:
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    scale calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .choice-group[data-variant="segmented"] > label + input + label {
@@ -1426,7 +1459,7 @@ a:not([class]) {
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: background-color var(--duration-quick) var(--ease-standard);
+  transition: background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .accordion__trigger::-webkit-details-marker {
@@ -1446,7 +1479,7 @@ a:not([class]) {
 
 .accordion__icon {
   flex-shrink: 0;
-  transition: rotate var(--duration-base) var(--ease-spring);
+  transition: rotate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
 }
 
 .accordion__item[open] > .accordion__trigger .accordion__icon {
@@ -1455,35 +1488,6 @@ a:not([class]) {
 
 .accordion__content {
   padding: 0 var(--inset-surface) var(--inset-surface);
-}
-
-/*
- * Height animation: the 0fr -> 1fr grid trick on the details' content slot.
- * content-visibility transitions discretely so closing animates too.
- * Browsers without ::details-content simply open and close instantly.
- */
-.accordion__item::details-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition-property: grid-template-rows, content-visibility;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.accordion__item[open]::details-content {
-  grid-template-rows: 1fr;
-}
-
-.accordion__item > .accordion__content {
-  min-block-size: 0;
-  overflow: hidden;
-  transition: padding-block-end var(--duration-base) var(--ease-standard);
-}
-
-/* A 0fr row cannot shrink padding, so the padding closes with it */
-.accordion__item:not([open]) > .accordion__content {
-  padding-block-end: 0;
 }
 }
 
@@ -1530,18 +1534,6 @@ a:not([class]) {
   box-shadow: var(--shadow-raised);
 }
 
-/* Entrance: plays each time the details opens (it closes instantly) */
-.dropdown-wrapper[open] > .dropdown {
-  animation: ll-dropdown-enter var(--duration-base) var(--ease-spring);
-}
-
-@keyframes ll-dropdown-enter {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--space-2xs) * -1));
-  }
-}
-
 /* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
 .dropdown[data-align="end"] {
   inset-inline-start: auto;
@@ -1567,8 +1559,8 @@ a:not([class]) {
   font-size: var(--text-body);
   font-weight: var(--weight-medium);
   transition:
-    background-color var(--duration-quick) var(--ease-standard),
-    color var(--duration-quick) var(--ease-standard);
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .dropdown__item:focus-visible {
@@ -1599,9 +1591,9 @@ a:not([class]) {
   visibility: hidden;
   transform: translateY(calc(var(--space-2xs) * -1));
   transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-spring),
-    visibility var(--duration-base);
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    transform calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    visibility calc(var(--duration-base) * var(--motion-scale));
 }
 
 .dropdown-wrapper[data-state="open"] .dropdown {
@@ -1673,14 +1665,22 @@ a:not([class]) {
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
   z-index: var(--layer-nav);
-  padding-block: var(--space-s);
+}
+
+/*
+ * The vertical padding sits on the navbar's children (usually one .wrapper)
+ * rather than the navbar, so a container query on the navbar can change it
+ * (src/05-motion/stuck.css compacts a stuck navbar this way).
+ */
+.navbar > * {
+  padding-block: var(--navbar-padding, var(--space-s));
 }
 
 /* CUBE Exception: stays at the top while the page scrolls, clear of the notch */
 .navbar[data-sticky] {
   position: sticky;
   inset-block-start: 0;
-  padding-block-start: calc(var(--space-s) + var(--safe-top));
+  padding-block-start: var(--safe-top);
 }
 
 .navbar__brand {
@@ -1706,8 +1706,8 @@ a:not([class]) {
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    color var(--duration-quick) var(--ease-standard),
-    background-color var(--duration-quick) var(--ease-standard);
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .navbar__link:focus-visible {
@@ -1795,18 +1795,6 @@ button.navbar__toggle {
   .navbar:has(.navbar__toggle[open]) .navbar__menu,
   .navbar__menu[data-state="open"] /* deprecated scripted markup, removed in 3.0 */ {
     display: flex;
-    animation: ll-navbar-reveal var(--duration-quick) var(--ease-standard);
-  }
-}
-
-@keyframes ll-navbar-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--space-2xs) * -1));
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 }
@@ -1814,8 +1802,7 @@ button.navbar__toggle {
 @layer blocks {
 /* ==========================================================================
    BLOCK: MODAL (Native Dialog)
-   Enters via @starting-style; display and overlay transition discretely so
-   the dialog stays in the top layer until its exit animation finishes.
+   The look only. Entrance and exit live in src/05-motion/entrances.css.
    ========================================================================== */
 
 .modal {
@@ -1829,54 +1816,20 @@ button.navbar__toggle {
   width: 90vw;
   margin: auto; /* Reset browser dialog defaults */
   overscroll-behavior: contain;
-
-  /* Closed state (also the exit target) */
-  opacity: 0;
-  transform: translateY(var(--space-xs)) scale(0.97);
-  transition-property: opacity, transform, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.modal[open] {
-  opacity: 1;
-  transform: none;
-}
-
-@starting-style {
-  .modal[open] {
-    opacity: 0;
-    transform: translateY(var(--space-xs)) scale(0.97);
-  }
 }
 
 .modal::backdrop {
-  background-color: transparent;
+  background-color: var(--color-backdrop);
   -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
-  transition-property: background-color, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.modal[open]::backdrop {
-  background-color: var(--color-backdrop);
-}
-
-@starting-style {
-  .modal[open]::backdrop {
-    background-color: transparent;
-  }
 }
 }
 
 @layer blocks {
 /* ==========================================================================
    BLOCK: OFFCANVAS (Drawer via Native Dialog)
-   Slides in via @starting-style; display and overlay transition discretely
-   so the drawer stays in the top layer until it has slid back out.
+   The look only. The slide in and out lives in src/05-motion/entrances.css,
+   driven by --offcanvas-hidden.
    ========================================================================== */
 
 .offcanvas {
@@ -1896,43 +1849,12 @@ button.navbar__toggle {
   overscroll-behavior: contain;
   box-shadow: var(--shadow-overlay);
   color: var(--color-text);
-
-  /* Closed state (also the exit target) */
-  transform: var(--offcanvas-hidden);
-  transition-property: transform, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.offcanvas[open] {
-  transform: none;
-}
-
-@starting-style {
-  .offcanvas[open] {
-    transform: var(--offcanvas-hidden);
-  }
 }
 
 .offcanvas::backdrop {
-  background-color: transparent;
+  background-color: var(--color-backdrop);
   -webkit-backdrop-filter: blur(4px); /* Safari < 18 */
   backdrop-filter: blur(4px);
-  transition-property: background-color, overlay, display;
-  transition-duration: var(--duration-base);
-  transition-timing-function: var(--ease-standard);
-  transition-behavior: allow-discrete;
-}
-
-.offcanvas[open]::backdrop {
-  background-color: var(--color-backdrop);
-}
-
-@starting-style {
-  .offcanvas[open]::backdrop {
-    background-color: transparent;
-  }
 }
 
 /* CUBE Exception: Left Alignment */
@@ -1963,8 +1885,8 @@ button.navbar__toggle {
   background-color: var(--alert-bg);
   color: var(--alert-text);
   transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    transform calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
 }
 
 /* 
@@ -2010,8 +1932,8 @@ button.navbar__toggle {
   padding: var(--space-2xs);
   border-radius: var(--radius-control);
   transition:
-    opacity var(--duration-quick),
-    background-color var(--duration-quick);
+    opacity calc(var(--duration-quick) * var(--motion-scale)),
+    background-color calc(var(--duration-quick) * var(--motion-scale));
 }
 
 @media (hover: hover) {
@@ -2220,7 +2142,7 @@ button.navbar__toggle {
   font-weight: var(--weight-medium);
   text-decoration: none;
   touch-action: manipulation;
-  transition: background-color var(--duration-quick) var(--ease-standard);
+  transition: background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .pagination__gap {
@@ -2304,7 +2226,7 @@ button.navbar__toggle {
    ========================================================================== */
 
 .marquee {
-  --marquee-duration: calc(var(--duration-slow) * 100);
+  --marquee-duration: calc(var(--duration-slow) * var(--motion-scale) * 100);
   --marquee-gap: var(--gutter);
 
   display: flex;
@@ -2352,7 +2274,7 @@ button.navbar__toggle {
    ========================================================================== */
 
 .bg-mesh {
-  --mesh-duration: calc(var(--duration-slow) * 40);
+  --mesh-duration: calc(var(--duration-slow) * var(--motion-scale) * 40);
   --mesh-strength: 8%;
 
   position: relative;
@@ -2454,7 +2376,293 @@ button.navbar__toggle {
 
 
 /* --------------------------------------------------------------------------
-   LAYER 4: UTILITIES (Single-Purpose Overrides)
+   LAYER 4: MOTION (Enhancements only: the system is complete without it.
+   Each file is fenced by @supports or the reduced-motion switches.)
+   -------------------------------------------------------------------------- */
+@layer motion {
+/* ==========================================================================
+   MOTION: ENTRANCES AND EXITS
+   Menus and dialogs animate in; dialogs animate out too. Without this file
+   they simply appear and disappear. Every duration goes through
+   --motion-scale, so both reduced-motion switches make them instant.
+   ========================================================================== */
+
+/* Menus: a keyframe entrance each time they open (they close instantly) */
+.dropdown-wrapper[open] > .dropdown {
+  animation: ll-drop-in calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+}
+
+@container navbar (width < 45rem) {
+  .navbar:has(.navbar__toggle[open]) .navbar__menu,
+  .navbar__menu[data-state="open"] {
+    animation: ll-drop-in calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-drop-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(var(--space-2xs) * -1);
+  }
+}
+
+/*
+ * Dialogs: @starting-style for the entrance; display and overlay transition
+ * discretely so the dialog stays in the top layer until its exit finishes.
+ * Each state's duration is the one used to arrive at it.
+ */
+@supports (transition-behavior: allow-discrete) {
+  .modal,
+  .offcanvas,
+  .modal::backdrop,
+  .offcanvas::backdrop {
+    transition-duration: calc(var(--duration-exit) * var(--motion-scale));
+    transition-timing-function: var(--ease-out-expo);
+    transition-behavior: allow-discrete;
+  }
+
+  .modal[open],
+  .offcanvas[open],
+  .modal[open]::backdrop,
+  .offcanvas[open]::backdrop {
+    transition-duration: calc(var(--duration-enter) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+  }
+
+  .modal {
+    opacity: 0;
+    transform: translateY(var(--space-xs)) scale(0.97);
+    transition-property: opacity, transform, overlay, display;
+  }
+
+  .modal[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .offcanvas {
+    transform: var(--offcanvas-hidden);
+    transition-property: transform, overlay, display;
+  }
+
+  .offcanvas[open] {
+    transform: none;
+  }
+
+  .modal::backdrop,
+  .offcanvas::backdrop {
+    background-color: transparent;
+    transition-property: background-color, overlay, display;
+  }
+
+  .modal[open]::backdrop,
+  .offcanvas[open]::backdrop {
+    background-color: var(--color-backdrop);
+  }
+
+  @starting-style {
+    .modal[open] {
+      opacity: 0;
+      transform: translateY(var(--space-xs)) scale(0.97);
+    }
+
+    .offcanvas[open] {
+      transform: var(--offcanvas-hidden);
+    }
+
+    .modal[open]::backdrop,
+    .offcanvas[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: PRESS FEEDBACK
+   Buttons and choices shrink slightly while pressed (--press-scale). Not
+   fenced by (hover: hover): touch is where press feedback matters most.
+   The blocks declare the scale transition; this file only says when.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduced"]) :is(.button:not(:disabled, [aria-disabled="true"]), .choice):active {
+    scale: var(--press-scale);
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: HEIGHT
+   Accordion items open and close smoothly. Two routes to the same result:
+     - interpolate-size: block-size transitions to and from auto (Chrome 129+)
+     - otherwise the 0fr -> 1fr grid trick on ::details-content
+   Browsers without ::details-content open and close instantly.
+   ========================================================================== */
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .accordion__item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition-property: block-size, content-visibility;
+    transition-duration: calc(var(--duration-base) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  .accordion__item[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@supports not (interpolate-size: allow-keywords) {
+  /* content-visibility transitions discretely so closing animates too */
+  .accordion__item::details-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition-property: grid-template-rows, content-visibility;
+    transition-duration: calc(var(--duration-base) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  .accordion__item[open]::details-content {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion__item > .accordion__content {
+    min-block-size: 0;
+    overflow: hidden;
+    transition: padding-block-end calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+  }
+
+  /* A 0fr row cannot shrink padding, so the padding closes with it */
+  .accordion__item:not([open]) > .accordion__content {
+    padding-block-end: 0;
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: PAGE TRANSITIONS
+   Same-origin page loads cross-fade (cross-document view transitions,
+   Chrome 126+, Safari 18.2+). A sticky navbar is its own transition group,
+   so it holds still while the page changes underneath it. Off for reduced
+   motion; the visitor's switch zeroes the duration through --motion-scale.
+   ========================================================================== */
+
+@supports (view-transition-name: none) {
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: calc(var(--duration-base) * var(--motion-scale));
+    animation-timing-function: var(--ease-standard);
+  }
+
+  .navbar[data-sticky] {
+    view-transition-name: navbar;
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: SCROLL REVEAL (opt-in)
+   An element with [data-reveal] fades and rises into place as it scrolls
+   into view, driven by the scroll position, not a timer (Chrome 115+,
+   Safari 26+). Never hidden by default: without support, or with reduced
+   motion, it is simply there. Keep it off navigation, forms and anything
+   above the fold.
+   ========================================================================== */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="reduced"]) [data-reveal] {
+      animation: ll-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@keyframes ll-reveal {
+  from {
+    opacity: 0;
+    translate: 0 var(--reveal-distance);
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: STUCK NAVBAR
+   A sticky navbar tightens its padding once it is stuck to the top, via a
+   scroll-state container query (Chrome 133+). Elsewhere nothing changes.
+   ========================================================================== */
+
+@supports (container-type: scroll-state) {
+  .navbar[data-sticky] {
+    container-type: inline-size scroll-state;
+  }
+
+  .navbar[data-sticky] > * {
+    transition: padding-block calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+  }
+
+  @container navbar scroll-state(stuck: top) {
+    .navbar > * {
+      --navbar-padding: var(--space-2xs);
+    }
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: LIFT
+   .anim-lift (any element) and interactive cards rise by --lift-distance on
+   hover, on devices that hover.
+   ========================================================================== */
+
+.anim-lift,
+.card[data-interactive] {
+  transition:
+    translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    box-shadow calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+}
+
+@media (hover: hover) {
+  .anim-lift:hover,
+  .card[data-interactive]:hover {
+    translate: 0 calc(var(--lift-distance) * -1);
+  }
+
+  .anim-lift:hover {
+    scale: 1.02;
+  }
+
+  .card[data-interactive]:hover {
+    box-shadow: var(--shadow-raised);
+  }
+}
+}
+
+
+/* --------------------------------------------------------------------------
+   LAYER 5: UTILITIES (Single-Purpose Overrides)
    -------------------------------------------------------------------------- */
 @layer utilities {
 /* ==========================================================================
@@ -2587,26 +2795,6 @@ button.navbar__toggle {
 .bg-gradient {
   background-image: linear-gradient(135deg, var(--color-action), var(--color-accent));
   color: var(--color-action-text);
-}
-}
-
-@layer utilities {
-/* ==========================================================================
-   UTILITY: ANIMATIONS
-   ========================================================================== */
-
-/* --- The Lift & Scale --- */
-.anim-lift {
-  transition:
-    transform var(--duration-base) var(--ease-spring),
-    box-shadow var(--duration-base) var(--ease-spring);
-  will-change: transform;
-}
-
-@media (hover: hover) {
-  .anim-lift:hover {
-    transform: translateY(calc(var(--space-2xs) * -1)) scale(1.02);
-  }
 }
 }
 

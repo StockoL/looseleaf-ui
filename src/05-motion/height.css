@@ -1,0 +1,53 @@
+/* ==========================================================================
+   MOTION: HEIGHT
+   Accordion items open and close smoothly. Two routes to the same result:
+     - interpolate-size: block-size transitions to and from auto (Chrome 129+)
+     - otherwise the 0fr -> 1fr grid trick on ::details-content
+   Browsers without ::details-content open and close instantly.
+   ========================================================================== */
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .accordion__item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition-property: block-size, content-visibility;
+    transition-duration: calc(var(--duration-base) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  .accordion__item[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@supports not (interpolate-size: allow-keywords) {
+  /* content-visibility transitions discretely so closing animates too */
+  .accordion__item::details-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition-property: grid-template-rows, content-visibility;
+    transition-duration: calc(var(--duration-base) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+    transition-behavior: allow-discrete;
+  }
+
+  .accordion__item[open]::details-content {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion__item > .accordion__content {
+    min-block-size: 0;
+    overflow: hidden;
+    transition: padding-block-end calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+  }
+
+  /* A 0fr row cannot shrink padding, so the padding closes with it */
+  .accordion__item:not([open]) > .accordion__content {
+    padding-block-end: 0;
+  }
+}

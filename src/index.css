@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* 1. Declare explicit layer precedence from lowest to highest priority */
-@layer reset, global, compositions, blocks, utilities;
+@layer reset, global, compositions, blocks, motion, utilities;
 
 /* --------------------------------------------------------------------------
    LAYER 1: RESET & GLOBAL ENVIRONMENT
@@ -55,11 +55,22 @@
 @import "03-blocks/swatch.css" layer(blocks);
 
 /* --------------------------------------------------------------------------
-   LAYER 4: UTILITIES (Single-Purpose Overrides)
+   LAYER 4: MOTION (Enhancements only: the system is complete without it.
+   Each file is fenced by @supports or the reduced-motion switches.)
+   -------------------------------------------------------------------------- */
+@import "05-motion/entrances.css" layer(motion);
+@import "05-motion/press.css" layer(motion);
+@import "05-motion/height.css" layer(motion);
+@import "05-motion/page.css" layer(motion);
+@import "05-motion/reveal.css" layer(motion);
+@import "05-motion/stuck.css" layer(motion);
+@import "05-motion/lift.css" layer(motion);
+
+/* --------------------------------------------------------------------------
+   LAYER 5: UTILITIES (Single-Purpose Overrides)
    -------------------------------------------------------------------------- */
 @import "04-utilities/accessibility.css" layer(utilities);
 @import "04-utilities/icon.css" layer(utilities);
 @import "04-utilities/indent.css" layer(utilities);
 @import "04-utilities/text.css" layer(utilities);
 @import "04-utilities/colors.css" layer(utilities);
-@import "04-utilities/animations.css" layer(utilities);

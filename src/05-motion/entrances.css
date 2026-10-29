@@ -1,0 +1,96 @@
+/* ==========================================================================
+   MOTION: ENTRANCES AND EXITS
+   Menus and dialogs animate in; dialogs animate out too. Without this file
+   they simply appear and disappear. Every duration goes through
+   --motion-scale, so both reduced-motion switches make them instant.
+   ========================================================================== */
+
+/* Menus: a keyframe entrance each time they open (they close instantly) */
+.dropdown-wrapper[open] > .dropdown {
+  animation: ll-drop-in calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+}
+
+@container navbar (width < 45rem) {
+  .navbar:has(.navbar__toggle[open]) .navbar__menu,
+  .navbar__menu[data-state="open"] {
+    animation: ll-drop-in calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-drop-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(var(--space-2xs) * -1);
+  }
+}
+
+/*
+ * Dialogs: @starting-style for the entrance; display and overlay transition
+ * discretely so the dialog stays in the top layer until its exit finishes.
+ * Each state's duration is the one used to arrive at it.
+ */
+@supports (transition-behavior: allow-discrete) {
+  .modal,
+  .offcanvas,
+  .modal::backdrop,
+  .offcanvas::backdrop {
+    transition-duration: calc(var(--duration-exit) * var(--motion-scale));
+    transition-timing-function: var(--ease-out-expo);
+    transition-behavior: allow-discrete;
+  }
+
+  .modal[open],
+  .offcanvas[open],
+  .modal[open]::backdrop,
+  .offcanvas[open]::backdrop {
+    transition-duration: calc(var(--duration-enter) * var(--motion-scale));
+    transition-timing-function: var(--ease-standard);
+  }
+
+  .modal {
+    opacity: 0;
+    transform: translateY(var(--space-xs)) scale(0.97);
+    transition-property: opacity, transform, overlay, display;
+  }
+
+  .modal[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .offcanvas {
+    transform: var(--offcanvas-hidden);
+    transition-property: transform, overlay, display;
+  }
+
+  .offcanvas[open] {
+    transform: none;
+  }
+
+  .modal::backdrop,
+  .offcanvas::backdrop {
+    background-color: transparent;
+    transition-property: background-color, overlay, display;
+  }
+
+  .modal[open]::backdrop,
+  .offcanvas[open]::backdrop {
+    background-color: var(--color-backdrop);
+  }
+
+  @starting-style {
+    .modal[open] {
+      opacity: 0;
+      transform: translateY(var(--space-xs)) scale(0.97);
+    }
+
+    .offcanvas[open] {
+      transform: var(--offcanvas-hidden);
+    }
+
+    .modal[open]::backdrop,
+    .offcanvas[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+}

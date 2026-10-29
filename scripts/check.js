@@ -159,6 +159,14 @@ function checkCss(file) {
     if (/^(transition|animation)(-[a-z-]+)?$/.test(property) && !reducedMotion && /(^|[\s,(])\d*\.?\d+m?s\b/.test(value)) {
       report(file, item.line, "duration literal", item.text);
     }
+    // Motion master switch: --motion-scale must multiply every duration token
+    for (const use of value.matchAll(/var\(\s*--duration-[\w-]+\s*\)/g)) {
+      const before = value.slice(0, use.index);
+      const after = value.slice(use.index + use[0].length);
+      if (!/calc\(\s*$/.test(before) || !/^\s*\*\s*var\(\s*--motion-scale\s*\)/.test(after)) {
+        report(file, item.line, "duration without * var(--motion-scale)", item.text);
+      }
+    }
     if (property === "outline" && /^none\b/i.test(value.trim())) {
       report(file, item.line, "outline: none", item.text);
     }

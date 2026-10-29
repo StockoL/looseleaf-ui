@@ -13,6 +13,25 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
+
+  /*
+   * Motion master switch: every duration in LooseLeaf is written as
+   * calc(var(--duration-x) * var(--motion-scale)), so 0 makes all motion
+   * instant at once. Not a token: a theme must never be able to undo it.
+   */
+  --motion-scale: 1;
+}
+
+/* Switch 1: the operating system's reduced-motion setting */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-scale: 0;
+  }
+}
+
+/* Switch 2: the visitor's choice on the site, persisted by theme.js */
+:root[data-motion="reduced"] {
+  --motion-scale: 0;
 }
 
 /* Interactive blocks draw their own pressed and focus states */

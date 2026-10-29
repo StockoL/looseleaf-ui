@@ -34,8 +34,8 @@
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition-property: background-color, border-color, color;
-  transition-duration: var(--duration-quick);
+  transition-property: background-color, border-color, color, scale;
+  transition-duration: calc(var(--duration-quick) * var(--motion-scale));
   transition-timing-function: var(--ease-standard);
 }
 
@@ -137,7 +137,7 @@
   border: 2px solid var(--button-text);
   border-inline-end-color: transparent;
   border-radius: 50%;
-  animation: ll-button-spin calc(var(--duration-slow) * 2) linear infinite;
+  animation: ll-button-spin calc(var(--duration-slow) * var(--motion-scale) * 2) linear infinite;
 }
 
 @keyframes ll-button-spin {

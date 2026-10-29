@@ -14,8 +14,8 @@
   background-color: var(--alert-bg);
   color: var(--alert-text);
   transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    transform calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
 }
 
 /* 
@@ -61,8 +61,8 @@
   padding: var(--space-2xs);
   border-radius: var(--radius-control);
   transition:
-    opacity var(--duration-quick),
-    background-color var(--duration-quick);
+    opacity calc(var(--duration-quick) * var(--motion-scale)),
+    background-color calc(var(--duration-quick) * var(--motion-scale));
 }
 
 @media (hover: hover) {

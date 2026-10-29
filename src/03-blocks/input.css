@@ -19,7 +19,7 @@
   background-color: var(--control-bg);
   border: 1px solid var(--control-border);
   border-radius: var(--radius-control);
-  transition: border-color var(--duration-quick) var(--ease-standard);
+  transition: border-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 :is(.input, .select, .textarea)::placeholder {

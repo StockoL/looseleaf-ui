@@ -6,7 +6,7 @@
    ========================================================================== */
 
 .marquee {
-  --marquee-duration: calc(var(--duration-slow) * 100);
+  --marquee-duration: calc(var(--duration-slow) * var(--motion-scale) * 100);
   --marquee-gap: var(--gutter);
 
   display: flex;

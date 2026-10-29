@@ -106,6 +106,8 @@
       alert.remove();
     };
     alert.dataset.state = "removing";
+    // With motion off every duration is 0 and no transitionend will come
+    if (getComputedStyle(alert).transitionDuration.split(",").every((d) => parseFloat(d) === 0)) return remove();
     alert.addEventListener("transitionend", remove, { once: true });
     setTimeout(remove, 1000);
   }
