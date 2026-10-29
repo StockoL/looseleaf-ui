@@ -313,7 +313,14 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
+| `npm run test:browser` | Browser tests with Playwright: axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
+
+---
+
+### Visual regression baselines
+
+Screenshots are compared pixel for pixel against committed baselines in `tests/browser/__screenshots__/`. Fonts render differently on each operating system, so only Linux baselines are committed, and CI renders and compares them. After an intended visual change, run the **Update visual baselines** workflow from the Actions tab, download its `visual-baselines` artifact into `tests/browser/__screenshots__/`, and commit it. Locally, the first run writes baselines for your own system (git-ignored) and later runs compare against them, which is handy before and after a refactor.
 
 ---
 

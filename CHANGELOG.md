@@ -7,6 +7,7 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 ### Added
 
 - `CHANGELOG.md`; each GitHub release now takes its notes from the matching section here.
+- Browser tests (`npm run test:browser`, Playwright): axe-core WCAG 2.2 AA checks on the demo in both schemes and on the configurator, and full-page visual regression of the demo at 360, 768 and 1280 px in light and dark, run in CI.
 
 ### Fixed
 
