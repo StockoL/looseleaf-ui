@@ -18,10 +18,19 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
   - `--reveal-animation` and `--navbar-stuck-padding`: carry the other two switches.
 - `scripts/spring.mjs`: simulates a damped spring and emits it as a CSS `linear()` easing of at most 40 points.
 - A Motion playground in the demo: a button to press, a menu, a dialog and a badge that lifts.
+- `.tabs` block and `tabs.js`: a jump list of in-page links without JavaScript; with it, a tab list with roles, a roving tabindex and arrow, Home and End keys.
+- `.toast` block and `toast.js`: toasts in a `.toast-region` that float in the top layer (inside an open modal, so they stay usable), dismiss themselves after five seconds unless danger, pause on hover and focus, and queue beyond three. Create them with `[data-toast]` or the `looseleaf:toast` event. Without JavaScript the region reads like alerts in the page.
+- `form-feedback.js`: native validation messages written into `.field__error` when a changed field is left, corrected while typing, and on submit with focus on the first problem; `[data-maxlength-counter]` counts the characters left. Forms with `novalidate` are left alone.
+- `password-reveal.js`: `input[type=password][data-reveal-password]` gets a Show button with `aria-pressed`, added by the script so it never appears without it.
+- `[data-motion-toggle]` in `theme.js`: reduces motion on the site (`data-motion="reduced"`), remembered like the theme.
+- `{% ll_messages style="toast" %}` in `django-looseleaf`.
+- Each behaviour is published on its own in `dist/behaviours/` (and the Django package's `static/looseleaf/behaviours/`) for selective import; `looseleaf.js` still joins them all.
+- Browser tests for the keyboard and screen reader contracts of tabs, toasts, form feedback, password reveal and the motion toggle.
 
 ### Changed
 
 - `--ease-spring` is a `linear()` spring curve instead of a `cubic-bezier()`.
+- `src/scripts/behaviors.js` is split into one module per concern in `src/scripts/behaviours/`, each with a header saying why it needs JavaScript and what happens without it. The demo loads `dist/looseleaf.js`.
 - A theme without `$motion` (exported from 2.1 or earlier) keeps its explicit motion tokens; the configurator moves them into `$motion` the first time the Motion panel is used.
 
 ## [2.1.0] - 2026-10-29

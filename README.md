@@ -305,8 +305,8 @@ looseleaf-ui/
 │   │                              pagination, breadcrumb, marquee, bg-mesh, swatch
 │   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors
 │   ├── 05-motion/             <-- entrances, press, height, page, reveal, stuck, lift
-│   └── scripts/               <-- behaviors.js, theme.js
-├── dist/                      <-- looseleaf.css, looseleaf.js, theme.js, tokens.resolved.json
+│   └── scripts/               <-- theme.js, behaviours/ (one module each, joined into looseleaf.js)
+├── dist/                      <-- looseleaf.css, looseleaf.js, behaviours/, theme.js, tokens.resolved.json
 ├── examples/index.html        <-- Living demo (also the configurator's preview)
 ├── tools/                     <-- configure.html, configure.js, configure.css, tokens-lib.js
 ├── index.html                 <-- GitHub Pages entry: redirects to the configurator
@@ -377,6 +377,8 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.modal` | Native `<dialog>`, animated in and out | `[open]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
+| `.toast` | Short-lived messages (`.toast__message`) inside a `.toast-region`; in the page flow without JavaScript, floating and self-dismissing with it | `data-status`: info, success, warning, danger; `data-duration`; the region gets `[data-js]` | `toast.js` adds `.toast__close` |
+| `.tabs` | `.tabs__list` of `.tabs__tab` links to sibling `.tabs__panel` sections; a jump list without JavaScript | `[aria-selected="true"]` on the tab, `[data-state="active"]` on the panel; the block gets `[data-js]` | `tabs.js` |
 | `.table` | Data tables inside a scrolling `.table-wrapper` | `[data-striped]`, `[data-hover]`, `[data-density="compact"]`; cells take `[data-align="end"]` | — |
 | `.prose` | Rich text you don't control (CMS, Markdown) | — | — |
 | `.pagination` | Page links (`.pagination__list`, `.pagination__link`, `.pagination__gap`) | `[aria-current="page"]`, `[aria-disabled="true"]` | — |
@@ -417,17 +419,36 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 ## 7. <a name="behaviors"></a> Behaviours & Theme Scripts
 
-### dist/looseleaf.js (src/scripts/behaviors.js)
+### dist/looseleaf.js (src/scripts/behaviours/)
 
-An enhancement, not a dependency: every menu, link and form already works without it, and `npm run test:nojs` checks that in CI. It uses event delegation on the document, exports nothing, works as a classic or module script, and is safe to include twice. What it adds:
+An enhancement, not a dependency: every menu, link and form already works without it, and `npm run test:nojs` checks that in CI. Native elements come first (`<details>`, `<dialog>`, Invoker Commands, form validation, `scroll-snap`); a module exists only where nothing native does the job, and its header says why. Each one uses event delegation on the document, exports nothing, works as a classic or module script, and is safe to include twice.
 
-1. Accordions: nothing needed. `.accordion` is built on native `<details name="…">`.
-2. Dropdowns: Escape closes and returns focus to the trigger; an outside click, choosing an item or moving focus away closes it; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; one menu is open at a time.
-3. Navbar: Escape closes the collapsed menu, and so does following one of its in-page links.
-4. Modals and drawers: buttons with `commandfor="dialog-id"` and `command="show-modal"` or `command="close"` work natively in browsers with Invoker Commands; the script reads the same attributes everywhere else. A backdrop click closes the dialog.
-5. Alerts: `.alert__close` animates the alert out, then removes it.
-6. Copy: `[data-copy]` copies its value, swaps the button label and announces the result through a polite live region.
-7. In-page links: CSS scrolls smoothly (unless motion is reduced); the script moves focus to the target (adding `tabindex="-1"` where needed) and closes the dialog it was clicked from.
+`looseleaf.js` joins all of them and is the recommended single include: 30.3 KB as shipped, 8.1 KB gzipped, a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.2.0/dist/behaviours/tabs.js"></script>
+```
+
+| Module | Why it needs JavaScript | Without it | Hooks |
+| --- | --- | --- | --- |
+| `dialog.js` | Invoker Commands fallback for older browsers; nothing native closes a dialog on a backdrop click | Dialogs open in browsers with Invoker Commands (Chrome 135, Safari 26.2, Firefox 144); content dialogs need a second route (below) | `button[commandfor][command="show-modal"]`, `command="close"` |
+| `menus.js` | `<details>` has no Escape, outside-click or focus-out close, arrow keys or one-open-at-a-time | Menus open and close from their summary; Tab reaches every item | `details.dropdown-wrapper`, `details.navbar__toggle` |
+| `focus-target.js` | Following an in-page link scrolls but leaves focus behind | The browser scrolls (smoothly, from CSS); focus stays put | `a[href^="#"]` |
+| `dismiss.js` | Removing an element needs script | The alert stays readable | `.alert__close` |
+| `copy.js` | Clipboard API | The text is on the page to copy by hand | `[data-copy]`, `data-copy-message` |
+| `tabs.js` | Tab list semantics: roles, `aria-selected`, roving tabindex, arrow, Home and End keys | A jump list of in-page links, with every panel showing | `.tabs` (see the block table) |
+| `toast.js` | Queue, auto-dismiss that pauses on hover and focus, staying above an open dialog, creating toasts from script | Server-rendered toasts stay where their region is, readable like alerts | `.toast-region`, `[data-toast]`, the `looseleaf:toast` event |
+| `form-feedback.js` | Native validation messages are bubbles that vanish, appear only on submit and leave the field unmarked | The browser's own validation on submit; server errors as usual | controls in a `.field` in a `<form>` without `novalidate`; `[data-maxlength-counter]` |
+| `password-reveal.js` | Showing a password means switching the input's type | An ordinary password field (the script adds the button, so none does nothing) | `input[type=password][data-reveal-password]` in an `.input-group` |
+| `legacy.js` | Keeps the 2.0 markup working through 2.x (below) | 2.0 markup does nothing | removed in 3.0 |
+
+Some details:
+
+- **Menus.** Escape closes a menu and returns focus to its trigger. ArrowDown or ArrowUp on the trigger opens it at the first or last item; arrows, Home and End move through the items. The collapsed navbar menu closes on Escape and when one of its in-page links is followed. The navbar's links themselves are a plain list that Tab moves through; arrow-key roving is for menus.
+- **Toasts.** Toasts dismiss themselves after five seconds (`data-duration` in milliseconds; `0` keeps a toast), pausing while the pointer or focus is on any of them. Danger toasts stay until dismissed and are announced with `role="alert"`. At most three show at once; the rest queue. Create one from a button with `data-toast="Saved."` and `data-toast-status="success"`, or from your own script with `document.dispatchEvent(new CustomEvent("looseleaf:toast", { detail: { message: "Saved.", status: "success" } }))`.
+- **Form feedback.** It leaves the browser's validation rules alone and changes only how the messages appear: written into the field's `.field__error` (created if missing, and linked with `aria-describedby`) as soon as the visitor leaves a field they changed, corrected as they type, and on submit with focus moved to the first problem. A form with `novalidate` is left untouched, because it validates on the server.
+
+Not included, on purpose: a combobox, a date picker and a carousel. They are bespoke and they are where component libraries bloat. Use `<input list>` with `<datalist>`, `<input type="date">` and the `.reel` composition with scroll snap.
 
 `theme.js` also sets `data-js` on `<html>`. CSS may hide something because a script will reveal it only under `[data-js]`.
 
@@ -479,11 +500,17 @@ The 2.0 markup still works through 2.x, with one console warning per kind; it st
 
 ### dist/theme.js (src/scripts/theme.js)
 
-Load it as a blocking script in `<head>` (or inline it) so the saved choice is applied before first paint. Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system.
+Load it as a blocking script in `<head>` (or inline it) so the saved choices are applied before first paint. It also sets `data-js` on `<html>` first of all.
+
+- Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system.
+- Any `[data-motion-toggle]` button switches between following the operating system and reducing motion on this site, which sets `data-motion="reduced"` on `<html>` (every duration becomes 0). `aria-pressed` is true while motion is reduced, and `[data-motion-label]` reads "On" or "Reduced".
 
 ```html
 <button class="button" type="button" data-variant="ghost" data-theme-toggle>
   Theme: <span data-theme-label>Auto</span>
+</button>
+<button class="button" type="button" data-variant="ghost" data-motion-toggle>
+  Motion: <span data-motion-label>On</span>
 </button>
 ```
 
@@ -499,7 +526,7 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
 | `npm run test:nojs` | The demo with JavaScript disabled at 360 and 1280 px: every nav link and dropdown item reachable, the accordion opens, the form submits, nothing interactive hidden, every dialog link also reachable outside a dialog |
-| `npm run test:browser` | Browser tests with Playwright: both reduced-motion switches leave no duration on the demo, axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
+| `npm run test:browser` | Browser tests with Playwright: the keyboard and screen reader contracts of tabs, toasts, form feedback, password reveal and the motion toggle; both reduced-motion switches leave no duration on the demo, axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
 
 ---
