@@ -209,7 +209,7 @@ textarea:not([rows]) {
   --color-surface-raised: var(--neutral-0);
   --color-surface-sunken: var(--neutral-100);
   --color-text: var(--neutral-900);
-  --color-text-muted: var(--neutral-500);
+  --color-text-muted: var(--neutral-600);
   --color-text-inverse: var(--neutral-0);
   --color-border: var(--neutral-200);
   --color-border-strong: var(--neutral-300);

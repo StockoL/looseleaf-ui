@@ -110,7 +110,7 @@ window.LooseLeafCurrentTokens = {
       "dark": "{neutral.100}"
     },
     "text-muted": {
-      "light": "{neutral.500}",
+      "light": "{neutral.600}",
       "dark": "{neutral.400}"
     },
     "text-inverse": {

@@ -8,6 +8,10 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 - `CHANGELOG.md`; each GitHub release now takes its notes from the matching section here.
 
+### Fixed
+
+- Muted text (`--color-text-muted`) now meets WCAG AA on sunken surfaces in the light scheme: it uses `neutral.600` (about 7:1 on `--color-surface-sunken`) instead of `neutral.500` (4.24:1). The contrast report and the configurator's contrast table now include this pairing.
+
 ### Changed
 
 - README: the browser baseline spells out that iOS and iPadOS 16 and earlier are not supported, and the versioning section explains what happens to a theme bundle across a major version.
