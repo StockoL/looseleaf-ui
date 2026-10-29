@@ -10,7 +10,8 @@
  * Theme: <button type="button" data-theme-toggle>Theme: <span data-theme-label>Auto</span></button>
  * Each click cycles auto -> light -> dark. aria-pressed reports whether dark
  * is forced ("mixed" while following the OS), and the label names the state.
- * "auto" removes data-theme and follows the OS.
+ * "auto" removes data-theme and follows the OS. Where view transitions exist
+ * and motion isn't reduced, the new theme grows as a circle from the toggle.
  *
  * Motion: <button type="button" data-motion-toggle>Motion: <span data-motion-label>On</span></button>
  * Each click switches between following the OS and reducing motion on this
@@ -77,17 +78,34 @@
   if (window[GUARD]) return;
   window[GUARD] = true;
 
+  const reducedMotion = () => motion === "reduced" || matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // The reveal: the change happens inside a view transition, centred on the toggle
+  function revealTheme(toggle) {
+    const update = () => {
+      apply();
+      sync();
+    };
+    if (typeof document.startViewTransition !== "function" || reducedMotion()) return update();
+    const box = toggle.getBoundingClientRect();
+    root.style.setProperty("--reveal-x", `${box.left + box.width / 2}px`);
+    root.style.setProperty("--reveal-y", `${box.top + box.height / 2}px`);
+    root.dataset.themeTransition = "";
+    document.startViewTransition(update).finished.finally(() => delete root.dataset.themeTransition);
+  }
+
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
-    if (event.target.closest("[data-theme-toggle]")) {
+    const themeToggle = event.target.closest("[data-theme-toggle]");
+    if (themeToggle) {
       theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
       store(THEME_KEY, theme, "auto");
-    } else if (event.target.closest("[data-motion-toggle]")) {
-      motion = motion === "reduced" ? "auto" : "reduced";
-      store(MOTION_KEY, motion, "auto");
-    } else {
+      revealTheme(themeToggle);
       return;
     }
+    if (!event.target.closest("[data-motion-toggle]")) return;
+    motion = motion === "reduced" ? "auto" : "reduced";
+    store(MOTION_KEY, motion, "auto");
     apply();
     sync();
   });
