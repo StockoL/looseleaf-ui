@@ -32,6 +32,20 @@
   color: var(--color-text-muted);
 }
 
+/* Numbers that line up and read as labels; the <ol> stays a real list */
+.prose ol > li::marker {
+  content: counter(list-item) ".2";
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}
+
+/* No lonely last word on a line, where the browser can balance it */
+@supports (text-wrap: pretty) {
+  .prose p {
+    text-wrap: pretty;
+  }
+}
+
 /* --- Quotes --- */
 .prose blockquote {
   padding-inline-start: var(--space-s);

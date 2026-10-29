@@ -29,6 +29,11 @@
   padding-block-start: var(--safe-top);
 }
 
+/* In-page links land below a sticky navbar, not under it */
+:root:has(.navbar[data-sticky]) {
+  scroll-padding-block-start: calc(var(--target-min) + var(--space-s) * 2 + var(--safe-top));
+}
+
 .navbar__brand {
   font-weight: var(--weight-bold);
   font-size: var(--text-lead);
