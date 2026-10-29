@@ -47,6 +47,29 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+  npm:
+    name: Publish looseleaf-ui to npm
+    needs: ci
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/looseleaf-ui
+    permissions:
+      contents: read
+      id-token: write # trusted publishing (OIDC) and provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@11 # trusted publishing needs npm 11.5 or later
+      - run: npm publish --access public
+        env:
+          # Only used until trusted publishing is configured on npmjs.com (npm needs
+          # the package to exist first); after that the OIDC token takes over.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   pypi:
     name: Publish django-looseleaf to PyPI
     needs: ci
