@@ -40,12 +40,14 @@
 @import "03-blocks/input-group.css" layer(blocks);
 @import "03-blocks/badge.css" layer(blocks);
 @import "03-blocks/accordion.css" layer(blocks);
+@import "03-blocks/tabs.css" layer(blocks);
 @import "03-blocks/dropdown.css" layer(blocks);
 @import "03-blocks/card.css" layer(blocks);
 @import "03-blocks/navbar.css" layer(blocks);
 @import "03-blocks/modal.css" layer(blocks);
 @import "03-blocks/offcanvas.css" layer(blocks);
 @import "03-blocks/alert.css" layer(blocks);
+@import "03-blocks/toast.css" layer(blocks);
 @import "03-blocks/table.css" layer(blocks);
 @import "03-blocks/prose.css" layer(blocks);
 @import "03-blocks/pagination.css" layer(blocks);
