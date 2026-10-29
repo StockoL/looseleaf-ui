@@ -10,6 +10,8 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 - The npm package `looseleaf-ui` is published by the release workflow alongside `django-looseleaf`.
 - `CHANGELOG.md`; each GitHub release now takes its notes from the matching section here.
 - [docs/CONFIGURATOR.md](docs/CONFIGURATOR.md): a walkthrough of the token configurator with screenshots, linked from both READMEs.
+- `npm run test:nojs` and a CI job: with JavaScript disabled, every nav link and dropdown item is reachable at 360 and 1280 px, the accordion opens, the form submits, nothing interactive is hidden, and every link inside a dialog is also reachable outside one.
+- `theme.js` sets `data-js` on `<html>` as its first act, so CSS can tell when scripts run.
 - Browser tests (`npm run test:browser`, Playwright): axe-core WCAG 2.2 AA checks on the demo in both schemes and on the configurator, and full-page visual regression of the demo at 360, 768 and 1280 px in light and dark, run in CI.
 
 ### Fixed
@@ -18,6 +20,15 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 - The demo's scrolling `.reel` is keyboard-focusable, and the README and the composition's comments say how to make any scrolling reel accessible.
 
 ### Changed
+
+- `.dropdown` is a native `<details class="dropdown-wrapper">` with a `<summary>` trigger, so it opens with no JavaScript. `looseleaf.js` adds Escape, outside-click and focus-out closing, arrow keys and one open menu at a time. The `role="menu"` roles are gone: without the script the menu is a disclosure, not an ARIA menu.
+- The collapsed `.navbar` menu is opened by an empty `<details class="navbar__toggle">` before `.navbar__menu`, shown through `.navbar:has()`, so it works with no JavaScript. Give its `<summary>` `aria-label` and `aria-controls`.
+- Modals and drawers open with Invoker Commands (`commandfor="id" command="show-modal"`, `command="close"`). `looseleaf.js` supplies the same attributes in browsers without them, and still closes a dialog on a backdrop click.
+- In-page links scroll smoothly from CSS (`scroll-behavior`, only without reduced motion); `looseleaf.js` now only moves focus to the target.
+
+### Deprecated
+
+- The 2.0 scripted markup still works through 2.x and logs one console warning per kind; it is removed in 3.0: `<div class="dropdown-wrapper">` with `[data-toggle="dropdown"]`, `<button class="navbar__toggle">`, and `[data-open-dialog]` / `[data-close-dialog]`.
 
 - README: the browser baseline spells out that iOS and iPadOS 16 and earlier are not supported, and the versioning section explains what happens to a theme bundle across a major version.
 
