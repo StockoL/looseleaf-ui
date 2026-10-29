@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for LooseLeaf UI. $utopia and $palette are inputs: the neutral, action, accent, status, step and space groups are derived from them at build time (scripts/tokens-core.mjs). Do not hand-edit derived values; change the inputs, or add an explicit value to a derived group to override it. Everything else is a semantic (tier 2) token named by purpose. Run npm run build after editing; see docs/TOKENS.md for the generated reference.",
+  "_comment": "Single source of truth for LooseLeaf UI. $utopia, $palette and $motion are inputs: the neutral, action, accent, status, step and space groups, and the motion tokens, are derived from them at build time (scripts/tokens-core.mjs). Do not hand-edit derived values; change the inputs, or add an explicit value to a derived group to override it. Everything else is a semantic (tier 2) token named by purpose. Run npm run build after editing; see docs/TOKENS.md for the generated reference.",
 
   "$utopia": {
     "minViewport": 320,
@@ -47,6 +47,17 @@
         "dark": { "base": 0.7, "surface": 0.22, "border": 0.35, "text": 0.85 }
       }
     }
+  },
+
+  "$motion": {
+    "preset": "snappy",
+    "spring": { "mass": 1, "stiffness": 180, "damping": 12 },
+    "durations": { "quick": 150, "base": 250, "slow": 400 },
+    "press": 0.97,
+    "lift": "3xs",
+    "reveal": true,
+    "pageTransition": true,
+    "stuck": true
   },
 
   "color": {
@@ -141,21 +152,15 @@
     "overlay": { "light": "0 10px 25px rgb(0 0 0 / 0.15)", "dark": "0 10px 25px rgb(0 0 0 / 0.6)" }
   },
   "duration": {
-    "$purpose": "Motion durations. Entrances run slower than exits.",
-    "quick": "150ms",
-    "base": "250ms",
-    "slow": "400ms",
+    "$purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits.",
     "enter": "{duration.base}",
     "exit": "{duration.quick}"
   },
   "ease": {
-    "$purpose": "Motion easing curves. Out-expo is for exits.",
+    "$purpose": "Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits.",
     "standard": "cubic-bezier(0.4, 0, 0.2, 1)",
-    "spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
     "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)"
   },
-  "press-scale": { "$value": "0.97", "$purpose": "Scale of a pressed button or choice (:active feedback)." },
-  "lift-distance": { "$value": "{space.3xs}", "$purpose": "How far .anim-lift and interactive cards rise on hover." },
   "reveal-distance": { "$value": "{space.s}", "$purpose": "How far a [data-reveal] element travels as it scrolls into view." },
   "layer": {
     "$purpose": "Stacking order. Dialogs use the top layer and need no token.",

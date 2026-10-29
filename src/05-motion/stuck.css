@@ -15,7 +15,7 @@
 
   @container navbar scroll-state(stuck: top) {
     .navbar > * {
-      --navbar-padding: var(--space-2xs);
+      --navbar-padding: var(--navbar-stuck-padding);
     }
   }
 }

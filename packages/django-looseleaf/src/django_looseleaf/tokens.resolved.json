@@ -603,6 +603,132 @@
     "overridden": false,
     "purpose": "Raw Utopia fluid space scale and one-up pairs, derived from $utopia.space."
   },
+  "duration.quick": {
+    "name": "--duration-quick",
+    "tier": 2,
+    "light": "150ms",
+    "dark": "150ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.base": {
+    "name": "--duration-base",
+    "tier": 2,
+    "light": "250ms",
+    "dark": "250ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.slow": {
+    "name": "--duration-slow",
+    "tier": 2,
+    "light": "400ms",
+    "dark": "400ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.spring": {
+    "name": "--duration-spring",
+    "tier": 2,
+    "light": "1132ms",
+    "dark": "1132ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.page": {
+    "name": "--duration-page",
+    "tier": 2,
+    "light": "250ms",
+    "dark": "250ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.enter": {
+    "name": "--duration-enter",
+    "tier": 2,
+    "light": "250ms",
+    "dark": "250ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "duration.exit": {
+    "name": "--duration-exit",
+    "tier": 2,
+    "light": "150ms",
+    "dark": "150ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
+  },
+  "ease.spring": {
+    "name": "--ease-spring",
+    "tier": 2,
+    "light": "linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1)",
+    "dark": "linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits."
+  },
+  "ease.standard": {
+    "name": "--ease-standard",
+    "tier": 2,
+    "light": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "dark": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits."
+  },
+  "ease.out-expo": {
+    "name": "--ease-out-expo",
+    "tier": 2,
+    "light": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "dark": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits."
+  },
+  "press.scale": {
+    "name": "--press-scale",
+    "tier": 2,
+    "light": "0.97",
+    "dark": "0.97",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Scale of a pressed button or choice, from $motion.press."
+  },
+  "lift.distance": {
+    "name": "--lift-distance",
+    "tier": 2,
+    "light": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
+    "dark": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "How far .anim-lift and interactive cards rise on hover, from $motion.lift."
+  },
+  "reveal.animation": {
+    "name": "--reveal-animation",
+    "tier": 2,
+    "light": "ll-reveal",
+    "dark": "ll-reveal",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Scroll reveal for [data-reveal]: the animation, or none when $motion.reveal is off."
+  },
+  "navbar.stuck-padding": {
+    "name": "--navbar-stuck-padding",
+    "tier": 2,
+    "light": "clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem)",
+    "dark": "clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off."
+  },
   "color.surface": {
     "name": "--color-surface",
     "tier": 2,
@@ -1115,96 +1241,6 @@
     "themed": true,
     "overridden": false,
     "purpose": "Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas."
-  },
-  "duration.quick": {
-    "name": "--duration-quick",
-    "tier": 2,
-    "light": "150ms",
-    "dark": "150ms",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion durations. Entrances run slower than exits."
-  },
-  "duration.base": {
-    "name": "--duration-base",
-    "tier": 2,
-    "light": "250ms",
-    "dark": "250ms",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion durations. Entrances run slower than exits."
-  },
-  "duration.slow": {
-    "name": "--duration-slow",
-    "tier": 2,
-    "light": "400ms",
-    "dark": "400ms",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion durations. Entrances run slower than exits."
-  },
-  "duration.enter": {
-    "name": "--duration-enter",
-    "tier": 2,
-    "light": "250ms",
-    "dark": "250ms",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion durations. Entrances run slower than exits."
-  },
-  "duration.exit": {
-    "name": "--duration-exit",
-    "tier": 2,
-    "light": "150ms",
-    "dark": "150ms",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion durations. Entrances run slower than exits."
-  },
-  "ease.standard": {
-    "name": "--ease-standard",
-    "tier": 2,
-    "light": "cubic-bezier(0.4, 0, 0.2, 1)",
-    "dark": "cubic-bezier(0.4, 0, 0.2, 1)",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion easing curves. Out-expo is for exits."
-  },
-  "ease.spring": {
-    "name": "--ease-spring",
-    "tier": 2,
-    "light": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-    "dark": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion easing curves. Out-expo is for exits."
-  },
-  "ease.out-expo": {
-    "name": "--ease-out-expo",
-    "tier": 2,
-    "light": "cubic-bezier(0.16, 1, 0.3, 1)",
-    "dark": "cubic-bezier(0.16, 1, 0.3, 1)",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Motion easing curves. Out-expo is for exits."
-  },
-  "press-scale": {
-    "name": "--press-scale",
-    "tier": 2,
-    "light": "0.97",
-    "dark": "0.97",
-    "themed": false,
-    "overridden": false,
-    "purpose": "Scale of a pressed button or choice (:active feedback)."
-  },
-  "lift-distance": {
-    "name": "--lift-distance",
-    "tier": 2,
-    "light": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
-    "dark": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
-    "themed": false,
-    "overridden": false,
-    "purpose": "How far .anim-lift and interactive cards rise on hover."
   },
   "reveal-distance": {
     "name": "--reveal-distance",

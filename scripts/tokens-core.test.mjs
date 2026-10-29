@@ -150,3 +150,52 @@ test("font helpers find web fonts layered on system stacks", () => {
   );
   assert.equal(fontImports({ font: { body: stack } }), "");
 });
+
+const space = { "3xs": "4px", "2xs": "8px", s: "16px" };
+
+test("$motion derives the motion tokens as tier 2", () => {
+  const { tokens } = compile({ space, $motion: { spring: { mass: 1, stiffness: 180, damping: 12 }, durations: { quick: 100, base: 200, slow: 300 } } });
+  const t = byName(tokens);
+  assert.equal(t["--duration-quick"].value, "100ms");
+  assert.equal(t["--duration-slow"].value, "300ms");
+  assert.match(t["--duration-spring"].value, /^\d+ms$/);
+  assert.match(t["--ease-spring"].value, /^linear\(0, .+, 1\)$/);
+  assert.equal(t["--press-scale"].value, "0.97");
+  assert.equal(t["--lift-distance"].light, "4px");
+  assert.equal(t["--duration-quick"].tier, 2);
+  assert.equal(t["--ease-spring"].derived, true);
+});
+
+test("$motion switches become token values the motion layer reads", () => {
+  const on = byName(compile({ space, duration: {}, $motion: {} }).tokens);
+  assert.equal(on["--reveal-animation"].value, "ll-reveal");
+  assert.equal(on["--duration-page"].value, "var(--duration-base)");
+  assert.equal(on["--navbar-stuck-padding"].value, "var(--space-2xs)");
+
+  const off = byName(compile({ space, $motion: { reveal: false, pageTransition: false, stuck: false, lift: "none" } }).tokens);
+  assert.equal(off["--reveal-animation"].value, "none");
+  assert.equal(off["--duration-page"].value, "0ms");
+  assert.equal(off["--navbar-stuck-padding"].value, "var(--space-s)");
+  assert.equal(off["--lift-distance"].value, "0px");
+});
+
+test("explicit motion tokens sit beside the derived ones and can override them", () => {
+  const t = byName(compile({ space, $motion: {}, duration: { enter: "{duration.base}", quick: "90ms" } }).tokens);
+  assert.equal(t["--duration-enter"].light, "250ms");
+  assert.equal(t["--duration-quick"].value, "90ms");
+  assert.equal(t["--duration-quick"].overridden, true);
+});
+
+test("a file without $motion keeps its explicit motion tokens", () => {
+  const t = byName(compile({ duration: { quick: "150ms" }, ease: { spring: "cubic-bezier(0.2, 0, 0, 1)" } }).tokens);
+  assert.equal(t["--duration-quick"].value, "150ms");
+  assert.equal(t["--ease-spring"].value, "cubic-bezier(0.2, 0, 0, 1)");
+  assert.equal(t["--reveal-animation"], undefined);
+});
+
+test("invalid $motion values are rejected with their path", () => {
+  assert.throws(() => compile({ space, $motion: { durations: { base: -1 } } }), /\$motion\.durations\.base/);
+  assert.throws(() => compile({ space, $motion: { press: 1.5 } }), /\$motion\.press/);
+  assert.throws(() => compile({ space, $motion: { lift: "huge" } }), /\$motion\.lift/);
+  assert.throws(() => compile({ space, $motion: { spring: { mass: 0, stiffness: 1, damping: 1 } } }), /\$motion\.spring\.mass/);
+});

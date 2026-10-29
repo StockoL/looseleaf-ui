@@ -92,6 +92,32 @@
   --space-m-l: clamp(1.5rem, 1.24rem + 1.3vw, 2.25rem);
   --space-l-xl: clamp(2rem, 1.52rem + 2.39vw, 3.38rem);
 
+  /* --- duration: Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits. --- */
+  --duration-quick: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-spring: 1132ms;
+  --duration-page: var(--duration-base);
+  --duration-enter: var(--duration-base);
+  --duration-exit: var(--duration-quick);
+
+  /* --- ease: Motion easing curves. Spring is derived from $motion.spring; out-expo is for exits. --- */
+  --ease-spring: linear(0, 0.0204 1.33%, 0.083 2.83%, 0.2027 4.68%, 0.443 7.6%, 0.7643 11.4%, 0.939 13.87%, 1.0629 16.17%, 1.1469 18.46%, 1.1941 20.85%, 1.2059 23.59%, 1.1754 27.03%, 1.0106 37.1%, 0.9664 42.14%, 0.959 48.06%, 1.0069 65.19%, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- press: Scale of a pressed button or choice, from $motion.press. --- */
+  --press-scale: 0.97;
+
+  /* --- lift: How far .anim-lift and interactive cards rise on hover, from $motion.lift. --- */
+  --lift-distance: var(--space-3xs);
+
+  /* --- reveal: Scroll reveal for [data-reveal]: the animation, or none when $motion.reveal is off. --- */
+  --reveal-animation: ll-reveal;
+
+  /* --- navbar: Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off. --- */
+  --navbar-stuck-padding: var(--space-2xs);
+
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-0);
   --color-surface-raised: var(--neutral-0);
@@ -172,24 +198,6 @@
   /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
   --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
   --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
-
-  /* --- duration: Motion durations. Entrances run slower than exits. --- */
-  --duration-quick: 150ms;
-  --duration-base: 250ms;
-  --duration-slow: 400ms;
-  --duration-enter: var(--duration-base);
-  --duration-exit: var(--duration-quick);
-
-  /* --- ease: Motion easing curves. Out-expo is for exits. --- */
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* --- press-scale: Scale of a pressed button or choice (:active feedback). --- */
-  --press-scale: 0.97;
-
-  /* --- lift-distance: How far .anim-lift and interactive cards rise on hover. --- */
-  --lift-distance: var(--space-3xs);
 
   /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
   --reveal-distance: var(--space-s);

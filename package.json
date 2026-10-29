@@ -21,7 +21,8 @@
     "scripts/cli.js",
     "scripts/tokens-core.mjs",
     "scripts/utopia.mjs",
-    "scripts/color.mjs"
+    "scripts/color.mjs",
+    "scripts/spring.mjs"
   ],
   "scripts": {
     "build:tokens": "node scripts/build-tokens.js",
