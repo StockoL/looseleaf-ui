@@ -18,6 +18,9 @@ SYNCED = {
     "theme.js": PACKAGE_DIR / "static" / "looseleaf" / "theme.js",
     "tokens.resolved.json": PACKAGE_DIR / "tokens.resolved.json",
 }
+if (REPO_DIST / "behaviours").is_dir():
+    for module in sorted((REPO_DIST / "behaviours").glob("*.js")):
+        SYNCED[f"behaviours/{module.name}"] = PACKAGE_DIR / "static" / "looseleaf" / "behaviours" / module.name
 
 
 def digest(path):

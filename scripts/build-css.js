@@ -1,9 +1,10 @@
 /**
  * LooseLeaf UI - CSS and Script Bundler
  * Inlines the @import chain from src/index.css into dist/looseleaf.css and
- * copies the drop-in scripts to dist/ (no bundling needed):
- *   src/scripts/behaviors.js -> dist/looseleaf.js
- *   src/scripts/theme.js     -> dist/theme.js
+ * builds the drop-in scripts:
+ *   src/scripts/behaviours/*.js -> dist/looseleaf.js (joined, in the order of index.json)
+ *                               -> dist/behaviours/<name>.js (each on its own, for selective import)
+ *   src/scripts/theme.js        -> dist/theme.js
  * Each output opens with the MIT notice, which must stay with the file.
  */
 
@@ -22,10 +23,17 @@ const copyright = fs.readFileSync(path.join(rootDir, "LICENSE"), "utf8").match(/
 const notice = `/*! LooseLeaf UI v${version} | MIT License | ${copyright} | https://github.com/StockoL/looseleaf-ui */
 `;
 
-const SCRIPTS = [
-  { from: "behaviors.js", to: "looseleaf.js" },
-  { from: "theme.js", to: "theme.js" },
-];
+const behavioursDir = path.join(srcDir, "scripts", "behaviours");
+
+const LOOSELEAF_JS_HEADER = `/**
+ * LooseLeaf UI - Behaviours
+ * Enhancement only: every control already works without this file. Each module
+ * below says why it needs script and what happens without it. They are also
+ * published one by one in dist/behaviours/ for selective import. Event delegation
+ * on the document; exports nothing; works as a classic or a module script; safe
+ * to include twice, or alongside the individual modules.
+ */
+`;
 
 // Every partial must be imported into a cascade layer: @import "path" layer(name);
 const layeredImport = /@import\s+"([^"]+)"\s+layer\(([^)]+)\)\s*;/g;
@@ -75,11 +83,24 @@ try {
   fs.mkdirSync(distDir, { recursive: true });
   fs.writeFileSync(cssOutputPath, header + bundled, "utf8");
 
-  for (const { from, to } of SCRIPTS) {
-    fs.writeFileSync(path.join(distDir, to), notice + readSource(path.join(srcDir, "scripts", from)), "utf8");
-  }
+  const { modules } = JSON.parse(readSource(path.join(behavioursDir, "index.json")));
+  const onDisk = fs.readdirSync(behavioursDir).filter((file) => file.endsWith(".js")).map((file) => file.slice(0, -3));
+  const unlisted = onDisk.filter((name) => !modules.includes(name));
+  if (unlisted.length) throw new Error(`src/scripts/behaviours/index.json does not list: ${unlisted.join(", ")}`);
 
-  console.log("✨ LooseLeaf UI bundled dist/looseleaf.css and copied dist/looseleaf.js, dist/theme.js");
+  const behavioursOut = path.join(distDir, "behaviours");
+  fs.rmSync(behavioursOut, { recursive: true, force: true });
+  fs.mkdirSync(behavioursOut);
+  const sources = modules.map((name) => {
+    const source = readSource(path.join(behavioursDir, `${name}.js`));
+    fs.writeFileSync(path.join(behavioursOut, `${name}.js`), notice + source, "utf8");
+    return source.trim();
+  });
+  fs.writeFileSync(path.join(distDir, "looseleaf.js"), `${notice}${LOOSELEAF_JS_HEADER}\n${sources.join("\n\n")}\n`, "utf8");
+  fs.writeFileSync(path.join(distDir, "theme.js"), notice + readSource(path.join(srcDir, "scripts", "theme.js")), "utf8");
+
+  const size = (file) => `${(fs.statSync(path.join(distDir, file)).size / 1024).toFixed(1)} KB`;
+  console.log(`✨ LooseLeaf UI bundled dist/looseleaf.css, dist/looseleaf.js (${modules.length} modules, ${size("looseleaf.js")}), dist/behaviours/ and dist/theme.js`);
 } catch (error) {
   console.error(`❌ CSS bundling failed: ${error.message}`);
   process.exit(1);

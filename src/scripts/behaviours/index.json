@@ -1,0 +1,4 @@
+{
+  "_comment": "Order the modules are joined in for dist/looseleaf.js. Each is also copied to dist/behaviours/<name>.js on its own.",
+  "modules": ["dialog", "menus", "focus-target", "dismiss", "copy", "legacy"]
+}
