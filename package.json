@@ -23,6 +23,7 @@
     "build:django": "node scripts/build-django.js",
     "check": "node scripts/check.js",
     "test": "node --test \"scripts/*.test.mjs\"",
+    "test:browser": "playwright test",
     "bump": "node scripts/bump-version.js",
     "build": "npm run build:tokens && npm run build:tools && npm run build:css && npm run build:django && npm run check"
   },
@@ -42,5 +43,9 @@
   "bugs": {
     "url": "https://github.com/StockoL/looseleaf-ui/issues"
   },
-  "homepage": "https://github.com/StockoL/looseleaf-ui#readme"
+  "homepage": "https://github.com/StockoL/looseleaf-ui#readme",
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1"
+  }
 }

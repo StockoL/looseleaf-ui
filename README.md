@@ -49,7 +49,7 @@ The same files are attached to every [GitHub release](https://github.com/StockoL
 
 Then compose with the classes below. [examples/index.html](examples/index.html) is the living documentation: one section per composition and block, built with nothing but the shipped files.
 
-Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade layers, container queries, `:has()`, `color-mix()` and `@starting-style` are used freely.
+Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade layers, container queries, `:has()`, `color-mix()` and `@starting-style` are used freely. On Apple devices that means **iOS and iPadOS 17.4 or later**; iOS 16 and earlier are not supported (exclusive `<details name>` accordions need Safari 17.2, and dialog and drawer animations need 17.4).
 
 ### Django
 
@@ -229,7 +229,7 @@ Compositions govern spacing and alignment without injecting aesthetic styling. T
 | `.sidebar` | Target-width panel beside fluid content, stacking when space runs out | `--sidebar-target-width`, `--sidebar-content-min-width`, `--sidebar-space`, `--sidebar-align`, `[data-side="right"]`, `[data-sticky]` (with `--sticky-offset`) |
 | `.switcher` | Row that becomes a stack below a threshold | `--switcher-threshold` |
 | `.grid` | Auto-filling intrinsic grid | `--grid-min-item-size`, `--grid-placement` |
-| `.reel` | Horizontal scroll-snap strip | gap from `--gutter` |
+| `.reel` | Horizontal scroll-snap strip; give a scrolling reel `tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it | gap from `--gutter` |
 | `.frame` | Crops media to an aspect ratio | `--frame-ratio` |
 | `.bento` | Dense intrinsic grid with spanning items | `--bento-min`, `--bento-row-min`, `--bento-space`; items take `[data-span]` and `[data-row-span]` |
 
@@ -313,7 +313,14 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
+| `npm run test:browser` | Browser tests with Playwright: axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
+
+---
+
+### Visual regression baselines
+
+Screenshots are compared pixel for pixel against committed baselines in `tests/browser/__screenshots__/`. Fonts render differently on each operating system, so only Linux baselines are committed, and CI renders and compares them. After an intended visual change, run the **Update visual baselines** workflow from the Actions tab, download its `visual-baselines` artifact into `tests/browser/__screenshots__/`, and commit it. Locally, the first run writes baselines for your own system (git-ignored) and later runs compare against them, which is handy before and after a refactor.
 
 ---
 
@@ -325,9 +332,12 @@ The npm package and `django-looseleaf` share one version and follow [semantic ve
 - **Minor**: new tokens, blocks, compositions or exceptions.
 - **Patch**: visual refinements within the existing tokens, and fixes.
 
-Theme bundles record the version they were exported from. `django-looseleaf` warns (`looseleaf.W004`) when a theme comes from a different major version; within a major, any token a theme doesn't know falls back to its default, so older themes keep working.
+Theme bundles record the version they were exported from (`$version` in both JSON files). What that means across releases:
 
-To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three, reruns CI, attaches the built files to a GitHub release and publishes `django-looseleaf` to PyPI with trusted publishing.
+- **Same major (2.0 → 2.4):** the theme keeps working. Tokens added after it was exported fall back to their defaults until you re-export.
+- **New major (2.x → 3.0):** token names may have changed, and a renamed token in an old `looseleaf-tokens.css` simply stops applying, so the new default shows through in that spot. `django-looseleaf` warns about this (`looseleaf.W004`); plain-HTML sites get no warning, so keep the CDN version and the theme's major in step. To move a theme forward, import its `design-tokens.json` into the configurator for the new version and export the bundle again.
+
+To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; move the Unreleased notes in [CHANGELOG.md](CHANGELOG.md) under `## [2.1.0] - <date>`; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three versions or has no changelog entry, reruns CI, creates the GitHub release with the changelog section as its notes and the built files attached, and publishes `django-looseleaf` to PyPI with trusted publishing.
 
 ---
 

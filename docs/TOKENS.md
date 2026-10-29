@@ -23,8 +23,10 @@ WCAG 2.x ratios for the semantic text/surface pairings. Target: 4.5:1 (AA).
 | --- | --- | --- | --- | --- |
 | `color.text` | `color.surface` | light | 17.69 | pass |
 | `color.text` | `color.surface` | dark | 18.38 | pass |
-| `color.text-muted` | `color.surface` | light | 4.64 | pass |
+| `color.text-muted` | `color.surface` | light | 7.76 | pass |
 | `color.text-muted` | `color.surface` | dark | 7.83 | pass |
+| `color.text-muted` | `color.surface-sunken` | light | 7.09 | pass |
+| `color.text-muted` | `color.surface-sunken` | dark | 5.86 | pass |
 | `color.text` | `color.surface-sunken` | light | 16.17 | pass |
 | `color.text` | `color.surface-sunken` | dark | 13.76 | pass |
 | `color.action-text` | `color.action` | light | 4.72 | pass |
@@ -182,7 +184,7 @@ Semantic colour roles. The only colour tokens blocks may use.
 | `--color-surface-raised` | Semantic | `#ffffff` | `#18181d` |  |
 | `--color-surface-sunken` | Semantic | `#f4f4fc` | `#26262b` |  |
 | `--color-text` | Semantic | `#18181d` | `#f4f4fc` |  |
-| `--color-text-muted` | Semantic | `#74747a` | `#a1a1a8` |  |
+| `--color-text-muted` | Semantic | `#525258` | `#a1a1a8` |  |
 | `--color-text-inverse` | Semantic | `#ffffff` | `#07070b` |  |
 | `--color-border` | Semantic | `#e4e4eb` | `#3f3f45` |  |
 | `--color-border-strong` | Semantic | `#d3d3db` | `#525258` |  |

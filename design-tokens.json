@@ -55,7 +55,7 @@
     "surface-raised": { "light": "{neutral.0}", "dark": "{neutral.900}" },
     "surface-sunken": { "light": "{neutral.100}", "dark": "{neutral.800}" },
     "text": { "light": "{neutral.900}", "dark": "{neutral.100}" },
-    "text-muted": { "light": "{neutral.500}", "dark": "{neutral.400}" },
+    "text-muted": { "light": "{neutral.600}", "dark": "{neutral.400}" },
     "text-inverse": { "light": "{neutral.0}", "dark": "{neutral.950}" },
     "border": { "light": "{neutral.200}", "dark": "{neutral.700}" },
     "border-strong": { "light": "{neutral.300}", "dark": "{neutral.600}" },

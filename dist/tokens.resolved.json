@@ -642,7 +642,7 @@
   "color.text-muted": {
     "name": "--color-text-muted",
     "tier": 2,
-    "light": "#74747a",
+    "light": "#525258",
     "dark": "#a1a1a8",
     "themed": true,
     "overridden": false,
