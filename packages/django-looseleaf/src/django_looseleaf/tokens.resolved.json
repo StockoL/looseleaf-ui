@@ -1,5 +1,5 @@
 {
-  "$version": "2.0.0",
+  "$version": "2.1.0",
   "neutral.0": {
     "name": "--neutral-0",
     "tier": 1,
@@ -1123,7 +1123,7 @@
     "dark": "150ms",
     "themed": false,
     "overridden": false,
-    "purpose": "Motion durations."
+    "purpose": "Motion durations. Entrances run slower than exits."
   },
   "duration.base": {
     "name": "--duration-base",
@@ -1132,7 +1132,7 @@
     "dark": "250ms",
     "themed": false,
     "overridden": false,
-    "purpose": "Motion durations."
+    "purpose": "Motion durations. Entrances run slower than exits."
   },
   "duration.slow": {
     "name": "--duration-slow",
@@ -1141,7 +1141,25 @@
     "dark": "400ms",
     "themed": false,
     "overridden": false,
-    "purpose": "Motion durations."
+    "purpose": "Motion durations. Entrances run slower than exits."
+  },
+  "duration.enter": {
+    "name": "--duration-enter",
+    "tier": 2,
+    "light": "250ms",
+    "dark": "250ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Entrances run slower than exits."
+  },
+  "duration.exit": {
+    "name": "--duration-exit",
+    "tier": 2,
+    "light": "150ms",
+    "dark": "150ms",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion durations. Entrances run slower than exits."
   },
   "ease.standard": {
     "name": "--ease-standard",
@@ -1150,7 +1168,7 @@
     "dark": "cubic-bezier(0.4, 0, 0.2, 1)",
     "themed": false,
     "overridden": false,
-    "purpose": "Motion easing curves."
+    "purpose": "Motion easing curves. Out-expo is for exits."
   },
   "ease.spring": {
     "name": "--ease-spring",
@@ -1159,7 +1177,43 @@
     "dark": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
     "themed": false,
     "overridden": false,
-    "purpose": "Motion easing curves."
+    "purpose": "Motion easing curves. Out-expo is for exits."
+  },
+  "ease.out-expo": {
+    "name": "--ease-out-expo",
+    "tier": 2,
+    "light": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "dark": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Motion easing curves. Out-expo is for exits."
+  },
+  "press-scale": {
+    "name": "--press-scale",
+    "tier": 2,
+    "light": "0.97",
+    "dark": "0.97",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Scale of a pressed button or choice (:active feedback)."
+  },
+  "lift-distance": {
+    "name": "--lift-distance",
+    "tier": 2,
+    "light": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
+    "dark": "clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "How far .anim-lift and interactive cards rise on hover."
+  },
+  "reveal-distance": {
+    "name": "--reveal-distance",
+    "tier": 2,
+    "light": "clamp(1rem, 0.96rem + 0.22vw, 1.13rem)",
+    "dark": "clamp(1rem, 0.96rem + 0.22vw, 1.13rem)",
+    "themed": false,
+    "overridden": false,
+    "purpose": "How far a [data-reveal] element travels as it scrolls into view."
   },
   "layer.raised": {
     "name": "--layer-raised",

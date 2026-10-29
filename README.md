@@ -28,11 +28,13 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
    - [Tier 1: Global Layer & Reset](#tier-1)
    - [Tier 2: Compositions](#compositions)
    - [Tier 3: Blocks](#blocks)
+   - [Motion layer](#motion)
    - [Tier 4: Utilities](#utilities)
 7. [Behaviours & Theme Scripts](#behaviors)
 8. [Commands](#commands)
 9. [Versioning & Releases](#versioning)
-10. [Authors & Acknowledgements](#authors)
+10. [Crediting LooseLeaf UI in your project](#credit)
+11. [Authors & Acknowledgements](#authors)
 
 ---
 
@@ -47,10 +49,10 @@ Load the release files from jsDelivr, always pinned to a tag (never `@main`), an
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.js" defer></script>
 ```
 
 The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
@@ -138,10 +140,10 @@ Put `looseleaf-tokens.css` wherever you serve static files and load it **after**
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.js" defer></script>
 ```
 
 Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
@@ -156,7 +158,7 @@ npx looseleaf-ui compile design-tokens.json --out static/theme/
 
 That writes `looseleaf-tokens.css` and `tokens.resolved.json` into the folder, and you continue with Route A or B. Node 20+ is the only requirement. For the same `design-tokens.json`, the CSS is byte-identical to the configurator's export; the JSON differs only in its `$generated` timestamp.
 
-The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub:
+The `looseleaf-ui` npm package is published from 2.1.0 on. The same command also runs straight from GitHub, with nothing published:
 
 ```bash
 npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/
@@ -299,7 +301,8 @@ looseleaf-ui/
 │   │                              choice, input-group, badge, accordion, dropdown, card,
 │   │                              navbar, modal, offcanvas, alert, table, prose,
 │   │                              pagination, breadcrumb, marquee, bg-mesh, swatch
-│   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors, animations
+│   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors
+│   ├── 05-motion/             <-- entrances, press, height, page, reveal, stuck, lift
 │   └── scripts/               <-- behaviors.js, theme.js
 ├── dist/                      <-- looseleaf.css, looseleaf.js, theme.js, tokens.resolved.json
 ├── examples/index.html        <-- Living demo (also the configurator's preview)
@@ -310,11 +313,12 @@ looseleaf-ui/
 │   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
 │   ├── CONFIGURATOR.md        <-- Configurator walkthrough
 │   ├── images/                <-- Configurator screenshots
+│   ├── SUPPORT.md             <-- Browser tiers and what each enhancement needs
 │   └── TOKENS.md              <-- Generated token reference
 └── packages/django-looseleaf/ <-- Django package
 ```
 
-The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `blocks`, `utilities`.
+The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `blocks`, `motion`, `utilities`.
 
 ---
 
@@ -365,11 +369,11 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.input-group` | Input joined to `.input-group__addon` or a button | — | — |
 | `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | — |
 | `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
-| `.dropdown` | Menu inside `.dropdown-wrapper` (`.dropdown__item`, `.dropdown__divider`) | `[data-state="open"]` on the wrapper; `[data-align="end"]` | `[data-toggle="dropdown"]` |
-| `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped | — |
-| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`, `.navbar__toggle`); collapses below 45rem of its own width | `[data-sticky]`; `[data-state="open"]` on the menu | `.navbar__toggle` |
-| `.modal` | Native `<dialog>`, animated in and out | `[open]` | `[data-open-dialog]`, `[data-close-dialog]` |
-| `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `[data-open-dialog]`, `[data-close-dialog]` |
+| `.dropdown` | Menu inside a native `<details class="dropdown-wrapper">` whose `<summary>` is the trigger (`.dropdown__item`, `.dropdown__divider`); opens without JavaScript | `[open]` on the wrapper; `[data-align="end"]` | optional: Escape, outside click, arrow keys |
+| `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped; `[data-interactive]` lifts on hover | — |
+| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[open]` on the toggle; `--navbar-padding` (on its children) | optional: Escape |
+| `.modal` | Native `<dialog>`, animated in and out | `[open]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
+| `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
 | `.table` | Data tables inside a scrolling `.table-wrapper` | `[data-striped]`, `[data-hover]`, `[data-density="compact"]`; cells take `[data-align="end"]` | — |
 | `.prose` | Rich text you don't control (CMS, Markdown) | — | — |
@@ -378,6 +382,24 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.marquee` | Looping strip of `.marquee__track` rows | `--marquee-duration`, `--marquee-gap` | — |
 | `.bg-mesh` | Ambient drifting wash of the action and accent hues | `--mesh-duration`, `--mesh-strength` | — |
 | `.swatch` | Colour tile with `.swatch__tile`, `.swatch__label`, `.swatch__hex` | `--swatch-color`, `[data-state="overridden"]` | — |
+
+### <a name="motion"></a> Motion layer (src/05-motion/)
+
+Motion is an enhancement: the system is complete without this folder. Its `motion` layer sits between `blocks` and `utilities`, so it can refine any block and utilities still override it. Each file is fenced by `@supports` or the reduced-motion switches, and [docs/SUPPORT.md](docs/SUPPORT.md) lists which browsers get each one and what the rest see instead.
+
+**Two master switches.** Every duration in LooseLeaf is multiplied by `--motion-scale` (`calc(var(--duration-base) * var(--motion-scale))`, and the same for every `--duration-*` token), and `npm run check` rejects any that isn't. The operating system's reduced-motion setting sets `--motion-scale` to 0, and so does `data-motion="reduced"` on `<html>`, for a choice offered on the site. Either one makes all motion instant at once. `--motion-scale` is deliberately not a token, so a theme can never undo it.
+
+| File | What it does | Tokens |
+| --- | --- | --- |
+| `entrances.css` | Menus drop in as they open; dialogs and drawers animate in and out | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
+| `press.css` | Buttons and choices shrink slightly while pressed | `--press-scale` |
+| `height.css` | Accordion items open and close smoothly | `--duration-base` |
+| `page.css` | Same-site page loads cross-fade; a sticky navbar holds still | `--duration-base` |
+| `reveal.css` | `[data-reveal]` elements fade in as they scroll into view (opt-in; never hidden without support) | `--reveal-distance` |
+| `stuck.css` | A sticky navbar tightens once it is stuck to the top | `--navbar-padding` |
+| `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover | `--lift-distance`, `--ease-spring` |
+
+The demo's Motion section shows each one and reports whether the current browser runs it.
 
 ### <a name="utilities"></a> Tier 4: Utilities (src/04-utilities/)
 
@@ -388,7 +410,6 @@ Utilities sit at the top of the layer stack and do one thing each.
 - `.text-center`, `.text-uppercase`, `.truncate`, `.text-small`, `.text-lead`
 - `.text-primary`, `.text-muted`, `.text-danger`, `.bg-surface-base`, `.bg-surface-sunken`, `.bg-primary`, `.bg-gradient`
 - `.indent`: decorative edge accent (`--indent-size`, `--indent-color`)
-- `.anim-lift`: hover elevation on pointer devices
 
 ---
 
@@ -396,15 +417,63 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 ### dist/looseleaf.js (src/scripts/behaviors.js)
 
-A zero-dependency drop-in script using event delegation: one click, one keydown and one focusout listener on the document. It exports nothing, works as a classic or module script, and is safe to include twice.
+An enhancement, not a dependency: every menu, link and form already works without it, and `npm run test:nojs` checks that in CI. It uses event delegation on the document, exports nothing, works as a classic or module script, and is safe to include twice. What it adds:
 
-1. Accordions: none needed. `.accordion` is built on native `<details name="…">`.
-2. Dropdowns: toggle on click; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; Escape closes and returns focus; leaving the menu closes it. Triggers get `aria-controls` and `aria-expanded` wired automatically.
-3. Navbar: the toggle opens and closes the collapsed menu (Escape closes it too), with `aria-controls` wired.
-4. Modals and drawers: `[data-open-dialog]` and `[data-close-dialog]` drive native `<dialog>`; a backdrop click closes it.
+1. Accordions: nothing needed. `.accordion` is built on native `<details name="…">`.
+2. Dropdowns: Escape closes and returns focus to the trigger; an outside click, choosing an item or moving focus away closes it; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; one menu is open at a time.
+3. Navbar: Escape closes the collapsed menu, and so does following one of its in-page links.
+4. Modals and drawers: buttons with `commandfor="dialog-id"` and `command="show-modal"` or `command="close"` work natively in browsers with Invoker Commands; the script reads the same attributes everywhere else. A backdrop click closes the dialog.
 5. Alerts: `.alert__close` animates the alert out, then removes it.
 6. Copy: `[data-copy]` copies its value, swaps the button label and announces the result through a polite live region.
-7. In-page links: scroll motion-safely, move focus to the target (adding `tabindex="-1"` where needed), and close the dialog or menu they were clicked from.
+7. In-page links: CSS scrolls smoothly (unless motion is reduced); the script moves focus to the target (adding `tabindex="-1"` where needed) and closes the dialog it was clicked from.
+
+`theme.js` also sets `data-js` on `<html>`. CSS may hide something because a script will reveal it only under `[data-js]`.
+
+**Dialogs need a second route.** Without JavaScript and without Invoker Commands, a dialog can't open. A dialog holding only a confirmation can live with that; one holding content can't. Put that content somewhere reachable without the dialog too: drawer navigation repeats the navbar's links, and a form in a modal is also a page of its own.
+
+#### Upgrading markup from 2.0
+
+The 2.0 markup still works through 2.x, with one console warning per kind; it stops working in 3.0.
+
+```html
+<!-- 2.0: opens only with JavaScript -->
+<div class="dropdown-wrapper">
+  <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+  <div class="dropdown" role="menu">
+    <a href="/edit" class="dropdown__item" role="menuitem">Edit</a>
+  </div>
+</div>
+
+<!-- 2.1: a native disclosure -->
+<details class="dropdown-wrapper">
+  <summary class="button">Options</summary>
+  <div class="dropdown">
+    <a href="/edit" class="dropdown__item">Edit</a>
+  </div>
+</details>
+```
+
+```html
+<!-- 2.0 navbar toggle -->
+<button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">…</button>
+<nav class="navbar__menu">…</nav>
+
+<!-- 2.1: an empty <details> before the menu -->
+<details class="navbar__toggle">
+  <summary aria-label="Menu" aria-controls="primary-nav">…</summary>
+</details>
+<nav id="primary-nav" class="navbar__menu">…</nav>
+```
+
+```html
+<!-- 2.0 dialog triggers -->
+<button data-open-dialog="settings">Settings</button>
+<button data-close-dialog>Close</button>
+
+<!-- 2.1: Invoker Commands -->
+<button type="button" commandfor="settings" command="show-modal">Settings</button>
+<button type="button" commandfor="settings" command="close">Close</button>
+```
 
 ### dist/theme.js (src/scripts/theme.js)
 
@@ -427,7 +496,8 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
-| `npm run test:browser` | Browser tests with Playwright: axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
+| `npm run test:nojs` | The demo with JavaScript disabled at 360 and 1280 px: every nav link and dropdown item reachable, the accordion opens, the form submits, nothing interactive hidden, every dialog link also reachable outside a dialog |
+| `npm run test:browser` | Browser tests with Playwright: both reduced-motion switches leave no duration on the demo, axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
 
 ---
@@ -455,7 +525,30 @@ To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pypro
 
 ---
 
-## 10. <a name="authors"></a> Authors & Acknowledgements
+## 10. <a name="credit"></a> Crediting LooseLeaf UI in your project
+
+The MIT licence asks only that the licence notice at the top of `looseleaf.css` (and of the scripts) stays in place. Credit anywhere else is a courtesy, and appreciated. To say what your site is built on, copy and adapt this:
+
+```markdown
+This site is built on [LooseLeaf UI](https://github.com/StockoL/looseleaf-ui), a CSS foundation rather than a kit of ready-made components. It follows the CUBE CSS method, keeping layout, utilities and components apart, and its design tokens are named by purpose, so a colour is "surface" or "action" rather than "blue-500".
+
+- **Accessible by default.** Every control shows a visible focus ring, text colours are checked against WCAG AA contrast before the theme is exported, touch targets are at least 44 px, and animation stops for anyone whose device asks for reduced motion.
+- **Progressively enhanced.** Menus, navigation and forms work without JavaScript. Scripts add keyboard shortcuts and polish, and the page is complete without them.
+- **Light and dark.** It follows your device's colour scheme, or the choice you make on the site.
+- **No framework.** Plain HTML and CSS with a few small scripts, so pages stay light and fast.
+
+LooseLeaf UI builds on Andy Bell's CUBE CSS, Heydon Pickering's Every Layout, James Gilyead and Trys Mudford's Utopia fluid scales, Alla Kholmatova's Design Systems and Björn Ottosson's OKLCH colour space, and is released under the MIT licence.
+```
+
+Or, for a footer:
+
+```markdown
+Built with [LooseLeaf UI](https://github.com/StockoL/looseleaf-ui) (MIT).
+```
+
+---
+
+## 11. <a name="authors"></a> Authors & Acknowledgements
 
 LooseLeaf UI is conceptualised and maintained by Louis Stockton (@StockoL) under the LooseLeaf Applications organisation.
 

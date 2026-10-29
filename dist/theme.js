@@ -1,3 +1,4 @@
+/*! LooseLeaf UI v2.1.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Theme
  * Load in <head> as a blocking script (or inline it) so the stored choice is on
@@ -6,6 +7,9 @@
  * Toggle: <button type="button" data-theme-toggle>Theme: <span data-theme-label>Auto</span></button>
  * Each click cycles auto -> light -> dark. aria-pressed reports whether dark
  * is forced ("mixed" while following the OS), and the label names the state.
+ *
+ * Its first act is the data-js marker on <html>: CSS may hide something
+ * because a script will reveal it only under [data-js].
  */
 
 (() => {
@@ -16,6 +20,7 @@
   const LABELS = { auto: "Auto", light: "Light", dark: "Dark" };
   const PRESSED = { auto: "mixed", light: "false", dark: "true" };
   const root = document.documentElement;
+  root.setAttribute("data-js", "");
 
   function read() {
     try {

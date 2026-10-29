@@ -1,0 +1,21 @@
+/* ==========================================================================
+   MOTION: STUCK NAVBAR
+   A sticky navbar tightens its padding once it is stuck to the top, via a
+   scroll-state container query (Chrome 133+). Elsewhere nothing changes.
+   ========================================================================== */
+
+@supports (container-type: scroll-state) {
+  .navbar[data-sticky] {
+    container-type: inline-size scroll-state;
+  }
+
+  .navbar[data-sticky] > * {
+    transition: padding-block calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+  }
+
+  @container navbar scroll-state(stuck: top) {
+    .navbar > * {
+      --navbar-padding: var(--space-2xs);
+    }
+  }
+}

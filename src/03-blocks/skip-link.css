@@ -19,7 +19,7 @@
   font-weight: var(--weight-semibold);
   text-decoration: none;
   transform: translateY(calc(-100% - var(--space-l)));
-  transition: transform var(--duration-quick) var(--ease-standard);
+  transition: transform calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .skip-link:focus {

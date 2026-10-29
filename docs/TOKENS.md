@@ -317,22 +317,49 @@ Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas.
 
 ### duration
 
-Motion durations.
+Motion durations. Entrances run slower than exits.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
 | `--duration-quick` | Semantic | `150ms` |  |  |
 | `--duration-base` | Semantic | `250ms` |  |  |
 | `--duration-slow` | Semantic | `400ms` |  |  |
+| `--duration-enter` | Semantic | `250ms` |  |  |
+| `--duration-exit` | Semantic | `150ms` |  |  |
 
 ### ease
 
-Motion easing curves.
+Motion easing curves. Out-expo is for exits.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
 | `--ease-standard` | Semantic | `cubic-bezier(0.4, 0, 0.2, 1)` |  |  |
 | `--ease-spring` | Semantic | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` |  |  |
+| `--ease-out-expo` | Semantic | `cubic-bezier(0.16, 1, 0.3, 1)` |  |  |
+
+### press-scale
+
+Scale of a pressed button or choice (:active feedback).
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--press-scale` | Semantic | `0.97` |  |  |
+
+### lift-distance
+
+How far .anim-lift and interactive cards rise on hover.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--lift-distance` | Semantic | `clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem)` |  |  |
+
+### reveal-distance
+
+How far a [data-reveal] element travels as it scrolls into view.
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--reveal-distance` | Semantic | `clamp(1rem, 0.96rem + 0.22vw, 1.13rem)` |  |  |
 
 ### layer
 

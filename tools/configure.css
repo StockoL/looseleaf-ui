@@ -10,7 +10,7 @@
   }
 
   .configurator__toolbar {
-    padding-block: var(--space-2xs);
+    --navbar-padding: var(--space-2xs);
   }
 
   .configurator__viewport .input-group {

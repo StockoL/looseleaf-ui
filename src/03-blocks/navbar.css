@@ -11,14 +11,22 @@
   border-bottom: 1px solid var(--navbar-border);
   position: relative;
   z-index: var(--layer-nav);
-  padding-block: var(--space-s);
+}
+
+/*
+ * The vertical padding sits on the navbar's children (usually one .wrapper)
+ * rather than the navbar, so a container query on the navbar can change it
+ * (src/05-motion/stuck.css compacts a stuck navbar this way).
+ */
+.navbar > * {
+  padding-block: var(--navbar-padding, var(--space-s));
 }
 
 /* CUBE Exception: stays at the top while the page scrolls, clear of the notch */
 .navbar[data-sticky] {
   position: sticky;
   inset-block-start: 0;
-  padding-block-start: calc(var(--space-s) + var(--safe-top));
+  padding-block-start: var(--safe-top);
 }
 
 .navbar__brand {
@@ -44,8 +52,8 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    color var(--duration-quick) var(--ease-standard),
-    background-color var(--duration-quick) var(--ease-standard);
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .navbar__link:focus-visible {
@@ -71,9 +79,23 @@
   gap: var(--navbar-menu-space, var(--space-2xs));
 }
 
-/* Toggle: only shown once the navbar is too narrow for the menu */
+/*
+ * Toggle: an empty <details> placed before the menu. Its native open state
+ * shows the menu through :has(), so the collapsed menu works with no
+ * JavaScript, and the summary reports expanded/collapsed itself.
+ *   <details class="navbar__toggle">
+ *     <summary aria-label="Menu" aria-controls="primary-nav"><svg class="icon">…</svg></summary>
+ *   </details>
+ *   <nav id="primary-nav" class="navbar__menu">…</nav>
+ * Only shown once the navbar is too narrow for the menu.
+ */
 .navbar__toggle {
   display: none;
+}
+
+.navbar__toggle > summary,
+button.navbar__toggle {
+  display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
@@ -83,18 +105,29 @@
   padding: var(--space-2xs);
   min-block-size: var(--target-min);
   min-inline-size: var(--target-min);
+  border-radius: var(--radius-control);
+  list-style: none; /* no native disclosure triangle */
   touch-action: manipulation;
   user-select: none;
+}
+
+.navbar__toggle > summary::-webkit-details-marker {
+  display: none;
 }
 
 /*
  * Collapsed navbar (narrower than 45rem, the documented menu-collapse
  * constant). Driven by the navbar's own width, not the viewport, so it
- * also collapses inside a narrow column or iframe.
+ * also collapses inside a narrow column or iframe. At 45rem and wider the
+ * toggle is hidden and the menu always shows, whatever the toggle's state.
  */
 @container navbar (width < 45rem) {
   .navbar__toggle {
-    display: inline-flex;
+    display: block;
+  }
+
+  button.navbar__toggle {
+    display: flex;
   }
 
   .navbar__menu {
@@ -105,19 +138,8 @@
     padding-block-start: var(--space-s);
   }
 
-  .navbar__menu[data-state="open"] {
+  .navbar:has(.navbar__toggle[open]) .navbar__menu,
+  .navbar__menu[data-state="open"] /* deprecated scripted markup, removed in 3.0 */ {
     display: flex;
-    animation: ll-navbar-reveal var(--duration-quick) var(--ease-standard);
-  }
-}
-
-@keyframes ll-navbar-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--space-2xs) * -1));
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }

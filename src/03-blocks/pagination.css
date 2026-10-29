@@ -35,7 +35,7 @@
   font-weight: var(--weight-medium);
   text-decoration: none;
   touch-action: manipulation;
-  transition: background-color var(--duration-quick) var(--ease-standard);
+  transition: background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .pagination__gap {

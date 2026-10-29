@@ -1,5 +1,13 @@
 /* ==========================================================================
-   BLOCK: DROPDOWN
+   BLOCK: DROPDOWN (native details/summary: opens and closes with no JavaScript)
+   <details class="dropdown-wrapper">
+     <summary class="button">Options</summary>
+     <div class="dropdown">
+       <a class="dropdown__item" href="…">Edit</a>
+     </div>
+   </details>
+   looseleaf.js adds Escape, outside-click and focus-out closing, arrow keys,
+   and one open menu at a time.
    Hooks (set on the dropdown or any ancestor):
      --dropdown-width   minimum menu width (default 12rem)
      --dropdown-offset  gap between trigger and menu (default --space-2xs)
@@ -7,7 +15,16 @@
 
 .dropdown-wrapper {
   position: relative;
-  display: inline-flex;
+  display: inline-block;
+}
+
+/* The summary is the trigger; it carries its own look (usually .button) */
+.dropdown-wrapper > summary {
+  list-style: none; /* no native disclosure triangle */
+}
+
+.dropdown-wrapper > summary::-webkit-details-marker {
+  display: none;
 }
 
 .dropdown {
@@ -21,29 +38,12 @@
   border-radius: var(--radius-surface);
   padding: var(--space-2xs);
   box-shadow: var(--shadow-raised);
-
-  /* Hidden State Physics */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(calc(var(--space-2xs) * -1));
-  transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-spring),
-    visibility var(--duration-base);
-  will-change: transform, opacity;
 }
 
 /* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
 .dropdown[data-align="end"] {
   inset-inline-start: auto;
   inset-inline-end: 0;
-}
-
-/* CUBE Exception: open */
-.dropdown-wrapper[data-state="open"] .dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
 }
 
 /* Items may be links or buttons; buttons lose their native chrome */
@@ -65,8 +65,8 @@
   font-size: var(--text-body);
   font-weight: var(--weight-medium);
   transition:
-    background-color var(--duration-quick) var(--ease-standard),
-    color var(--duration-quick) var(--ease-standard);
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .dropdown__item:focus-visible {
@@ -85,4 +85,25 @@
   border: none;
   border-top: 1px solid var(--color-border);
   margin-block: var(--space-2xs);
+}
+
+/*
+ * Deprecated in 2.1, removed in 3.0: the scripted markup,
+ * <div class="dropdown-wrapper"> with a [data-toggle="dropdown"] button,
+ * shown by [data-state="open"]. Without JavaScript it never opens.
+ */
+.dropdown-wrapper:not(details) .dropdown {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(var(--space-2xs) * -1));
+  transition:
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    transform calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    visibility calc(var(--duration-base) * var(--motion-scale));
+}
+
+.dropdown-wrapper[data-state="open"] .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }

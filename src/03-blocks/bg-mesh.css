@@ -5,7 +5,7 @@
    ========================================================================== */
 
 .bg-mesh {
-  --mesh-duration: calc(var(--duration-slow) * 40);
+  --mesh-duration: calc(var(--duration-slow) * var(--motion-scale) * 40);
   --mesh-strength: 8%;
 
   position: relative;

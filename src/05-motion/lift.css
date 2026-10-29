@@ -1,0 +1,28 @@
+/* ==========================================================================
+   MOTION: LIFT
+   .anim-lift (any element) and interactive cards rise by --lift-distance on
+   hover, on devices that hover.
+   ========================================================================== */
+
+.anim-lift,
+.card[data-interactive] {
+  transition:
+    translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
+    box-shadow calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+}
+
+@media (hover: hover) {
+  .anim-lift:hover,
+  .card[data-interactive]:hover {
+    translate: 0 calc(var(--lift-distance) * -1);
+  }
+
+  .anim-lift:hover {
+    scale: 1.02;
+  }
+
+  .card[data-interactive]:hover {
+    box-shadow: var(--shadow-raised);
+  }
+}

@@ -1,0 +1,12 @@
+/* ==========================================================================
+   MOTION: PRESS FEEDBACK
+   Buttons and choices shrink slightly while pressed (--press-scale). Not
+   fenced by (hover: hover): touch is where press feedback matters most.
+   The blocks declare the scale transition; this file only says when.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduced"]) :is(.button:not(:disabled, [aria-disabled="true"]), .choice):active {
+    scale: var(--press-scale);
+  }
+}

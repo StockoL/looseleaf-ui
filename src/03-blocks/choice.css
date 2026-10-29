@@ -63,7 +63,9 @@
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: background-color var(--duration-quick) var(--ease-standard);
+  transition:
+    background-color calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard),
+    scale calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 .choice-group[data-variant="segmented"] > label + input + label {

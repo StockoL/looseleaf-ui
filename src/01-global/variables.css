@@ -173,14 +173,26 @@
   --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
   --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
 
-  /* --- duration: Motion durations. --- */
+  /* --- duration: Motion durations. Entrances run slower than exits. --- */
   --duration-quick: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  --duration-enter: var(--duration-base);
+  --duration-exit: var(--duration-quick);
 
-  /* --- ease: Motion easing curves. --- */
+  /* --- ease: Motion easing curves. Out-expo is for exits. --- */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- press-scale: Scale of a pressed button or choice (:active feedback). --- */
+  --press-scale: 0.97;
+
+  /* --- lift-distance: How far .anim-lift and interactive cards rise on hover. --- */
+  --lift-distance: var(--space-3xs);
+
+  /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
+  --reveal-distance: var(--space-s);
 
   /* --- layer: Stacking order. Dialogs use the top layer and need no token. --- */
   --layer-raised: 10;
