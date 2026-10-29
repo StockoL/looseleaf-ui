@@ -4,6 +4,8 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-29
+
 ### Added
 
 - A **Motion** panel in the configurator, replacing the motion half of "Shape and motion":
@@ -114,6 +116,7 @@ The first release of v2: a ground-up rework into a token-driven foundation, a to
 - A floating badge on a card is no longer clipped.
 - No block removes the focus outline.
 
-[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/StockoL/looseleaf-ui/releases/tag/v2.0.0
