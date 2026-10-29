@@ -26,6 +26,8 @@ First version with support, by engine. "No" means no stable release supports it 
 | Theme reveal (`page.css`, `theme.js`) | Same-document view transitions | 111 | 18 | 144 | The theme changes at once. |
 | Staggered reveal (`micro.css`, `[data-reveal-stagger]`) | `sibling-index()` | 138 | Unconfirmed | Unconfirmed | Each child's authored `--i`; without that, all reveal together. |
 | Prose line breaking (`prose.css`) | `text-wrap: pretty` | 117 | 26 | No | Normal wrapping. |
+| Field errors without script (`field.css`) | `:user-invalid` | 119 | 16.5 | 88 | `form-feedback.js` marks the field, or the browser's own validation on submit. |
+| Native switch (`choice.css`, `[data-variant="switch"]`) | `<input type="checkbox" switch>` | No | 17.4 | No | The drawn track and thumb. |
 | Dialog buttons without the script | Invoker Commands, `commandfor` and `command` | 135 | 26.2 | 144 | `looseleaf.js` reads the same attributes. With no script either, a dialog can't open, so any dialog holding content needs a second route (see the README). |
 
 ## Spring easing

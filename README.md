@@ -364,12 +364,12 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | Class | Purpose | Exceptions | JS hook |
 | --- | --- | --- | --- |
 | `.skip-link` | First focusable link, revealed on focus | — | — |
-| `.button` | Actions | `data-variant`: primary, secondary, ghost, danger; `data-size`: small, large; `[data-icon-only]`; `:disabled` and `[aria-disabled="true"]`; `data-state`: loading, copied | `[data-copy]` sets the copied state |
+| `.button` | Actions | `data-variant`: primary, secondary, ghost, danger; `data-size`: small, large; `[data-icon-only]`; `:disabled` and `[aria-disabled="true"]`; `data-state`: loading (pair with `aria-busy="true"`), done (a checkmark draws in place of the label) | `[data-copy]` sets the copied state |
 | `.field` | Label, control, `.field__hint` and `.field__error`; `.field__controls` sets a control beside its companion; `.fieldset` and `.legend` group choices | `[data-status="danger"]` | — |
 | `.input` | Text-like inputs and range sliders (shares a base with select and textarea) | `[aria-invalid="true"]`, `:disabled` | — |
 | `.select` | Native select with a theme-aware chevron | `[aria-invalid="true"]`, `[multiple]` | — |
 | `.textarea` | Multi-line input, vertical resize only | `[aria-invalid="true"]` | — |
-| `.choice` | Checkbox or radio with its label (`.choice__input`); `.choice-group` stacks them | `.choice-group[data-variant="segmented"]` | — |
+| `.choice` | Checkbox or radio with its label (`.choice__input`); `.choice-group` stacks them | `.choice-group[data-variant="segmented"]`; `.choice[data-variant="switch"]` with a `.choice__thumb` (the native `switch` where Safari has it) | — |
 | `.input-group` | Input joined to `.input-group__addon` or a button | — | — |
 | `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | —; `[data-pulse]` (a ring that pulses), `[data-bump]` (pops on the spring when rendered), `[data-interactive]` (press feedback) |
 | `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
@@ -380,6 +380,8 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
 | `.toast` | Short-lived messages (`.toast__message`) inside a `.toast-region`; in the page flow without JavaScript, floating and self-dismissing with it | `data-status`: info, success, warning, danger; `data-duration`; the region gets `[data-js]` | `toast.js` adds `.toast__close` |
+| `.skeleton` | Placeholder shapes while content loads; the container is `aria-busy="true"`, the shapes `aria-hidden="true"` | `data-shape`: text, title, avatar, block; the shimmer stops under reduced motion | — |
+| `.progress` | Native `<progress>` and `<meter>`, styled; give each a label | indeterminate when `<progress>` has no `value`; `<meter>` colours follow `low`, `high` and `optimum` | — |
 | `.tabs` | `.tabs__list` of `.tabs__tab` links to sibling `.tabs__panel` sections; a jump list without JavaScript | `[aria-selected="true"]` on the tab, `[data-state="active"]` on the panel; the block gets `[data-js]` | `tabs.js` |
 | `.table` | Data tables inside a scrolling `.table-wrapper` | `[data-striped]`, `[data-hover]`, `[data-density="compact"]`; cells take `[data-align="end"]` | — |
 | `.prose` | Rich text you don't control (CMS, Markdown) | — | — |
@@ -416,6 +418,7 @@ Utilities sit at the top of the layer stack and do one thing each.
 - `.visually-hidden`: hidden visually but still announced; reveals itself when focused. A `[hidden]` rule restores `display: none` on blocks that set their own display.
 - `.icon`: sizes an inline SVG to the text and strokes it in `currentColor`; `[data-size="s"]` and `[data-size="l"]`. No icon library ships: paste paths or keep a `<symbol>` sheet.
 - `.text-center`, `.text-uppercase`, `.truncate`, `.text-small`, `.text-lead`
+- `.clamp`: cuts text after `--clamp-lines` lines (default 3) with an ellipsis
 - `.text-primary`, `.text-muted`, `.text-danger`, `.bg-surface-base`, `.bg-surface-sunken`, `.bg-primary`, `.bg-gradient`
 - `.indent`: decorative edge accent (`--indent-size`, `--indent-color`)
 
@@ -427,7 +430,7 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 An enhancement, not a dependency: every menu, link and form already works without it, and `npm run test:nojs` checks that in CI. Native elements come first (`<details>`, `<dialog>`, Invoker Commands, form validation, `scroll-snap`); a module exists only where nothing native does the job, and its header says why. Each one uses event delegation on the document, exports nothing, works as a classic or module script, and is safe to include twice.
 
-`looseleaf.js` joins all of them and is the recommended single include: 30.3 KB as shipped, 8.1 KB gzipped, a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
+`looseleaf.js` joins all of them and is the recommended single include: 36.4 KB as shipped, 10.1 KB gzipped, about a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
 
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/behaviours/tabs.js"></script>
@@ -444,17 +447,23 @@ An enhancement, not a dependency: every menu, link and form already works withou
 | `toast.js` | Queue, auto-dismiss that pauses on hover and focus, staying above an open dialog, creating toasts from script | Server-rendered toasts stay where their region is, readable like alerts | `.toast-region`, `[data-toast]`, the `looseleaf:toast` event |
 | `form-feedback.js` | Native validation messages are bubbles that vanish, appear only on submit and leave the field unmarked | The browser's own validation on submit; server errors as usual | controls in a `.field` in a `<form>` without `novalidate`; `[data-maxlength-counter]` |
 | `password-reveal.js` | Showing a password means switching the input's type | An ordinary password field (the script adds the button, so none does nothing) | `input[type=password][data-reveal-password]` in an `.input-group` |
+| `done-state.js` | CSS can't know an action succeeded | Nothing changes visually; the action still happened | `[data-done-on="submit"]`, `[data-done-on="request"]` (htmx), the `looseleaf:done` event |
+| `sound.js` | CSS can't play sound | Silence | `[data-sound="click"]`, `"toggle"`, `"success"`; opt-in twice (below) |
 | `legacy.js` | Keeps the 2.0 markup working through 2.x (below) | 2.0 markup does nothing | removed in 3.0 |
 
 Some details:
 
 - **Menus.** Escape closes a menu and returns focus to its trigger. ArrowDown or ArrowUp on the trigger opens it at the first or last item; arrows, Home and End move through the items. The collapsed navbar menu closes on Escape and when one of its in-page links is followed. The navbar's links themselves are a plain list that Tab moves through; arrow-key roving is for menus.
 - **Toasts.** Toasts dismiss themselves after five seconds (`data-duration` in milliseconds; `0` keeps a toast), pausing while the pointer or focus is on any of them. Danger toasts stay until dismissed and are announced with `role="alert"`. At most three show at once; the rest queue. Create one from a button with `data-toast="Saved."` and `data-toast-status="success"`, or from your own script with `document.dispatchEvent(new CustomEvent("looseleaf:toast", { detail: { message: "Saved.", status: "success" } }))`.
-- **Form feedback.** It leaves the browser's validation rules alone and changes only how the messages appear: written into the field's `.field__error` (created if missing, and linked with `aria-describedby`) as soon as the visitor leaves a field they changed, corrected as they type, and on submit with focus moved to the first problem. A form with `novalidate` is left untouched, because it validates on the server.
+- **Done state.** After a successful action, the button's label steps aside for a checkmark that draws itself, and it clears after two seconds. Copy buttons use it automatically. Mark a form's submit button `data-done-on="submit"`, an htmx element `data-done-on="request"`, or dispatch `looseleaf:done` on any control from your own code.
+- **Sound.** Off twice over. The site opts in with `data-sound` on `<html>` (in Django, `{% looseleaf_html_attrs %}` with `LOOSELEAF_SOUNDS`); each visitor then turns it on with a `[data-sound-toggle]` button, which defaults to off. With no toggle on the page nothing plays, because there is no reduced-sound media query and the toggle is the only consent. Sounds play on activation only, never on hover or focus. They are synthesised by default; `data-sound-src="/path/"` plays your own `click.mp3`, `toggle.mp3` and `success.mp3`. Volume is the `--sound-volume` token (0.3).
+- **Form feedback.** It leaves the browser's validation rules alone and changes only how the messages appear. Without it, `:user-invalid` still marks a field invalid once it has been left; with it: written into the field's `.field__error` (created if missing, and linked with `aria-describedby`) as soon as the visitor leaves a field they changed, corrected as they type, and on submit with focus moved to the first problem. A form with `novalidate` is left untouched, because it validates on the server.
 
-Not included, on purpose: a combobox, a date picker and a carousel. They are bespoke and they are where component libraries bloat. Use `<input list>` with `<datalist>`, `<input type="date">` and the `.reel` composition with scroll snap.
+Not included, on purpose: a combobox, a date picker, a carousel, drag and drop, and haptics. The first four are bespoke and they are where component libraries bloat. Use `<input list>` with `<datalist>`, `<input type="date">` and the `.reel` composition with scroll snap, and pair any drag library with the `[data-dropped]` settle in `micro.css`. Haptics: `navigator.vibrate` is Android-only and Safari has no web haptics API; the switch variant uses Safari's native `<input type="checkbox" switch>`, the one route to iOS haptics.
 
 `theme.js` also sets `data-js` on `<html>`. CSS may hide something because a script will reveal it only under `[data-js]`.
+
+**Loading states are busy.** Every loading state (`.button[data-state="loading"]`, `.skeleton`, an indeterminate `.progress`) goes with `aria-busy="true"` on what is loading, so assistive tech hears that it is busy rather than reading placeholders.
 
 **Dialogs need a second route.** Without JavaScript and without Invoker Commands, a dialog can't open. A dialog holding only a confirmation can live with that; one holding content can't. Put that content somewhere reachable without the dialog too: drawer navigation repeats the navbar's links, and a form in a modal is also a page of its own.
 
@@ -507,6 +516,7 @@ The 2.0 markup still works through 2.x, with one console warning per kind; it st
 Load it as a blocking script in `<head>` (or inline it) so the saved choices are applied before first paint. It also sets `data-js` on `<html>` first of all.
 
 - Any `[data-theme-toggle]` button cycles auto → light → dark, stores the choice and updates its `[data-theme-label]` text and ARIA state. "Auto" follows the operating system. Where view transitions exist and motion isn't reduced, the new theme grows as a circle from the toggle. Put both icons in a `[data-theme-icons]` span (`data-theme-icon="light"` and `"dark"`) and they trade places with a turn.
+- Any `[data-sound-toggle]` button turns interface sounds on or off for this visitor (off by default), setting `data-sound-on` on `<html>`; `[data-sound-label]` reads "On" or "Off".
 - Any `[data-motion-toggle]` button switches between following the operating system and reducing motion on this site, which sets `data-motion="reduced"` on `<html>` (every duration becomes 0). `aria-pressed` is true while motion is reduced, and `[data-motion-label]` reads "On" or "Reduced".
 
 ```html
