@@ -231,6 +231,12 @@ textarea:not([rows]) {
   /* --- navbar: Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off. --- */
   --navbar-stuck-padding: var(--space-2xs);
 
+  /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+  --shadow-color: 0.2 0.03 286;
+  --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.168), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.168), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.168);
+  --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.132), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.132), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.132), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.132);
+  --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.108), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.108), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.108), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.108), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.108);
+
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-0);
   --color-surface-raised: var(--neutral-0);
@@ -308,9 +314,8 @@ textarea:not([rows]) {
   --radius-surface: 8px;
   --radius-pill: 999px;
 
-  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
-  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
+  /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+  --scheme-dark: 0;
 
   /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
   --reveal-distance: var(--space-s);
@@ -342,6 +347,12 @@ textarea:not([rows]) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
+    /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+    --shadow-color: 0.05 0.03 286;
+    --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.336), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.336), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.336);
+    --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.264), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.264), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.264), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.264);
+    --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.216), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.216), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.216), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.216), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.216);
+
     /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
     --color-surface: var(--neutral-950);
     --color-surface-raised: var(--neutral-900);
@@ -368,14 +379,19 @@ textarea:not([rows]) {
     --color-status-info-border: var(--info-border-dark);
     --color-status-info-text: var(--info-text-dark);
 
-    /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-    --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
-    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+    /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+    --scheme-dark: 1;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+
+  /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+  --shadow-color: 0.05 0.03 286;
+  --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.336), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.336), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.336);
+  --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.264), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.264), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.264), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.264);
+  --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.216), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.216), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.216), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.216), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.216);
 
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-950);
@@ -403,9 +419,8 @@ textarea:not([rows]) {
   --color-status-info-border: var(--info-border-dark);
   --color-status-info-text: var(--info-text-dark);
 
-  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
-  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+  /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+  --scheme-dark: 1;
 }
 }
 
@@ -756,6 +771,18 @@ a:not([class]) {
     var(--grid-placement, auto-fit),
     minmax(min(var(--grid-min-item-size, 15rem), 100%), 1fr)
   );
+}
+
+/*
+ * CUBE Exception: each item spans --subgrid-rows rows of the grid and takes
+ * them as its own (subgrid), so the parts of every item in a row line up:
+ * titles with titles, footers with footers, however long the text.
+ */
+.grid[data-subgrid] > * {
+  display: grid;
+  grid-row: span var(--subgrid-rows, 3);
+  grid-template-rows: subgrid;
+  row-gap: var(--subgrid-space, var(--space-2xs));
 }
 }
 
@@ -1167,6 +1194,7 @@ a:not([class]) {
 /* The global :focus-visible ring is the focus indicator; the border follows it */
 :is(.input, .select, .textarea):focus-visible {
   --control-border: var(--color-focus);
+  box-shadow: var(--shadow-raised);
 }
 
 @media (hover: hover) {
@@ -1399,6 +1427,7 @@ a:not([class]) {
   border-radius: var(--radius-pill);
   background-color: var(--badge-bg);
   color: var(--badge-text);
+  transition: scale calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
 }
 
 /* CUBE Exceptions (Status Variants) */
@@ -1599,7 +1628,7 @@ a:not([class]) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-surface);
   padding: var(--space-2xs);
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-floating);
 }
 
 /* CUBE Exception: align the menu's end edge with the trigger's (menus near the right edge) */
@@ -1680,10 +1709,10 @@ a:not([class]) {
 
 .card {
   position: relative;
-  overflow: hidden; /* clips flush media to the radius */
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 .card__body {
@@ -1705,17 +1734,22 @@ a:not([class]) {
 }
 
 /*
- * CUBE Exception: a floating badge straddles the top edge, so the card must
- * not clip it. Leading media then rounds its own top corners instead.
+ * The card never clips (a floating badge straddles its edge, and a lifted
+ * card's shadow sits outside it), so flush media rounds its own corners:
+ * leading media its top corners, trailing media its bottom ones.
  */
-.card:has(.badge[data-placement="floating"]) {
-  overflow: visible;
-}
-
-.card:has(.badge[data-placement="floating"])
-  > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
+.card > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
+}
+
+.card > :is(img, picture, video):last-child {
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}
+
+.card > picture > img {
+  border-radius: inherit;
 }
 }
 
@@ -1749,6 +1783,11 @@ a:not([class]) {
   position: sticky;
   inset-block-start: 0;
   padding-block-start: var(--safe-top);
+}
+
+/* In-page links land below a sticky navbar, not under it */
+:root:has(.navbar[data-sticky]) {
+  scroll-padding-block-start: calc(var(--target-min) + var(--space-s) * 2 + var(--safe-top));
 }
 
 .navbar__brand {
@@ -2067,7 +2106,7 @@ button.navbar__toggle {
   border-radius: var(--radius-surface);
   background-color: var(--color-surface-raised);
   color: var(--color-text);
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-floating);
   transition:
     opacity calc(var(--duration-exit) * var(--motion-scale)) var(--ease-out-expo),
     translate calc(var(--duration-exit) * var(--motion-scale)) var(--ease-out-expo);
@@ -2224,6 +2263,20 @@ button.navbar__toggle {
 
 .prose li::marker {
   color: var(--color-text-muted);
+}
+
+/* Numbers that line up and read as labels; the <ol> stays a real list */
+.prose ol > li::marker {
+  content: counter(list-item) ".2";
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+}
+
+/* No lonely last word on a line, where the browser can balance it */
+@supports (text-wrap: pretty) {
+  .prose p {
+    text-wrap: pretty;
+  }
 }
 
 /* --- Quotes --- */
@@ -2555,38 +2608,49 @@ button.navbar__toggle {
 @layer motion {
 /* ==========================================================================
    MOTION: ENTRANCES AND EXITS
-   Menus, toasts and dialogs animate in; dialogs animate out too. Without this file
-   they simply appear and disappear. Every duration goes through
+   Alerts, toasts, menus and dialogs animate in; dialogs animate out too.
+   Without this file they simply appear and disappear. Every duration goes through
    --motion-scale, so both reduced-motion switches make them instant.
    ========================================================================== */
 
-/* Menus: a keyframe entrance each time they open (they close instantly) */
+/*
+ * Ordinary entrances are partial keyframes: only the starting frame is given,
+ * so the animation lands on whatever the element's resting style is. Unlike
+ * @starting-style, a more specific rule or an inline style can't cancel them.
+ */
+.alert,
+.toast-region[data-js] > .toast:not([data-state]) {
+  animation: ll-enter calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+}
+
+/* Menus play it each time they open (they close instantly), growing from their trigger */
 .dropdown-wrapper[open] > .dropdown {
-  animation: ll-drop-in calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+  transform-origin: top left;
+  animation: ll-grow calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
+}
+
+.dropdown-wrapper[open] > .dropdown[data-align="end"] {
+  transform-origin: top right;
 }
 
 @container navbar (width < 45rem) {
   .navbar:has(.navbar__toggle[open]) .navbar__menu,
   .navbar__menu[data-state="open"] {
-    animation: ll-drop-in calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+    animation: ll-enter calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
   }
 }
 
-/* Toasts slide in as they appear (and again when one leaves the queue) */
-.toast-region[data-js] > .toast:not([data-state]) {
-  animation: ll-slide-in calc(var(--duration-enter) * var(--motion-scale)) var(--ease-spring);
-}
-
-@keyframes ll-slide-in {
+@keyframes ll-enter {
   from {
     opacity: 0;
-    translate: var(--space-s) 0;
+    translate: 0 calc(var(--reveal-distance) * -1);
   }
 }
 
-@keyframes ll-drop-in {
+@keyframes ll-grow {
   from {
     opacity: 0;
+    scale: 0.96;
     translate: 0 calc(var(--space-2xs) * -1);
   }
 }
@@ -2666,13 +2730,14 @@ button.navbar__toggle {
 @layer motion {
 /* ==========================================================================
    MOTION: PRESS FEEDBACK
-   Buttons and choices shrink slightly while pressed (--press-scale). Not
+   Buttons, choices and interactive badges shrink slightly while pressed
+   (--press-scale). Not
    fenced by (hover: hover): touch is where press feedback matters most.
    The blocks declare the scale transition; this file only says when.
    ========================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion="reduced"]) :is(.button:not(:disabled, [aria-disabled="true"]), .choice):active {
+  :root:not([data-motion="reduced"]) :is(.button:not(:disabled, [aria-disabled="true"]), .choice, .badge[data-interactive]):active {
     scale: var(--press-scale);
   }
 }
@@ -2736,7 +2801,7 @@ button.navbar__toggle {
 
 @layer motion {
 /* ==========================================================================
-   MOTION: PAGE TRANSITIONS
+   MOTION: PAGE TRANSITIONS AND THEME REVEAL
    Same-origin page loads cross-fade (cross-document view transitions,
    Chrome 126+, Safari 18.2+). A sticky navbar is its own transition group,
    so it holds still while the page changes underneath it. Off for reduced
@@ -2756,8 +2821,31 @@ button.navbar__toggle {
     animation-timing-function: var(--ease-standard);
   }
 
-  .navbar[data-sticky] {
+  /* Not a glass navbar: a view-transition-name makes it a backdrop root, and its blur would see nothing */
+  .navbar[data-sticky]:not([data-glass]) {
     view-transition-name: navbar;
+  }
+
+  /*
+   * Theme reveal: theme.js changes the theme inside a view transition and
+   * marks <html> with data-theme-transition. The new theme grows as a circle
+   * from the toggle (--reveal-x, --reveal-y) over the old one.
+   */
+  :root[data-theme-transition]::view-transition-old(root) {
+    animation: none;
+  }
+
+  :root[data-theme-transition]::view-transition-new(root) {
+    animation: ll-theme-reveal calc(var(--duration-slow) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-theme-reveal {
+  from {
+    clip-path: circle(0 at var(--reveal-x, 50%) var(--reveal-y, 0));
+  }
+  to {
+    clip-path: circle(150% at var(--reveal-x, 50%) var(--reveal-y, 0));
   }
 }
 }
@@ -2820,16 +2908,29 @@ button.navbar__toggle {
 @layer motion {
 /* ==========================================================================
    MOTION: LIFT
-   .anim-lift (any element) and interactive cards rise by --lift-distance on
-   hover, on devices that hover.
+   .anim-lift (any positioned element) and interactive cards rise by
+   --lift-distance on hover, on devices that hover. Standard easing, not the
+   spring: an interrupted CSS transition shortens rather than carrying its
+   velocity, so springs are for entrances, never for hovers the pointer can
+   cut short. The layered shadow is never animated: a ::after carrying
+   --shadow-floating fades in instead.
    ========================================================================== */
 
 .anim-lift,
 .card[data-interactive] {
-  transition:
-    translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
-    scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
-    box-shadow calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+  transition: translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.anim-lift::after,
+.card[data-interactive]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-floating);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
 }
 
 @media (hover: hover) {
@@ -2838,13 +2939,185 @@ button.navbar__toggle {
     translate: 0 calc(var(--lift-distance) * -1);
   }
 
-  .anim-lift:hover {
-    scale: 1.02;
+  .anim-lift:hover::after,
+  .card[data-interactive]:hover::after {
+    opacity: 1;
+  }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   GLASS NAVBAR
+   .navbar[data-glass]: a translucent, blurred surface that content scrolls
+   under. The blur layer reaches a full header-height below the navbar and is
+   masked back to the navbar's own height, so it already samples the content
+   approaching the edge: no hard line where blurred meets sharp. Without
+   backdrop-filter the navbar keeps its opaque surface. A glass navbar fades
+   with the page on navigation rather than holding still (see page.css).
+   ========================================================================== */
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .navbar[data-glass] {
+    --navbar-bg: transparent;
   }
 
-  .card[data-interactive]:hover {
-    box-shadow: var(--shadow-raised);
+  .navbar[data-glass]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    inset-block-end: -100%;
+    z-index: calc(var(--layer-raised) * -1);
+    background-color: color-mix(in oklch, var(--color-surface) 70%, transparent);
+    -webkit-backdrop-filter: blur(16px); /* Safari < 18 */
+    backdrop-filter: blur(16px);
+    mask-image: linear-gradient(to bottom, black 0 50%, transparent 50% 100%);
+    pointer-events: none;
   }
+}
+}
+
+@layer motion {
+/* ==========================================================================
+   MOTION: MICRO-INTERACTIONS
+   Small details, each opt-in by attribute or tied to one block. Every
+   duration goes through --motion-scale.
+   ========================================================================== */
+
+/* --- .badge[data-pulse]: a ring that expands and fades, then rests --- */
+.badge[data-pulse] {
+  position: relative;
+}
+
+.badge[data-pulse]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--badge-text);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  animation: ll-pulse calc(var(--duration-slow) * var(--motion-scale) * 5) var(--ease-standard) infinite;
+}
+
+@keyframes ll-pulse {
+  0% {
+    opacity: 0.6;
+    scale: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    scale: 1.5 1.9;
+  }
+}
+
+/* --- .badge[data-bump]: pops and settles on the spring when (re)inserted --- */
+.badge[data-bump] {
+  animation: ll-bump calc(var(--duration-slow) * var(--motion-scale)) var(--ease-spring);
+}
+
+@keyframes ll-bump {
+  from {
+    scale: 0.6;
+  }
+}
+
+/* --- [data-underline="slide"]: the bar slides in from the left and out to the right --- */
+:is(.navbar__link, a)[data-underline="slide"] {
+  position: relative;
+  text-decoration: none;
+}
+
+:is(.navbar__link, a)[data-underline="slide"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--underline-inset, 0);
+  inset-block-end: 0;
+  block-size: 2px;
+  background-color: var(--color-action);
+  scale: 0 1;
+  transform-origin: right;
+  transition: scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.navbar__link[data-underline="slide"] {
+  --underline-inset: var(--space-2xs);
+}
+
+:is(.navbar__link, a)[data-underline="slide"]:focus-visible::after,
+:is(.navbar__link, a)[data-underline="slide"][aria-current="page"]::after {
+  scale: 1 1;
+  transform-origin: left;
+}
+
+@media (hover: hover) {
+  :is(.navbar__link, a)[data-underline="slide"]:hover::after {
+    scale: 1 1;
+    transform-origin: left;
+  }
+}
+
+/* --- [data-reveal-stagger]: revealed children follow one another --- */
+/* Scroll-driven animations ignore time delays, so each child starts a little later in the scroll range instead */
+[data-reveal-stagger] > [data-reveal] {
+  --reveal-order: var(--i, 0);
+
+  animation-range: entry calc(var(--reveal-order) * 5%) entry calc(40% + var(--reveal-order) * 5%);
+}
+
+@supports (z-index: sibling-index()) {
+  [data-reveal-stagger] > [data-reveal] {
+    --reveal-order: calc(sibling-index() - 1);
+  }
+}
+
+/* --- Focus: the ring arrives rather than appears --- */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduced"]) :focus-visible {
+    animation: ll-ring calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-ring {
+  from {
+    outline-offset: 0;
+  }
+}
+
+/* --- [data-dropped]: settles on the spring after a drag (any drag library) --- */
+[data-dropped] {
+  animation: ll-settle calc(var(--duration-slow) * var(--motion-scale)) var(--ease-spring);
+}
+
+@keyframes ll-settle {
+  from {
+    scale: 1.04;
+  }
+}
+
+/* --- Theme toggle: sun and moon trade places with a turn --- */
+/* --scheme-dark is a token: 0 in the light scheme, 1 in the dark, however it was chosen */
+/* <span data-theme-icons><svg data-theme-icon="light">…</svg><svg data-theme-icon="dark">…</svg></span> */
+[data-theme-icons] {
+  display: inline-grid;
+}
+
+[data-theme-icons] > [data-theme-icon] {
+  grid-area: 1 / 1;
+  transition:
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    rotate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+}
+
+[data-theme-icons] > [data-theme-icon="light"] {
+  opacity: calc(1 - var(--scheme-dark));
+  rotate: calc(var(--scheme-dark) * 90deg);
+}
+
+[data-theme-icons] > [data-theme-icon="dark"] {
+  opacity: var(--scheme-dark);
+  rotate: calc((1 - var(--scheme-dark)) * -90deg);
 }
 }
 

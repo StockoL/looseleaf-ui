@@ -1,15 +1,28 @@
 /* ==========================================================================
    MOTION: LIFT
-   .anim-lift (any element) and interactive cards rise by --lift-distance on
-   hover, on devices that hover.
+   .anim-lift (any positioned element) and interactive cards rise by
+   --lift-distance on hover, on devices that hover. Standard easing, not the
+   spring: an interrupted CSS transition shortens rather than carrying its
+   velocity, so springs are for entrances, never for hovers the pointer can
+   cut short. The layered shadow is never animated: a ::after carrying
+   --shadow-floating fades in instead.
    ========================================================================== */
 
 .anim-lift,
 .card[data-interactive] {
-  transition:
-    translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
-    scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring),
-    box-shadow calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+  transition: translate calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.anim-lift::after,
+.card[data-interactive]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-floating);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
 }
 
 @media (hover: hover) {
@@ -18,11 +31,8 @@
     translate: 0 calc(var(--lift-distance) * -1);
   }
 
-  .anim-lift:hover {
-    scale: 1.02;
-  }
-
-  .card[data-interactive]:hover {
-    box-shadow: var(--shadow-raised);
+  .anim-lift:hover::after,
+  .card[data-interactive]:hover::after {
+    opacity: 1;
   }
 }

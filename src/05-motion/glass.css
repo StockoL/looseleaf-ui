@@ -1,0 +1,28 @@
+/* ==========================================================================
+   GLASS NAVBAR
+   .navbar[data-glass]: a translucent, blurred surface that content scrolls
+   under. The blur layer reaches a full header-height below the navbar and is
+   masked back to the navbar's own height, so it already samples the content
+   approaching the edge: no hard line where blurred meets sharp. Without
+   backdrop-filter the navbar keeps its opaque surface. A glass navbar fades
+   with the page on navigation rather than holding still (see page.css).
+   ========================================================================== */
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .navbar[data-glass] {
+    --navbar-bg: transparent;
+  }
+
+  .navbar[data-glass]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    inset-block-end: -100%;
+    z-index: calc(var(--layer-raised) * -1);
+    background-color: color-mix(in oklch, var(--color-surface) 70%, transparent);
+    -webkit-backdrop-filter: blur(16px); /* Safari < 18 */
+    backdrop-filter: blur(16px);
+    mask-image: linear-gradient(to bottom, black 0 50%, transparent 50% 100%);
+    pointer-events: none;
+  }
+}
