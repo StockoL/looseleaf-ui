@@ -230,6 +230,17 @@ Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is 
 | --- | --- | --- | --- | --- |
 | `--navbar-stuck-padding` | Semantic | `clamp(0.5rem, 0.48rem + 0.11vw, 0.56rem)` |  | derived |
 
+### shadow
+
+Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components).
+
+| Token | Tier | Light | Dark | Notes |
+| --- | --- | --- | --- | --- |
+| `--shadow-color` | Semantic | `0.2 0.03 286` | `0.05 0.03 286` | derived |
+| `--shadow-raised` | Semantic | `0.22px 0.44px 0.89px -0.06px oklch(0.2 0.03 286 / 0.168), 0.89px 1.78px 3.56px -0.22px oklch(0.2 0.03 286 / 0.168), 2px 4px 8px -0.5px oklch(0.2 0.03 286 / 0.168)` | `0.22px 0.44px 0.89px -0.06px oklch(0.05 0.03 286 / 0.336), 0.89px 1.78px 3.56px -0.22px oklch(0.05 0.03 286 / 0.336), 2px 4px 8px -0.5px oklch(0.05 0.03 286 / 0.336)` | derived |
+| `--shadow-floating` | Semantic | `0.44px 0.88px 1.75px -0.11px oklch(0.2 0.03 286 / 0.132), 1.75px 3.5px 7px -0.44px oklch(0.2 0.03 286 / 0.132), 3.94px 7.88px 15.75px -0.98px oklch(0.2 0.03 286 / 0.132), 7px 14px 28px -1.75px oklch(0.2 0.03 286 / 0.132)` | `0.44px 0.88px 1.75px -0.11px oklch(0.05 0.03 286 / 0.264), 1.75px 3.5px 7px -0.44px oklch(0.05 0.03 286 / 0.264), 3.94px 7.88px 15.75px -0.98px oklch(0.05 0.03 286 / 0.264), 7px 14px 28px -1.75px oklch(0.05 0.03 286 / 0.264)` | derived |
+| `--shadow-overlay` | Semantic | `0.72px 1.44px 2.88px -0.18px oklch(0.2 0.03 286 / 0.108), 2.88px 5.76px 11.52px -0.72px oklch(0.2 0.03 286 / 0.108), 6.48px 12.96px 25.92px -1.62px oklch(0.2 0.03 286 / 0.108), 11.52px 23.04px 46.08px -2.88px oklch(0.2 0.03 286 / 0.108), 18px 36px 72px -4.5px oklch(0.2 0.03 286 / 0.108)` | `0.72px 1.44px 2.88px -0.18px oklch(0.05 0.03 286 / 0.216), 2.88px 5.76px 11.52px -0.72px oklch(0.05 0.03 286 / 0.216), 6.48px 12.96px 25.92px -1.62px oklch(0.05 0.03 286 / 0.216), 11.52px 23.04px 46.08px -2.88px oklch(0.05 0.03 286 / 0.216), 18px 36px 72px -4.5px oklch(0.05 0.03 286 / 0.216)` | derived |
+
 ### color
 
 Semantic colour roles. The only colour tokens blocks may use.
@@ -362,14 +373,13 @@ Corner radii by what is being rounded.
 | `--radius-surface` | Semantic | `8px` |  |  |
 | `--radius-pill` | Semantic | `999px` |  |  |
 
-### shadow
+### scheme
 
-Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas.
+Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
-| `--shadow-raised` | Semantic | `0 10px 25px -5px rgb(0 0 0 / 0.1)` | `0 10px 25px -5px rgb(0 0 0 / 0.5)` |  |
-| `--shadow-overlay` | Semantic | `0 10px 25px rgb(0 0 0 / 0.15)` | `0 10px 25px rgb(0 0 0 / 0.6)` |  |
+| `--scheme-dark` | Semantic | `0` | `1` |  |
 
 ### reveal-distance
 

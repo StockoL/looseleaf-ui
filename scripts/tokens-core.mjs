@@ -14,6 +14,8 @@
  *     $palette / $utopia. An explicit value in one of those groups wins and is flagged overridden.
  *   - Motion tokens (duration, ease.spring, press, lift, reveal, navbar.stuck-padding) are
  *     derived from $motion, the configurator's Motion panel. They are tier 2 (semantic).
+ *   - Shadows (shadow.color, raised, floating, overlay) are derived from $shape.shadow and the
+ *     neutral hue: layered, tinted toward the page, one light source for every elevation.
  */
 
 import { typeScale, spaceScale } from "./utopia.mjs";
@@ -49,6 +51,16 @@ export const MOTION_PRESETS = {
   playful: { spring: { mass: 1, stiffness: 220, damping: 8 }, durations: { quick: 180, base: 300, slow: 450 } },
 };
 export const DURATION_KEYS = ["quick", "base", "slow"];
+
+// Shadows: one light source; each elevation stacks more, larger, softer, fainter layers
+export const SHADOW_ANGLES = ["top-left", "top", "top-right"];
+const ELEVATIONS = [
+  { key: "raised", layers: 3, reach: 4, alpha: 0.28 },
+  { key: "floating", layers: 4, reach: 14, alpha: 0.22 },
+  { key: "overlay", layers: 5, reach: 36, alpha: 0.18 },
+];
+const SHADOW_TINT = { light: 0.2, dark: 0.05, chroma: 0.03 }; // OKLCH lightness per scheme, chroma
+const DARK_ALPHA = 2; // dark surfaces need a stronger shadow to read at all
 export const LIFT_SIZES = ["none", "3xs", "2xs", "xs", "s"];
 
 /* --------------------------------------------------------------------------
@@ -109,7 +121,43 @@ function motionGroups(motion) {
   ];
 }
 
-/** Groups computed from the $palette, $utopia and $motion inputs, in output order. */
+const px = (value) => `${Number(value.toFixed(2))}px`;
+
+function shadowLayers({ layers, reach, alpha }, { strength, softness, angle }, scheme) {
+  const across = { "top-left": 0.5, top: 0, "top-right": -0.5 }[angle];
+  const opacity = Number(Math.min(1, alpha * strength * (scheme === "dark" ? DARK_ALPHA : 1)).toFixed(3));
+  return Array.from({ length: layers }, (_, i) => {
+    const y = reach * ((i + 1) / layers) ** 2; // each layer twice as far as the last, roughly
+    const blur = y * (1 + softness * 2);
+    const spread = -y * 0.25 * (1 - softness);
+    return `${px(y * across)} ${px(y)} ${px(blur)} ${px(spread)} oklch({shadow.color} / ${opacity})`;
+  }).join(", ");
+}
+
+function shadowGroup(shape, palette) {
+  const { strength = 0.6, softness = 0.5, angle = "top-left" } = shape.shadow;
+  if (!Number.isFinite(strength) || strength < 0 || strength > 1) throw new Error("$shape.shadow.strength must be between 0 and 1");
+  if (!Number.isFinite(softness) || softness < 0 || softness > 1) throw new Error("$shape.shadow.softness must be between 0 and 1");
+  if (!SHADOW_ANGLES.includes(angle)) throw new Error(`$shape.shadow.angle must be one of ${SHADOW_ANGLES.join(", ")}`);
+  const hue = palette?.neutral?.hue ?? 0;
+  const tint = (lightness) => `${lightness} ${SHADOW_TINT.chroma} ${hue}`;
+  const settings = { strength, softness, angle };
+  return {
+    name: "shadow",
+    tier: 2,
+    purpose: "Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components).",
+    entries: [
+      { key: "color", value: tint(SHADOW_TINT.light), dark: tint(SHADOW_TINT.dark) },
+      ...ELEVATIONS.map((elevation) => ({
+        key: elevation.key,
+        value: shadowLayers(elevation, settings, "light"),
+        dark: shadowLayers(elevation, settings, "dark"),
+      })),
+    ],
+  };
+}
+
+/** Groups computed from the $palette, $utopia, $motion and $shape inputs, in output order. */
 export function deriveGroups(json) {
   const groups = [];
   const palette = json.$palette;
@@ -163,6 +211,7 @@ export function deriveGroups(json) {
   }
 
   if (json.$motion) groups.push(...motionGroups(json.$motion));
+  if (json.$shape?.shadow) groups.push(shadowGroup(json.$shape, palette));
 
   return groups;
 }
@@ -218,11 +267,11 @@ function collectEntries(json) {
     const context = { tier: group.tier ?? 1, purpose: explicit.$purpose ?? group.purpose };
     const derivedKeys = new Set(group.entries.map((entry) => entry.key));
 
-    for (const { key, value } of group.entries) {
+    for (const { key, value, dark } of group.entries) {
       if (key in explicit) {
         walk(explicit[key], [group.name, key], { ...context, derived: false, overridden: true }, entries);
       } else {
-        entries.push({ path: [group.name, key], ...context, light: value, derived: true, overridden: false });
+        entries.push({ path: [group.name, key], ...context, light: value, dark, derived: true, overridden: false });
       }
     }
     for (const [key, child] of Object.entries(explicit)) {

@@ -118,6 +118,12 @@
   /* --- navbar: Padding of a sticky navbar once stuck; the normal padding when $motion.stuck is off. --- */
   --navbar-stuck-padding: var(--space-2xs);
 
+  /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+  --shadow-color: 0.2 0.03 286;
+  --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.168), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.168), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.168);
+  --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.132), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.132), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.132), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.132);
+  --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.108), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.108), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.108), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.108), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.108);
+
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-0);
   --color-surface-raised: var(--neutral-0);
@@ -195,9 +201,8 @@
   --radius-surface: 8px;
   --radius-pill: 999px;
 
-  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.1);
-  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.15);
+  /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+  --scheme-dark: 0;
 
   /* --- reveal-distance: How far a [data-reveal] element travels as it scrolls into view. --- */
   --reveal-distance: var(--space-s);
@@ -229,6 +234,12 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
+    /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+    --shadow-color: 0.05 0.03 286;
+    --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.336), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.336), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.336);
+    --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.264), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.264), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.264), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.264);
+    --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.216), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.216), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.216), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.216), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.216);
+
     /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
     --color-surface: var(--neutral-950);
     --color-surface-raised: var(--neutral-900);
@@ -255,14 +266,19 @@
     --color-status-info-border: var(--info-border-dark);
     --color-status-info-text: var(--info-text-dark);
 
-    /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-    --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
-    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+    /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+    --scheme-dark: 1;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
+
+  /* --- shadow: Elevation, derived from $shape.shadow: layered shadows tinted with the neutral hue (shadow.color holds OKLCH components). --- */
+  --shadow-color: 0.05 0.03 286;
+  --shadow-raised: 0.22px 0.44px 0.89px -0.06px oklch(var(--shadow-color) / 0.336), 0.89px 1.78px 3.56px -0.22px oklch(var(--shadow-color) / 0.336), 2px 4px 8px -0.5px oklch(var(--shadow-color) / 0.336);
+  --shadow-floating: 0.44px 0.88px 1.75px -0.11px oklch(var(--shadow-color) / 0.264), 1.75px 3.5px 7px -0.44px oklch(var(--shadow-color) / 0.264), 3.94px 7.88px 15.75px -0.98px oklch(var(--shadow-color) / 0.264), 7px 14px 28px -1.75px oklch(var(--shadow-color) / 0.264);
+  --shadow-overlay: 0.72px 1.44px 2.88px -0.18px oklch(var(--shadow-color) / 0.216), 2.88px 5.76px 11.52px -0.72px oklch(var(--shadow-color) / 0.216), 6.48px 12.96px 25.92px -1.62px oklch(var(--shadow-color) / 0.216), 11.52px 23.04px 46.08px -2.88px oklch(var(--shadow-color) / 0.216), 18px 36px 72px -4.5px oklch(var(--shadow-color) / 0.216);
 
   /* --- color: Semantic colour roles. The only colour tokens blocks may use. --- */
   --color-surface: var(--neutral-950);
@@ -290,7 +306,6 @@
   --color-status-info-border: var(--info-border-dark);
   --color-status-info-text: var(--info-text-dark);
 
-  /* --- shadow: Elevation. Raised: dropdowns, card hover. Overlay: modal, offcanvas. --- */
-  --shadow-raised: 0 10px 25px -5px rgb(0 0 0 / 0.5);
-  --shadow-overlay: 0 10px 25px rgb(0 0 0 / 0.6);
+  /* --- scheme: Which scheme is showing, as a number CSS can calculate with: dark is 0 in the light scheme and 1 in the dark. --- */
+  --scheme-dark: 1;
 }

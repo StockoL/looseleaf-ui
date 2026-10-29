@@ -199,3 +199,40 @@ test("invalid $motion values are rejected with their path", () => {
   assert.throws(() => compile({ space, $motion: { lift: "huge" } }), /\$motion\.lift/);
   assert.throws(() => compile({ space, $motion: { spring: { mass: 0, stiffness: 1, damping: 1 } } }), /\$motion\.spring\.mass/);
 });
+
+const shape = (shadow = {}) => ({ $palette: { neutral: { hue: 200, chroma: 0.01 }, lightness: palette.lightness }, $shape: { shadow } });
+
+test("$shape.shadow derives a tinted colour and three layered elevations", () => {
+  const t = byName(compile(shape()).tokens);
+  assert.equal(t["--shadow-color"].light, "0.2 0.03 200");
+  assert.equal(t["--shadow-color"].dark, "0.05 0.03 200");
+  const layers = (name) => t[name].value.split("oklch(").length - 1;
+  assert.deepEqual([layers("--shadow-raised"), layers("--shadow-floating"), layers("--shadow-overlay")], [3, 4, 5]);
+  assert.match(t["--shadow-raised"].value, /oklch\(var\(--shadow-color\) \/ [\d.]+\)/);
+  assert.equal(t["--shadow-raised"].tier, 2);
+});
+
+test("one light source: every layer drops twice as far as it shifts", () => {
+  for (const [angle, sign] of [["top-left", 1], ["top", 0], ["top-right", -1]]) {
+    const value = byName(compile(shape({ angle })).tokens)["--shadow-floating"].value;
+    for (const layer of value.split(/\), /)) {
+      const [x, y] = layer.match(/-?[\d.]+(?=px)/g);
+      assert.ok(Math.abs(Number(x) - (sign * Number(y)) / 2) < 0.02, `${angle}: ${x} vs ${y}`);
+    }
+  }
+});
+
+test("higher elevations are fainter per layer; strength scales opacity; dark is stronger", () => {
+  const t = byName(compile(shape({ strength: 1 })).tokens);
+  const alpha = (value) => Number(value.match(/\/ ([\d.]+)\)/)[1]);
+  assert.ok(alpha(t["--shadow-raised"].value) > alpha(t["--shadow-overlay"].value));
+  assert.ok(alpha(t["--shadow-raised"].darkValue) > alpha(t["--shadow-raised"].value));
+  const none = byName(compile(shape({ strength: 0 })).tokens);
+  assert.equal(alpha(none["--shadow-raised"].value), 0);
+});
+
+test("invalid $shape.shadow values are rejected with their path", () => {
+  assert.throws(() => compile(shape({ strength: 2 })), /\$shape\.shadow\.strength/);
+  assert.throws(() => compile(shape({ softness: -1 })), /\$shape\.shadow\.softness/);
+  assert.throws(() => compile(shape({ angle: "below" })), /\$shape\.shadow\.angle/);
+});
