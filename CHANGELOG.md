@@ -11,6 +11,7 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 - `CHANGELOG.md`; each GitHub release now takes its notes from the matching section here.
 - [docs/CONFIGURATOR.md](docs/CONFIGURATOR.md): a walkthrough of the token configurator with screenshots, linked from both READMEs.
 - `npm run test:nojs` and a CI job: with JavaScript disabled, every nav link and dropdown item is reachable at 360 and 1280 px, the accordion opens, the form submits, nothing interactive is hidden, and every link inside a dialog is also reachable outside one.
+- README section "Crediting LooseLeaf UI in your project": a copy-pasteable description for a site's credits page, and a one-line footer version.
 - `theme.js` sets `data-js` on `<html>` as its first act, so CSS can tell when scripts run.
 - Browser tests (`npm run test:browser`, Playwright): axe-core WCAG 2.2 AA checks on the demo in both schemes and on the configurator, and full-page visual regression of the demo at 360, 768 and 1280 px in light and dark, run in CI.
 
@@ -25,6 +26,8 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 - The collapsed `.navbar` menu is opened by an empty `<details class="navbar__toggle">` before `.navbar__menu`, shown through `.navbar:has()`, so it works with no JavaScript. Give its `<summary>` `aria-label` and `aria-controls`.
 - Modals and drawers open with Invoker Commands (`commandfor="id" command="show-modal"`, `command="close"`). `looseleaf.js` supplies the same attributes in browsers without them, and still closes a dialog on a backdrop click.
 - In-page links scroll smoothly from CSS (`scroll-behavior`, only without reduced motion); `looseleaf.js` now only moves focus to the target.
+
+- `dist/looseleaf.css`, `looseleaf.js` and `theme.js` open with a one-line MIT licence notice (version, copyright, repository), the only thing the licence asks users to keep.
 
 ### Deprecated
 
