@@ -138,7 +138,11 @@ npx looseleaf-ui compile design-tokens.json --out static/theme/
 
 That writes `looseleaf-tokens.css` and `tokens.resolved.json` into the folder, and you continue with Route A or B. Node 20+ is the only requirement. For the same `design-tokens.json`, the CSS is byte-identical to the configurator's export; the JSON differs only in its `$generated` timestamp.
 
-The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub: `npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/`.
+The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub:
+
+```bash
+npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/
+```
 
 #### Updating a theme later
 
