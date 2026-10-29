@@ -14,8 +14,8 @@ jobs:
     name: Tag matches every version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: node scripts/bump-version.js --check "${{ github.ref_name }}"
@@ -33,7 +33,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: node scripts/release-notes.js "${{ github.ref_name }}" > release-notes.md
       - run: >-
           gh release create "${{ github.ref_name }}"
@@ -58,8 +58,8 @@ jobs:
       contents: read
       id-token: write # trusted publishing (OIDC) and provenance
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
@@ -80,7 +80,7 @@ jobs:
     permissions:
       id-token: write # trusted publishing (OIDC); no API token is stored
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: python-dist
           path: dist/
