@@ -365,11 +365,11 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.input-group` | Input joined to `.input-group__addon` or a button | — | — |
 | `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | — |
 | `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
-| `.dropdown` | Menu inside `.dropdown-wrapper` (`.dropdown__item`, `.dropdown__divider`) | `[data-state="open"]` on the wrapper; `[data-align="end"]` | `[data-toggle="dropdown"]` |
+| `.dropdown` | Menu inside a native `<details class="dropdown-wrapper">` whose `<summary>` is the trigger (`.dropdown__item`, `.dropdown__divider`); opens without JavaScript | `[open]` on the wrapper; `[data-align="end"]` | optional: Escape, outside click, arrow keys |
 | `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped | — |
-| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`, `.navbar__toggle`); collapses below 45rem of its own width | `[data-sticky]`; `[data-state="open"]` on the menu | `.navbar__toggle` |
-| `.modal` | Native `<dialog>`, animated in and out | `[open]` | `[data-open-dialog]`, `[data-close-dialog]` |
-| `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `[data-open-dialog]`, `[data-close-dialog]` |
+| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[open]` on the toggle | optional: Escape |
+| `.modal` | Native `<dialog>`, animated in and out | `[open]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
+| `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
 | `.table` | Data tables inside a scrolling `.table-wrapper` | `[data-striped]`, `[data-hover]`, `[data-density="compact"]`; cells take `[data-align="end"]` | — |
 | `.prose` | Rich text you don't control (CMS, Markdown) | — | — |
@@ -396,15 +396,63 @@ Utilities sit at the top of the layer stack and do one thing each.
 
 ### dist/looseleaf.js (src/scripts/behaviors.js)
 
-A zero-dependency drop-in script using event delegation: one click, one keydown and one focusout listener on the document. It exports nothing, works as a classic or module script, and is safe to include twice.
+An enhancement, not a dependency: every menu, link and form already works without it, and `npm run test:nojs` checks that in CI. It uses event delegation on the document, exports nothing, works as a classic or module script, and is safe to include twice. What it adds:
 
-1. Accordions: none needed. `.accordion` is built on native `<details name="…">`.
-2. Dropdowns: toggle on click; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; Escape closes and returns focus; leaving the menu closes it. Triggers get `aria-controls` and `aria-expanded` wired automatically.
-3. Navbar: the toggle opens and closes the collapsed menu (Escape closes it too), with `aria-controls` wired.
-4. Modals and drawers: `[data-open-dialog]` and `[data-close-dialog]` drive native `<dialog>`; a backdrop click closes it.
+1. Accordions: nothing needed. `.accordion` is built on native `<details name="…">`.
+2. Dropdowns: Escape closes and returns focus to the trigger; an outside click, choosing an item or moving focus away closes it; ArrowDown/ArrowUp on the trigger open at the first or last item; arrows, Home and End move through items; one menu is open at a time.
+3. Navbar: Escape closes the collapsed menu, and so does following one of its in-page links.
+4. Modals and drawers: buttons with `commandfor="dialog-id"` and `command="show-modal"` or `command="close"` work natively in browsers with Invoker Commands; the script reads the same attributes everywhere else. A backdrop click closes the dialog.
 5. Alerts: `.alert__close` animates the alert out, then removes it.
 6. Copy: `[data-copy]` copies its value, swaps the button label and announces the result through a polite live region.
-7. In-page links: scroll motion-safely, move focus to the target (adding `tabindex="-1"` where needed), and close the dialog or menu they were clicked from.
+7. In-page links: CSS scrolls smoothly (unless motion is reduced); the script moves focus to the target (adding `tabindex="-1"` where needed) and closes the dialog it was clicked from.
+
+`theme.js` also sets `data-js` on `<html>`. CSS may hide something because a script will reveal it only under `[data-js]`.
+
+**Dialogs need a second route.** Without JavaScript and without Invoker Commands, a dialog can't open. A dialog holding only a confirmation can live with that; one holding content can't. Put that content somewhere reachable without the dialog too: drawer navigation repeats the navbar's links, and a form in a modal is also a page of its own.
+
+#### Upgrading markup from 2.0
+
+The 2.0 markup still works through 2.x, with one console warning per kind; it stops working in 3.0.
+
+```html
+<!-- 2.0: opens only with JavaScript -->
+<div class="dropdown-wrapper">
+  <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+  <div class="dropdown" role="menu">
+    <a href="/edit" class="dropdown__item" role="menuitem">Edit</a>
+  </div>
+</div>
+
+<!-- 2.1: a native disclosure -->
+<details class="dropdown-wrapper">
+  <summary class="button">Options</summary>
+  <div class="dropdown">
+    <a href="/edit" class="dropdown__item">Edit</a>
+  </div>
+</details>
+```
+
+```html
+<!-- 2.0 navbar toggle -->
+<button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">…</button>
+<nav class="navbar__menu">…</nav>
+
+<!-- 2.1: an empty <details> before the menu -->
+<details class="navbar__toggle">
+  <summary aria-label="Menu" aria-controls="primary-nav">…</summary>
+</details>
+<nav id="primary-nav" class="navbar__menu">…</nav>
+```
+
+```html
+<!-- 2.0 dialog triggers -->
+<button data-open-dialog="settings">Settings</button>
+<button data-close-dialog>Close</button>
+
+<!-- 2.1: Invoker Commands -->
+<button type="button" commandfor="settings" command="show-modal">Settings</button>
+<button type="button" commandfor="settings" command="close">Close</button>
+```
 
 ### dist/theme.js (src/scripts/theme.js)
 
@@ -427,6 +475,7 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run build:css` | Bundle `src/index.css` and copy the scripts into `dist/` |
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
+| `npm run test:nojs` | The demo with JavaScript disabled at 360 and 1280 px: every nav link and dropdown item reachable, the accordion opens, the form submits, nothing interactive hidden, every dialog link also reachable outside a dialog |
 | `npm run test:browser` | Browser tests with Playwright: axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
 
