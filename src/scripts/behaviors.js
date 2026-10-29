@@ -1,15 +1,18 @@
 /**
  * LooseLeaf UI - Behaviours
- * Drop-in progressive enhancement through event delegation. Exports nothing,
- * works as a classic or a module script, and is safe to include twice.
+ * Enhancement only: every control already works without this file. Event
+ * delegation on the document; exports nothing, works as a classic or a module
+ * script, and is safe to include twice.
  *
- * Hooks:
- *   .dropdown-wrapper > [data-toggle="dropdown"] + .dropdown   menu button (arrows, Home/End, Escape)
- *   .navbar__toggle + .navbar__menu                           collapsed navbar menu
- *   [data-open-dialog="id"] / [data-close-dialog]              native <dialog> triggers
- *   .alert__close                                              dismiss an alert
- *   [data-copy="text"] (optional data-copy-message)            copy to clipboard, announced
- *   a[href^="#"]                                               motion-safe in-page scrolling
+ * What it adds, and why nothing native does it:
+ *   details.dropdown-wrapper     Escape, outside click and focus-out close the menu, arrow keys
+ *                                move through items, one menu open at a time (<details> has none of these)
+ *   details.navbar__toggle       Escape and in-page links close the collapsed menu
+ *   button[commandfor]           Invoker Commands fallback for browsers without them (show-modal, close)
+ *   dialog                       a backdrop click closes it (no native equivalent)
+ *   .alert__close                removes the alert (dismissing is optional; the alert reads fine without)
+ *   [data-copy="text"]           Clipboard API, announced (optional data-copy-message)
+ *   a[href^="#"]                 moves focus to the target; CSS does the smooth scroll
  * Accordions need no script: they are native <details>.
  */
 
@@ -20,50 +23,16 @@
   if (window[GUARD]) return;
   window[GUARD] = true;
 
-  let uid = 0;
-  const ensureId = (element, prefix) => element.id || (element.id = `${prefix}-${++uid}`);
-  const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   /* ------------------------------------------------------------------------
-     ARIA WIRING: give toggles aria-controls/aria-expanded that match the DOM
+     DROPDOWN (<details class="dropdown-wrapper">)
      ------------------------------------------------------------------------ */
-  function wire() {
-    document.querySelectorAll(".dropdown-wrapper").forEach((wrapper) => {
-      const trigger = wrapper.querySelector('[data-toggle="dropdown"]');
-      const menu = wrapper.querySelector(".dropdown");
-      if (!trigger || !menu) return;
-      trigger.setAttribute("aria-controls", ensureId(menu, "ll-dropdown"));
-      trigger.setAttribute("aria-haspopup", "true");
-      trigger.setAttribute("aria-expanded", String(wrapper.dataset.state === "open"));
-    });
-
-    document.querySelectorAll(".navbar__toggle").forEach((toggle) => {
-      const menu = toggle.closest(".navbar")?.querySelector(".navbar__menu");
-      if (!menu) return;
-      toggle.setAttribute("aria-controls", ensureId(menu, "ll-navbar-menu"));
-      toggle.setAttribute("aria-expanded", String(menu.dataset.state === "open"));
-    });
-  }
-
-  /* ------------------------------------------------------------------------
-     DROPDOWN
-     ------------------------------------------------------------------------ */
+  const openDropdowns = () => document.querySelectorAll("details.dropdown-wrapper[open]");
   const dropdownItems = (wrapper) =>
     [...wrapper.querySelectorAll(".dropdown__item")].filter((item) => !item.matches(':disabled, [aria-disabled="true"]'));
 
-  function setDropdown(wrapper, open, focus) {
-    wrapper.dataset.state = open ? "open" : "closed";
-    wrapper.querySelector('[data-toggle="dropdown"]')?.setAttribute("aria-expanded", String(open));
-    if (!open || !focus) return;
-    const items = dropdownItems(wrapper);
-    // The menu becomes focusable once visibility flips, on the next frame
-    requestAnimationFrame(() => (focus === "last" ? items[items.length - 1] : items[0])?.focus());
-  }
-
-  function closeDropdowns(except) {
-    document.querySelectorAll('.dropdown-wrapper[data-state="open"]').forEach((wrapper) => {
-      if (wrapper !== except) setDropdown(wrapper, false);
-    });
+  function closeDropdown(wrapper, returnFocus) {
+    wrapper.open = false;
+    if (returnFocus) wrapper.querySelector(":scope > summary")?.focus();
   }
 
   function moveInDropdown(wrapper, key) {
@@ -77,15 +46,16 @@
     return true;
   }
 
-  /* ------------------------------------------------------------------------
-     NAVBAR MENU
-     ------------------------------------------------------------------------ */
-  function setNavMenu(toggle, open) {
-    const menu = toggle.closest(".navbar")?.querySelector(".navbar__menu");
-    if (!menu) return;
-    menu.dataset.state = open ? "open" : "closed";
-    toggle.setAttribute("aria-expanded", String(open));
-  }
+  // toggle doesn't bubble, so listen in the capture phase: one menu open at a time
+  document.addEventListener(
+    "toggle",
+    (event) => {
+      const wrapper = event.target;
+      if (!(wrapper instanceof HTMLDetailsElement) || !wrapper.matches(".dropdown-wrapper") || !wrapper.open) return;
+      openDropdowns().forEach((other) => other !== wrapper && closeDropdown(other));
+    },
+    true,
+  );
 
   /* ------------------------------------------------------------------------
      ANNOUNCEMENTS: one polite live region, created on first use
@@ -141,24 +111,31 @@
   }
 
   /* ------------------------------------------------------------------------
-     IN-PAGE LINKS: motion-safe scroll, and move focus to the target
+     DIALOGS: Invoker Commands fallback. Same markup either way; this does
+     nothing in browsers that support command/commandfor natively.
      ------------------------------------------------------------------------ */
-  function followInPageLink(link, event) {
+  const nativeCommands = "commandForElement" in HTMLButtonElement.prototype;
+  function runCommand(button) {
+    const dialog = document.getElementById(button.getAttribute("commandfor"));
+    if (!(dialog instanceof HTMLDialogElement)) return;
+    const command = button.getAttribute("command");
+    if (command === "show-modal" && !dialog.open) dialog.showModal();
+    else if (command === "close" || command === "request-close") dialog.close();
+  }
+
+  /* ------------------------------------------------------------------------
+     IN-PAGE LINKS: the browser scrolls (smoothly, from CSS); keyboard and
+     screen reader users also need focus moved to the target
+     ------------------------------------------------------------------------ */
+  function followInPageLink(link) {
     const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
     if (!target) return;
-    event.preventDefault();
-
     link.closest("dialog[open]")?.close();
-    const navToggle = link.closest(".navbar")?.querySelector(".navbar__toggle");
-    if (navToggle && link.closest('.navbar__menu[data-state="open"]')) setNavMenu(navToggle, false);
-
-    target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
-    // Non-interactive targets need tabindex="-1" to take focus for keyboard and screen reader users
-    if (!target.matches('a[href], button, input, select, textarea, summary, [tabindex]')) {
-      target.setAttribute("tabindex", "-1");
-    }
+    const navToggle = link.closest(".navbar")?.querySelector("details.navbar__toggle[open]");
+    if (navToggle) navToggle.open = false;
+    // Non-interactive targets need tabindex="-1" to take focus
+    if (!target.matches("a[href], button, input, select, textarea, summary, [tabindex]")) target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
-    if (location.hash !== link.hash) history.pushState(null, "", link.hash);
   }
 
   /* ------------------------------------------------------------------------
@@ -168,33 +145,16 @@
     const target = event.target;
     if (!(target instanceof Element)) return;
 
-    const dropdownTrigger = target.closest('[data-toggle="dropdown"]');
-    if (dropdownTrigger) {
-      const wrapper = dropdownTrigger.closest(".dropdown-wrapper");
-      if (!wrapper) return;
-      closeDropdowns(wrapper);
-      setDropdown(wrapper, wrapper.dataset.state !== "open");
-      return;
-    }
-    const openWrapper = target.closest('.dropdown-wrapper[data-state="open"]');
-    if (!openWrapper) closeDropdowns();
-    else if (target.closest(".dropdown__item")) setDropdown(openWrapper, false);
+    // Outside a menu closes it; choosing an item closes it too
+    const inDropdown = target.closest("details.dropdown-wrapper");
+    openDropdowns().forEach((wrapper) => wrapper !== inDropdown && closeDropdown(wrapper));
+    if (inDropdown?.open && target.closest(".dropdown__item")) closeDropdown(inDropdown);
 
-    const navToggle = target.closest(".navbar__toggle");
-    if (navToggle) {
-      setNavMenu(navToggle, navToggle.getAttribute("aria-expanded") !== "true");
-      return;
-    }
+    if (legacyClick(target)) return;
 
-    const opener = target.closest("[data-open-dialog]");
-    if (opener) {
-      document.getElementById(opener.dataset.openDialog)?.showModal?.();
-      return;
-    }
-
-    const closer = target.closest("[data-close-dialog]");
-    if (closer) {
-      closer.closest("dialog")?.close();
+    const commander = !nativeCommands && target.closest("button[commandfor]");
+    if (commander) {
+      runCommand(commander);
       return;
     }
 
@@ -221,25 +181,24 @@
     }
 
     const link = target.closest('a[href^="#"]:not([href="#"])');
-    if (link) followInPageLink(link, event);
+    if (link) followInPageLink(link);
   });
 
   document.addEventListener("keydown", (event) => {
     if (!(event.target instanceof Element)) return;
-    const wrapper = event.target.closest(".dropdown-wrapper");
+    if (legacyKeydown(event)) return;
+    const wrapper = event.target.closest("details.dropdown-wrapper");
 
     if (event.key === "Escape") {
-      const open = wrapper?.dataset.state === "open" ? wrapper : document.querySelector('.dropdown-wrapper[data-state="open"]');
+      const open = wrapper?.open ? wrapper : openDropdowns()[0];
       if (open) {
-        setDropdown(open, false);
-        open.querySelector('[data-toggle="dropdown"]')?.focus();
+        closeDropdown(open, true);
         return;
       }
-      const openMenu = document.querySelector('.navbar__menu[data-state="open"]');
-      const toggle = openMenu?.closest(".navbar")?.querySelector(".navbar__toggle");
-      if (toggle) {
-        setNavMenu(toggle, false);
-        toggle.focus();
+      const navToggle = document.querySelector("details.navbar__toggle[open]");
+      if (navToggle) {
+        navToggle.open = false;
+        navToggle.querySelector("summary")?.focus();
       }
       return;
     }
@@ -247,26 +206,97 @@
     if (!wrapper) return;
 
     // Arrow keys on the trigger open the menu at the first or last item
-    if (event.target.matches('[data-toggle="dropdown"]') && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+    if (event.target.matches(".dropdown-wrapper > summary") && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       event.preventDefault();
-      closeDropdowns(wrapper);
-      setDropdown(wrapper, true, event.key === "ArrowUp" ? "last" : "first");
+      wrapper.open = true;
+      const items = dropdownItems(wrapper);
+      (event.key === "ArrowUp" ? items[items.length - 1] : items[0])?.focus();
       return;
     }
 
-    if (wrapper.dataset.state === "open" && event.target.closest(".dropdown") && moveInDropdown(wrapper, event.key)) {
-      event.preventDefault();
-    }
+    if (wrapper.open && event.target.closest(".dropdown") && moveInDropdown(wrapper, event.key)) event.preventDefault();
   });
 
   // A menu closes once focus leaves it (Tab away, or focus moves elsewhere)
   document.addEventListener("focusout", (event) => {
-    if (!(event.target instanceof Element)) return;
-    const wrapper = event.target.closest('.dropdown-wrapper[data-state="open"]');
-    if (!wrapper || (event.relatedTarget && wrapper.contains(event.relatedTarget))) return;
-    if (event.relatedTarget) setDropdown(wrapper, false);
+    if (!(event.target instanceof Element) || !event.relatedTarget) return;
+    const wrapper = event.target.closest("details.dropdown-wrapper[open]");
+    if (wrapper && !wrapper.contains(event.relatedTarget)) closeDropdown(wrapper);
   });
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire, { once: true });
-  else wire();
+  /* ------------------------------------------------------------------------
+     DEPRECATED in 2.1, removed in 3.0: the scripted markup from 2.0, which
+     does nothing without JavaScript.
+       <div class="dropdown-wrapper"> + [data-toggle="dropdown"]  ->  <details class="dropdown-wrapper"> + <summary>
+       <button class="navbar__toggle">                             ->  <details class="navbar__toggle"><summary>
+       [data-open-dialog="id"] / [data-close-dialog]                ->  commandfor="id" command="show-modal" / "close"
+     ------------------------------------------------------------------------ */
+  const warned = new Set();
+  function deprecated(what, instead) {
+    if (warned.has(what)) return;
+    warned.add(what);
+    console.warn(`LooseLeaf UI: ${what} is deprecated and stops working in 3.0. Use ${instead} instead.`);
+  }
+
+  function setLegacyDropdown(wrapper, open) {
+    wrapper.dataset.state = open ? "open" : "closed";
+    wrapper.querySelector('[data-toggle="dropdown"]')?.setAttribute("aria-expanded", String(open));
+  }
+
+  function setLegacyNav(toggle, open) {
+    const menu = toggle.closest(".navbar")?.querySelector(".navbar__menu");
+    if (menu) menu.dataset.state = open ? "open" : "closed";
+    toggle.setAttribute("aria-expanded", String(open));
+  }
+
+  function legacyClick(target) {
+    const legacyOpen = document.querySelectorAll('div.dropdown-wrapper[data-state="open"]');
+    const trigger = target.closest('[data-toggle="dropdown"]');
+    legacyOpen.forEach((wrapper) => {
+      if (!wrapper.contains(target) || (!trigger && target.closest(".dropdown__item"))) setLegacyDropdown(wrapper, false);
+    });
+    if (trigger) {
+      deprecated('[data-toggle="dropdown"]', '<details class="dropdown-wrapper"> with a <summary>');
+      const wrapper = trigger.closest(".dropdown-wrapper");
+      if (wrapper) setLegacyDropdown(wrapper, wrapper.dataset.state !== "open");
+      return true;
+    }
+
+    const navToggle = target.closest("button.navbar__toggle");
+    if (navToggle) {
+      deprecated("<button class=\"navbar__toggle\">", '<details class="navbar__toggle"><summary>');
+      setLegacyNav(navToggle, navToggle.getAttribute("aria-expanded") !== "true");
+      return true;
+    }
+
+    const opener = target.closest("[data-open-dialog]");
+    if (opener) {
+      deprecated("[data-open-dialog]", 'commandfor="…" command="show-modal"');
+      document.getElementById(opener.dataset.openDialog)?.showModal?.();
+      return true;
+    }
+
+    const closer = target.closest("[data-close-dialog]");
+    if (closer) {
+      deprecated("[data-close-dialog]", 'commandfor="…" command="close"');
+      closer.closest("dialog")?.close();
+      return true;
+    }
+    return false;
+  }
+
+  function legacyKeydown(event) {
+    if (event.key !== "Escape") return false;
+    const wrapper = document.querySelector('div.dropdown-wrapper[data-state="open"]');
+    if (wrapper) {
+      setLegacyDropdown(wrapper, false);
+      wrapper.querySelector('[data-toggle="dropdown"]')?.focus();
+      return true;
+    }
+    const toggle = document.querySelector('.navbar__menu[data-state="open"]')?.closest(".navbar")?.querySelector("button.navbar__toggle");
+    if (!toggle) return false;
+    setLegacyNav(toggle, false);
+    toggle.focus();
+    return true;
+  }
 })();

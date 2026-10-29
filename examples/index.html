@@ -44,9 +44,9 @@
         <div class="cluster" style="--cluster-justify: space-between;">
           <a href="#main" class="navbar__brand">LooseLeaf UI</a>
 
-          <button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">
-            <svg class="icon" aria-hidden="true"><use href="#icon-menu" /></svg>
-          </button>
+          <details class="navbar__toggle">
+            <summary aria-label="Menu" aria-controls="primary-nav"><svg class="icon" aria-hidden="true"><use href="#icon-menu" /></svg></summary>
+          </details>
 
           <nav id="primary-nav" class="navbar__menu">
             <a href="#design-tokens" class="navbar__link">Tokens</a>
@@ -572,23 +572,23 @@
         <div class="wrapper flow">
           <h3 id="block-dropdown">Dropdown</h3>
           <div class="cluster" style="--cluster-justify: space-between;">
-            <div class="dropdown-wrapper">
-              <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
-              <div class="dropdown" role="menu">
-                <a href="#" class="dropdown__item" role="menuitem">Edit</a>
-                <a href="#" class="dropdown__item" role="menuitem">Duplicate</a>
+            <details class="dropdown-wrapper">
+              <summary class="button">Options</summary>
+              <div class="dropdown">
+                <a href="#" class="dropdown__item">Edit</a>
+                <a href="#" class="dropdown__item">Duplicate</a>
                 <hr class="dropdown__divider" />
-                <a href="#" class="dropdown__item" role="menuitem">Delete</a>
+                <a href="#" class="dropdown__item">Delete</a>
               </div>
-            </div>
-            <div class="dropdown-wrapper">
-              <button class="button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aligned to end</button>
-              <div class="dropdown" data-align="end" role="menu">
-                <a href="#" class="dropdown__item" role="menuitem">Profile</a>
-                <a href="#" class="dropdown__item" role="menuitem">Settings</a>
-                <a href="#" class="dropdown__item" role="menuitem">Sign out</a>
+            </details>
+            <details class="dropdown-wrapper">
+              <summary class="button">Aligned to end</summary>
+              <div class="dropdown" data-align="end">
+                <a href="#" class="dropdown__item">Profile</a>
+                <a href="#" class="dropdown__item">Settings</a>
+                <a href="#" class="dropdown__item">Sign out</a>
               </div>
-            </div>
+            </details>
           </div>
         </div>
       </section>
@@ -598,8 +598,8 @@
         <div class="wrapper flow">
           <h3 id="block-overlays">Modal and offcanvas</h3>
           <div class="cluster">
-            <button class="button" type="button" data-open-dialog="demo-modal">Open modal</button>
-            <button class="button" type="button" data-open-dialog="demo-drawer">Open drawer</button>
+            <button class="button" type="button" commandfor="demo-modal" command="show-modal">Open modal</button>
+            <button class="button" type="button" commandfor="demo-drawer" command="show-modal">Open drawer</button>
           </div>
         </div>
       </section>
@@ -762,15 +762,16 @@
     </footer>
 
     <!-- ================================================================
-         MODAL & OFFCANVAS (native <dialog>, triggered via behaviors.js)
+         MODAL & OFFCANVAS (native <dialog>, opened with Invoker Commands;
+         behaviors.js fills in for browsers without them)
          ================================================================ -->
     <dialog class="modal" id="demo-modal">
       <div class="flow">
         <h3>Modal Title</h3>
-        <p>Native <code>&lt;dialog&gt;</code>, opened via <code>data-open-dialog</code> and closed via backdrop click, Escape, or <code>data-close-dialog</code>.</p>
+        <p>Native <code>&lt;dialog&gt;</code>, opened by a button with <code>commandfor</code> and <code>command="show-modal"</code>, and closed by Escape, a backdrop click or <code>command="close"</code>.</p>
         <div class="cluster" style="--cluster-justify: flex-end;">
-          <button class="button" data-close-dialog>Cancel</button>
-          <button class="button" data-variant="primary" data-close-dialog>Confirm</button>
+          <button class="button" type="button" commandfor="demo-modal" command="close">Cancel</button>
+          <button class="button" type="button" data-variant="primary" commandfor="demo-modal" command="close">Confirm</button>
         </div>
       </div>
     </dialog>
@@ -779,7 +780,7 @@
       <div class="wrapper flow">
         <div class="cluster" style="--cluster-justify: space-between;">
           <h3>Navigation</h3>
-          <button class="button" type="button" data-icon-only data-close-dialog aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
+          <button class="button" type="button" data-icon-only commandfor="demo-drawer" command="close" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#icon-close" /></svg></button>
         </div>
         <nav aria-label="Drawer">
           <ul class="flow" role="list">

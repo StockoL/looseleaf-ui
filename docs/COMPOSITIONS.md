@@ -233,14 +233,14 @@ A slide-out mobile menu or filter drawer using the native HTML5 `<dialog>` eleme
 
 ```html
 <!-- Trigger Button -->
-<button class="button" data-open-dialog="mobile-menu-drawer">Open Menu</button>
+<button class="button" type="button" commandfor="mobile-menu-drawer" command="show-modal">Open Menu</button>
 
 <!-- Slide-Out Drawer Dialog -->
 <dialog class="offcanvas" id="mobile-menu-drawer">
   <div class="wrapper flow">
     <div class="cluster" style="--cluster-justify: space-between;">
       <h3>Navigation</h3>
-      <button class="button" data-size="small" data-close-dialog>Close</button>
+      <button class="button" type="button" data-size="small" commandfor="mobile-menu-drawer" command="close">Close</button>
     </div>
 
     <nav class="flow">
@@ -256,6 +256,7 @@ A slide-out mobile menu or filter drawer using the native HTML5 `<dialog>` eleme
 #### Why This Works
 
 - Native Accessibility Layering: Nesting `.flow` inside the native `<dialog>` element guarantees focus trapping and keyboard navigation routes work out of the box while automating vertical link rhythm.
+- A Route Without JavaScript: A dialog can't open without JavaScript in browsers that lack Invoker Commands, so drawer navigation must repeat links that are reachable elsewhere, such as the navbar's `<details>` menu. Any dialog that holds content, not just a confirmation, needs a non-dialog route to the same thing.
 - Isolated Spatial Constraints: The `.wrapper` primitive prevents drawer text from pressing against screen edges on mobile devices without hardcoding margins into individual navigation anchors.
 
 ### <a name="case-study-5"></a> Case Study 5: The Bento Feature Grid

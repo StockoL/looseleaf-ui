@@ -15,10 +15,10 @@
       <div class="wrapper">
         <div class="cluster" style="--cluster-justify: space-between;">
           <a class="navbar__brand" href="{% url 'enquiry' %}">LooseLeaf for Django</a>
-          <button class="navbar__toggle" type="button" aria-expanded="false" aria-label="Menu">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </button>
-          <nav class="navbar__menu" aria-label="Primary">
+          <details class="navbar__toggle">
+            <summary aria-label="Menu" aria-controls="primary-nav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></summary>
+          </details>
+          <nav id="primary-nav" class="navbar__menu" aria-label="Primary">
             <a class="navbar__link" href="{% url 'enquiry' %}"{% if request.resolver_match.url_name == 'enquiry' %} aria-current="page"{% endif %}>Enquiry form</a>
             <a class="navbar__link" href="{% url 'components' %}"{% if request.resolver_match.url_name == 'components' %} aria-current="page"{% endif %}>Components</a>
             <button class="button" type="button" data-variant="ghost" data-theme-toggle>Theme: <span data-theme-label>Auto</span></button>

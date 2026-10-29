@@ -20,6 +20,13 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* In-page links scroll smoothly, unless motion is reduced (no script needed) */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="reduced"]) {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   min-block-size: 100dvh; /* dvh, not vh: tracks mobile browser toolbars */
   font-family: var(--font-body);

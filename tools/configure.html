@@ -48,18 +48,18 @@
           </div>
 
           <div class="cluster" style="--gutter: var(--space-2xs);">
-            <button class="button" type="button" data-open-dialog="import-dialog">Import</button>
-            <div class="dropdown-wrapper">
-              <button class="button" type="button" id="export-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="button" type="button" commandfor="import-dialog" command="show-modal">Import</button>
+            <details class="dropdown-wrapper">
+              <summary class="button" id="export-menu">
                 Export <svg class="icon" aria-hidden="true"><use href="#icon-chevron" /></svg>
-              </button>
-              <div class="dropdown" data-align="end" role="menu" style="--dropdown-width: 16rem;">
-                <button class="dropdown__item" type="button" role="menuitem" data-export="bundle">Theme bundle (.zip)</button>
-                <button class="dropdown__item" type="button" role="menuitem" data-export="source">Tokens source (design-tokens.json)</button>
+              </summary>
+              <div class="dropdown" data-align="end" style="--dropdown-width: 16rem;">
+                <button class="dropdown__item" type="button" data-export="bundle">Theme bundle (.zip)</button>
+                <button class="dropdown__item" type="button" data-export="source">Tokens source (design-tokens.json)</button>
                 <hr class="dropdown__divider" />
-                <button class="dropdown__item" type="button" role="menuitem" data-export="css">Copy tokens CSS</button>
+                <button class="dropdown__item" type="button" data-export="css">Copy tokens CSS</button>
               </div>
-            </div>
+            </details>
             <button class="button" type="button" id="copy-link">
               <span data-label="idle">Copy link</span>
               <span data-label="copied">Copied</span>
@@ -132,7 +132,7 @@
     <dialog class="modal flow" id="import-dialog" aria-labelledby="import-title">
       <div class="cluster" style="--cluster-justify: space-between;">
         <h2 id="import-title">Import tokens</h2>
-        <button class="button" type="button" data-close-dialog aria-label="Close">
+        <button class="button" type="button" commandfor="import-dialog" command="close" aria-label="Close">
           <svg class="icon"><use href="#icon-close" /></svg>
         </button>
       </div>
