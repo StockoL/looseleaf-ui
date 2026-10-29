@@ -49,10 +49,10 @@ Load the release files from jsDelivr, always pinned to a tag (never `@main`), an
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.js" defer></script>
 ```
 
 The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
@@ -140,10 +140,10 @@ Put `looseleaf-tokens.css` wherever you serve static files and load it **after**
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.1.0/dist/looseleaf.js" defer></script>
 ```
 
 Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
@@ -158,7 +158,7 @@ npx looseleaf-ui compile design-tokens.json --out static/theme/
 
 That writes `looseleaf-tokens.css` and `tokens.resolved.json` into the folder, and you continue with Route A or B. Node 20+ is the only requirement. For the same `design-tokens.json`, the CSS is byte-identical to the configurator's export; the JSON differs only in its `$generated` timestamp.
 
-The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub:
+The `looseleaf-ui` npm package is published from 2.1.0 on. The same command also runs straight from GitHub, with nothing published:
 
 ```bash
 npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/

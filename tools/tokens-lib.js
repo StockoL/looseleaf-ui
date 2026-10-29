@@ -702,5 +702,5 @@ function zip(files, date = new Date()) {
   return { crc32, zip };
   })();
 
-  global.LooseLeafTokens = Object.assign({ VERSION: "2.0.0" }, modules["utopia.mjs"], modules["color.mjs"], modules["tokens-core.mjs"], modules["zip.mjs"]);
+  global.LooseLeafTokens = Object.assign({ VERSION: "2.1.0" }, modules["utopia.mjs"], modules["color.mjs"], modules["tokens-core.mjs"], modules["zip.mjs"]);
 })(typeof window !== "undefined" ? window : globalThis);

@@ -4,6 +4,8 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-29
+
 ### Added
 
 - `looseleaf-ui compile <design-tokens.json> --out <dir>` command line (`npx looseleaf-ui …` once the package is on npm): writes `looseleaf-tokens.css` and `tokens.resolved.json` exactly as the configurator's Theme bundle does, for builds and CI pipelines.
@@ -83,5 +85,6 @@ The first release of v2: a ground-up rework into a token-driven foundation, a to
 - A floating badge on a card is no longer clipped.
 - No block removes the focus outline.
 
-[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/StockoL/looseleaf-ui/releases/tag/v2.0.0
