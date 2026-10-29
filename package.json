@@ -1,6 +1,6 @@
 {
   "name": "looseleaf-ui",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Bespoke, architecture-first CUBE CSS design system template library.",
   "main": "dist/looseleaf.css",
   "style": "dist/looseleaf.css",

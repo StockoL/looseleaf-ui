@@ -49,10 +49,10 @@ Load the release files from jsDelivr, always pinned to a tag (never `@main`), an
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.js" defer></script>
 ```
 
 The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
@@ -140,10 +140,10 @@ Put `looseleaf-tokens.css` wherever you serve static files and load it **after**
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.js" defer></script>
 ```
 
 Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
@@ -433,7 +433,7 @@ An enhancement, not a dependency: every menu, link and form already works withou
 `looseleaf.js` joins all of them and is the recommended single include: 36.4 KB as shipped, 10.1 KB gzipped, about a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.3.0/dist/behaviours/tabs.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/behaviours/tabs.js"></script>
 ```
 
 | Module | Why it needs JavaScript | Without it | Hooks |
