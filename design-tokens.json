@@ -141,16 +141,22 @@
     "overlay": { "light": "0 10px 25px rgb(0 0 0 / 0.15)", "dark": "0 10px 25px rgb(0 0 0 / 0.6)" }
   },
   "duration": {
-    "$purpose": "Motion durations.",
+    "$purpose": "Motion durations. Entrances run slower than exits.",
     "quick": "150ms",
     "base": "250ms",
-    "slow": "400ms"
+    "slow": "400ms",
+    "enter": "{duration.base}",
+    "exit": "{duration.quick}"
   },
   "ease": {
-    "$purpose": "Motion easing curves.",
+    "$purpose": "Motion easing curves. Out-expo is for exits.",
     "standard": "cubic-bezier(0.4, 0, 0.2, 1)",
-    "spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+    "spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+    "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)"
   },
+  "press-scale": { "$value": "0.97", "$purpose": "Scale of a pressed button or choice (:active feedback)." },
+  "lift-distance": { "$value": "{space.3xs}", "$purpose": "How far .anim-lift and interactive cards rise on hover." },
+  "reveal-distance": { "$value": "{space.s}", "$purpose": "How far a [data-reveal] element travels as it scrolls into view." },
   "layer": {
     "$purpose": "Stacking order. Dialogs use the top layer and need no token.",
     "raised": 10,
