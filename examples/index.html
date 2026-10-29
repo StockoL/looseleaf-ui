@@ -52,6 +52,7 @@
             <a href="#design-tokens" class="navbar__link">Tokens</a>
             <a href="#compositions" class="navbar__link">Compositions</a>
             <a href="#blocks" class="navbar__link">Blocks</a>
+            <a href="#motion" class="navbar__link">Motion</a>
             <a href="#utilities" class="navbar__link">Utilities</a>
             <button class="button" type="button" data-variant="ghost" data-theme-toggle>
               <svg class="icon" aria-hidden="true"><use href="#icon-moon" /></svg>
@@ -710,6 +711,84 @@
       </section>
 
       <!-- ================================================================
+           MOTION (the motion layer: every effect is an enhancement)
+           ================================================================ -->
+      <section class="region" id="motion" aria-labelledby="motion-title">
+        <div class="wrapper flow">
+          <h2 id="motion-title">Motion</h2>
+          <p>
+            Each effect is fenced by <code>@supports</code> or the reduced-motion switches, so the page is complete without it.
+            Every duration is multiplied by <code>--motion-scale</code>, which the operating system's reduced-motion setting and
+            <code>data-motion="reduced"</code> on <code>&lt;html&gt;</code> both set to 0.
+          </p>
+
+          <div class="table-wrapper" role="region" aria-labelledby="motion-caption" tabindex="0">
+            <table class="table" data-density="compact">
+              <caption id="motion-caption">Motion enhancements in this browser</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Enhancement</th>
+                  <th scope="col">Where to see it</th>
+                  <th scope="col">This browser</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Entrances and exits</td><td>Dropdown, modal and drawer above</td><td><span class="badge" data-motion-check="entrances">Needs JavaScript to check</span></td></tr>
+                <tr><td>Press feedback</td><td>Press and hold any button</td><td><span class="badge" data-motion-check="press">Needs JavaScript to check</span></td></tr>
+                <tr><td>Height</td><td>The accordion above</td><td><span class="badge" data-motion-check="height">Needs JavaScript to check</span></td></tr>
+                <tr><td>Page transitions</td><td>Following a link to another page</td><td><span class="badge" data-motion-check="page">Needs JavaScript to check</span></td></tr>
+                <tr><td>Scroll reveal</td><td>The three cards below</td><td><span class="badge" data-motion-check="reveal">Needs JavaScript to check</span></td></tr>
+                <tr><td>Stuck navbar</td><td>A sticky navbar once it is stuck</td><td><span class="badge" data-motion-check="stuck">Needs JavaScript to check</span></td></tr>
+                <tr><td>Lift</td><td>Hover the cards below</td><td><span class="badge" data-motion-check="lift">Needs JavaScript to check</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid" style="--grid-min-item-size: 14rem;">
+            <article class="card" data-interactive data-reveal>
+              <div class="card__body flow">
+                <h4>Reveal and lift</h4>
+                <p class="text-muted"><code>data-reveal</code> fades it in as it scrolls into view; <code>data-interactive</code> lifts it on hover.</p>
+              </div>
+            </article>
+            <article class="card" data-interactive data-reveal>
+              <div class="card__body flow">
+                <h4>Never hidden</h4>
+                <p class="text-muted">Without scroll-driven animations, or with reduced motion, the card is simply there.</p>
+              </div>
+            </article>
+            <article class="card" data-interactive data-reveal>
+              <div class="card__body flow">
+                <h4>Opt-in</h4>
+                <p class="text-muted">Keep it off navigation, forms and anything above the fold.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <script>
+          // Demo only: report which motion enhancements this browser runs
+          (() => {
+            const supports = (query) => CSS.supports(query);
+            const checks = {
+              entrances: supports("transition-behavior: allow-discrete") ? "Yes" : "Menus only",
+              press: "Yes",
+              height: supports("interpolate-size: allow-keywords") ? "Yes (interpolate-size)" : supports("selector(::details-content)") ? "Yes (grid fallback)" : "No: opens instantly",
+              page: "CSSViewTransitionRule" in window ? "Yes" : "No: pages load as usual",
+              reveal: supports("animation-timeline: view()") ? "Yes" : "No: cards are simply visible",
+              stuck: supports("container-type: scroll-state") ? "Yes" : "No: the navbar keeps its size",
+              lift: matchMedia("(hover: hover)").matches ? "Yes" : "No: this device doesn't hover",
+            };
+            const motionOff = () => getComputedStyle(document.documentElement).getPropertyValue("--motion-scale").trim() === "0";
+            document.querySelectorAll("[data-motion-check]").forEach((badge) => {
+              const result = checks[badge.dataset.motionCheck];
+              badge.textContent = motionOff() ? `${result}, but motion is reduced` : result;
+              badge.dataset.status = result.startsWith("Yes") ? "success" : "info";
+            });
+          })();
+        </script>
+      </section>
+
+      <!-- ================================================================
            UTILITIES
            ================================================================ -->
       <section class="region bg-surface-sunken" id="utilities" aria-labelledby="utilities-title">
@@ -787,6 +866,7 @@
             <li><a href="#design-tokens">Tokens</a></li>
             <li><a href="#compositions">Compositions</a></li>
             <li><a href="#blocks">Blocks</a></li>
+            <li><a href="#motion">Motion</a></li>
             <li><a href="#utilities">Utilities</a></li>
           </ul>
         </nav>

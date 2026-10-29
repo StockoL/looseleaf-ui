@@ -46,7 +46,8 @@ for (const width of [360, 1280]) {
     });
 
     test("the accordion opens", async ({ page }) => {
-      const item = page.locator(".accordion__item").first();
+      const item = page.locator(".accordion__item").nth(1); // starts closed
+      await expect(item.locator(".accordion__content")).toBeHidden();
       await item.locator("summary").click();
       await expect(item.locator(".accordion__content")).toBeVisible();
     });
