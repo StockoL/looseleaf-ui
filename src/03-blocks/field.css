@@ -40,9 +40,14 @@
   flex: 1 1 8rem;
 }
 
-/* CUBE Exception: error state, from either the field or the control itself */
+/*
+ * CUBE Exception: error state, from the field, the control, or the browser:
+ * :user-invalid matches only once the visitor has interacted, so a control
+ * shows its error after it is left or the form is sent, with no script.
+ */
 .field[data-status="danger"] :is(.input, .select, .textarea),
-:is(.input, .select, .textarea)[aria-invalid="true"] {
+:is(.input, .select, .textarea)[aria-invalid="true"],
+:is(.input, .select, .textarea):user-invalid {
   --control-border: var(--color-status-danger);
   --control-bg: var(--color-status-danger-surface);
 }

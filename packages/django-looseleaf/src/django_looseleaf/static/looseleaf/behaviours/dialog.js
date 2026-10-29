@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.4.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Dialogs
  * Why script: Invoker Commands (commandfor/command) open and close <dialog>

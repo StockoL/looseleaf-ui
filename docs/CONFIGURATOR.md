@@ -77,7 +77,7 @@ To use a web font, type its name (for example `Inter`) in the optional family fi
 - **Spring**: movement in LooseLeaf (menus dropping in, cards lifting, the accordion's chevron) follows a spring. Three sliders shape it:
   - **Mass**: heavier springs move more slowly and swing further.
   - **Stiffness**: stiffer springs are quicker and snappier.
-  - **Damping**: less damping means more bounce. At 0 it never settles.
+  - **Damping**: less damping means more bounce. A spring too loose to settle is raised just enough that it does, and the panel says so.
 
   The plot shows the spring's path from start to rest, with the dashed line marking where it ends up, and the line under it says how long it takes to settle and how far it overshoots. The swatch below bounces along the same curve each time the spring changes, or when you press **Play**. If your system asks for reduced motion, it only moves when you press **Play**. The spring exports as `--ease-spring`, a CSS `linear()` curve.
 - **Durations**: the quick, base and slow speeds, in milliseconds. **Standard easing** is the curve for colour and opacity changes.

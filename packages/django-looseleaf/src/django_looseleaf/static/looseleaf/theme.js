@@ -1,6 +1,6 @@
-/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.4.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
- * LooseLeaf UI - Theme and motion
+ * LooseLeaf UI - Theme, motion and sound
  * Load in <head> as a blocking script (or inline it) so the stored choices are
  * on <html> before first paint.
  *
@@ -17,6 +17,10 @@
  * Each click switches between following the OS and reducing motion on this
  * site, which sets data-motion="reduced" (every duration becomes 0).
  * aria-pressed is true while motion is reduced.
+ *
+ * Sound: <button type="button" data-sound-toggle>Sound: <span data-sound-label>Off</span></button>
+ * Off until the visitor turns it on; sets data-sound-on on <html>, which
+ * sound.js needs (along with the site's own data-sound) before it plays anything.
  */
 
 (() => {
@@ -30,6 +34,7 @@
   const THEME_LABELS = { auto: "Auto", light: "Light", dark: "Dark" };
   const THEME_PRESSED = { auto: "mixed", light: "false", dark: "true" };
   const MOTION_KEY = "motion";
+  const SOUND_KEY = "sound";
 
   function read(key, allowed, fallback) {
     try {
@@ -51,12 +56,15 @@
 
   let theme = read(THEME_KEY, THEMES, "auto");
   let motion = read(MOTION_KEY, ["reduced"], "auto");
+  let sound = read(SOUND_KEY, ["on"], "off");
 
   function apply() {
     if (theme === "auto") delete root.dataset.theme;
     else root.dataset.theme = theme;
     if (motion === "reduced") root.dataset.motion = "reduced";
     else delete root.dataset.motion;
+    if (sound === "on") root.dataset.soundOn = "";
+    else delete root.dataset.soundOn;
   }
 
   function sync() {
@@ -68,6 +76,10 @@
     document.querySelectorAll("[data-motion-toggle]").forEach((toggle) => {
       toggle.setAttribute("aria-pressed", String(motion === "reduced"));
       toggle.querySelectorAll("[data-motion-label]").forEach((label) => (label.textContent = motion === "reduced" ? "Reduced" : "On"));
+    });
+    document.querySelectorAll("[data-sound-toggle]").forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String(sound === "on"));
+      toggle.querySelectorAll("[data-sound-label]").forEach((label) => (label.textContent = sound === "on" ? "On" : "Off"));
     });
   }
 
@@ -103,18 +115,25 @@
       revealTheme(themeToggle);
       return;
     }
-    if (!event.target.closest("[data-motion-toggle]")) return;
-    motion = motion === "reduced" ? "auto" : "reduced";
-    store(MOTION_KEY, motion, "auto");
+    if (event.target.closest("[data-motion-toggle]")) {
+      motion = motion === "reduced" ? "auto" : "reduced";
+      store(MOTION_KEY, motion, "auto");
+    } else if (event.target.closest("[data-sound-toggle]")) {
+      sound = sound === "on" ? "off" : "on";
+      store(SOUND_KEY, sound, "off");
+    } else {
+      return;
+    }
     apply();
     sync();
   });
 
   // Keep other open tabs in step
   window.addEventListener("storage", (event) => {
-    if (event.key !== THEME_KEY && event.key !== MOTION_KEY && event.key !== null) return;
+    if (![THEME_KEY, MOTION_KEY, SOUND_KEY, null].includes(event.key)) return;
     theme = read(THEME_KEY, THEMES, "auto");
     motion = read(MOTION_KEY, ["reduced"], "auto");
+    sound = read(SOUND_KEY, ["on"], "off");
     apply();
     sync();
   });

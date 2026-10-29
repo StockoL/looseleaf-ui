@@ -63,6 +63,15 @@ for (const width of [360, 1280]) {
       }
     });
 
+    test("an invalid field shows its error state after it is left, with no script", async ({ page }) => {
+      const email = page.locator("#live-email");
+      const border = () => email.evaluate((el) => getComputedStyle(el).borderTopColor);
+      const before = await border();
+      await email.fill("not-an-email");
+      await email.blur();
+      await expect.poll(border).not.toBe(before); // :user-invalid
+    });
+
     test("the form submits", async ({ page }) => {
       const form = page.locator("form").first();
       await form.locator('[type="submit"]').click();

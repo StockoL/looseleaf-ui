@@ -8,7 +8,7 @@ from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 
-from .. import controls, theme, tokens
+from .. import conf, controls, theme, tokens
 
 register = template.Library()
 
@@ -52,6 +52,22 @@ def looseleaf_theme(inline=True):
     if not inline:
         return format_html('<script src="{}"></script>', static("looseleaf/theme.js"))
     return mark_safe(f"<script>{_theme_source()}</script>")
+
+
+@register.simple_tag
+def looseleaf_html_attrs():
+    """Attributes for <html>: <html lang="en"{% looseleaf_html_attrs %}>.
+
+    With LOOSELEAF_SOUNDS set, opts the site in to interface sounds (data-sound, and
+    data-sound-src for a static prefix). Visitors still turn them on with a
+    [data-sound-toggle] button, and nothing plays without one.
+    """
+    sounds = conf.sounds()
+    if not sounds:
+        return ""
+    if sounds is True:
+        return mark_safe(" data-sound")
+    return format_html(' data-sound data-sound-src="{}"', static(f"{sounds}/"))
 
 
 @register.simple_tag

@@ -24,3 +24,12 @@ def theme_prefix():
     """LOOSELEAF_THEME: the static path prefix a theme bundle was unzipped into (e.g. "theme"), or None."""
     prefix = (getattr(settings, "LOOSELEAF_THEME", None) or "").strip("/")
     return prefix or None
+
+
+def sounds():
+    """LOOSELEAF_SOUNDS: False/None (off, the default), True (synthesised sounds), or a static
+    path prefix holding click.mp3, toggle.mp3 and success.mp3 (e.g. "sounds")."""
+    value = getattr(settings, "LOOSELEAF_SOUNDS", None)
+    if isinstance(value, str):
+        return value.strip("/") or None
+    return bool(value)

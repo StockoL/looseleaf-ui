@@ -1,9 +1,10 @@
-/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.4.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Copy to clipboard
  * Why script: writing to the clipboard needs the Clipboard API.
  * Without it: the text is on the page to select and copy by hand.
- * Hooks: [data-copy="text"] (optional data-copy-message), announced politely
+ * Hooks: [data-copy="text"] (optional data-copy-message), announced politely.
+ *        On success the button takes the done state (a checkmark), as done-state.js does.
  */
 
 (() => {
@@ -30,16 +31,18 @@
   }
 
   const timers = new WeakMap();
+  const CHECK = '<svg class="icon" data-done-icon viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5" /></svg>';
   async function copy(trigger) {
     try {
       await navigator.clipboard.writeText(trigger.dataset.copy);
-      trigger.dataset.state = "copied";
+      if (!trigger.querySelector("[data-done-icon]")) trigger.insertAdjacentHTML("beforeend", CHECK);
+      trigger.dataset.state = "done";
       announce(trigger.dataset.copyMessage || "Copied to clipboard");
       clearTimeout(timers.get(trigger));
       timers.set(
         trigger,
         setTimeout(() => {
-          if (trigger.dataset.state === "copied") delete trigger.dataset.state;
+          if (trigger.dataset.state === "done") delete trigger.dataset.state;
         }, 2000),
       );
     } catch {

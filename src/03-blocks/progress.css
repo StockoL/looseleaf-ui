@@ -1,0 +1,92 @@
+/* ==========================================================================
+   BLOCK: PROGRESS
+   Native <progress> and <meter>, styled. Nothing to script.
+     <progress class="progress" value="40" max="100">40%</progress>
+     <progress class="progress" aria-busy="true">Loading</progress>   (indeterminate)
+     <meter class="progress" value="0.7" low="0.3" high="0.8" optimum="1">70%</meter>
+   Give each an accessible name (a <label> or aria-label). An indeterminate
+   progress is busy: pair it with aria-busy="true" on what is loading.
+   ========================================================================== */
+
+.progress {
+  --progress-fill: var(--color-action);
+
+  appearance: none;
+  display: block;
+  inline-size: 100%;
+  block-size: var(--space-2xs);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border); /* the track shows on any surface */
+  color: var(--progress-fill); /* Firefox fills <progress> from color */
+  overflow: hidden;
+}
+
+.progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress::-webkit-progress-value {
+  background-color: var(--progress-fill);
+  border-radius: var(--radius-pill);
+  transition: inline-size calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.progress::-moz-progress-bar {
+  background-color: var(--progress-fill);
+  border-radius: var(--radius-pill);
+}
+
+/* Indeterminate: a band sweeps across; it stops under reduced motion */
+.progress:indeterminate {
+  background-image: linear-gradient(90deg, transparent 0 35%, var(--progress-fill) 35% 65%, transparent 65%);
+  background-size: 200% 100%;
+  animation: ll-indeterminate calc(var(--duration-slow) * var(--motion-scale) * 3) linear infinite;
+}
+
+.progress:indeterminate::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress:indeterminate::-moz-progress-bar {
+  background-color: transparent;
+}
+
+@keyframes ll-indeterminate {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* <meter>: the fill follows the value's standing against low, high and optimum */
+.progress::-webkit-meter-bar {
+  background: none;
+  border: 0;
+}
+
+.progress::-webkit-meter-optimum-value {
+  background: var(--color-status-success);
+}
+
+.progress::-webkit-meter-suboptimum-value {
+  background: var(--color-status-warning);
+}
+
+.progress::-webkit-meter-even-less-good-value {
+  background: var(--color-status-danger);
+}
+
+.progress:-moz-meter-optimum::-moz-meter-bar {
+  background: var(--color-status-success);
+}
+
+.progress:-moz-meter-sub-optimum::-moz-meter-bar {
+  background: var(--color-status-warning);
+}
+
+.progress:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+  background: var(--color-status-danger);
+}

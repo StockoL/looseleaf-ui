@@ -4,6 +4,26 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-10-29
+
+### Added
+
+- `.skeleton` block: text, title, avatar and block placeholder shapes with a shimmer that stops under reduced motion.
+- `.progress` block: native `<progress>` (including indeterminate) and `<meter>`, styled.
+- `.choice[data-variant="switch"]`: a switch with `.choice__thumb`, using Safari's native `switch` where it exists; the thumb squashes while pressed.
+- `:user-invalid` field styling: a field shows its error once it has been left, with no script. `form-feedback.js` still writes the message and sets `aria-invalid`.
+- `.clamp` utility (`--clamp-lines`, default 3).
+- The done state, `.button[data-state="done"]`: a checkmark draws in place of the label. `done-state.js` sets it after `[data-done-on="submit"]`, `[data-done-on="request"]` (htmx) or the `looseleaf:done` event, and copy buttons use it.
+- `sound.js`: opt-in interface sounds, synthesised or from your own files, on activation only. They need the site's `data-sound` and the visitor's `[data-sound-toggle]` (in `theme.js`, off by default), and never play without a toggle on the page. `--sound-volume` token.
+- `{% looseleaf_html_attrs %}` and `LOOSELEAF_SOUNDS` in `django-looseleaf`.
+- The README's rule that every loading state goes with `aria-busy`, and why drag and drop and haptics are not included.
+
+### Changed
+
+- Copy buttons show the done state (a checkmark) instead of swapping to a "Copied" label. The `data-state="copied"` label swap is deprecated and removed in 3.0.
+- The spring easing aims for about 25 points (at most 40), and a spring too loose to settle is clamped to a damping ratio of 0.1; the Motion panel says when.
+- The configurator's Copy link button uses the done state.
+
 ## [2.3.0] - 2026-10-29
 
 ### Added
@@ -146,7 +166,8 @@ The first release of v2: a ground-up rework into a token-driven foundation, a to
 - A floating badge on a card is no longer clipped.
 - No block removes the focus outline.
 
-[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.0.0...v2.1.0

@@ -602,7 +602,9 @@
       for (const [name, value] of [["x1", 0], ["x2", 200], ["y1", y(1)], ["y2", y(1)]]) target.setAttribute(name, value);
 
       const overshoot = Math.round(spring.overshoot * 100);
-      const label = `Settles in ${spring.settleMs} ms${overshoot > 0 ? `, overshooting by ${overshoot}%` : " with no overshoot"}.`;
+      const asked = motionView().spring?.damping;
+      const clamped = Number.isFinite(asked) && spring.damping > asked ? ` Damping raised to ${Math.round(spring.damping * 10) / 10} so it comes to rest.` : "";
+      const label = `Settles in ${spring.settleMs} ms${overshoot > 0 ? `, overshooting by ${overshoot}%` : " with no overshoot"}.${clamped}`;
       summary.textContent = `${label} Exported as a linear() curve of ${spring.points.length} points.`;
       svg.setAttribute("aria-label", `Spring curve. ${label}`);
 
@@ -649,7 +651,7 @@
     for (const [key, label, min, max, step, hint] of [
       ["mass", "Mass", 0.1, 5, 0.1, "Heavier springs move more slowly and swing further."],
       ["stiffness", "Stiffness", 10, 600, 5, "Stiffer springs are quicker and snappier."],
-      ["damping", "Damping", 0, 60, 0.5, "Less damping, more bounce. 0 never settles."],
+      ["damping", "Damping", 0, 60, 0.5, "Less damping, more bounce. Very low values are raised just enough to settle."],
     ]) {
       slider(section, {
         label,
@@ -967,8 +969,7 @@
     const url = `${location.href.split("#")[0]}${HASH_PREFIX}${encodeDraft(draft)}`;
     try {
       await navigator.clipboard.writeText(url);
-      dom.copyLink.dataset.state = "copied";
-      setTimeout(() => delete dom.copyLink.dataset.state, 2000);
+      dom.copyLink.dispatchEvent(new CustomEvent("looseleaf:done", { bubbles: true })); // looseleaf.js shows the checkmark
     } catch {
       window.prompt("Copy this link:", url);
     }

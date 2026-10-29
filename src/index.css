@@ -48,6 +48,8 @@
 @import "03-blocks/offcanvas.css" layer(blocks);
 @import "03-blocks/alert.css" layer(blocks);
 @import "03-blocks/toast.css" layer(blocks);
+@import "03-blocks/skeleton.css" layer(blocks);
+@import "03-blocks/progress.css" layer(blocks);
 @import "03-blocks/table.css" layer(blocks);
 @import "03-blocks/prose.css" layer(blocks);
 @import "03-blocks/pagination.css" layer(blocks);

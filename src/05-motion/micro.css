@@ -92,6 +92,11 @@
   }
 }
 
+/* --- Switch: the thumb squashes while pressed, then springs back --- */
+.choice[data-variant="switch"] .choice__input:active + .choice__thumb::before {
+  scale: 1.2 0.85;
+}
+
 /* --- Focus: the ring arrives rather than appears --- */
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion="reduced"]) :focus-visible {

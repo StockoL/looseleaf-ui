@@ -58,6 +58,17 @@ test("the settle time is the moment it comes to rest", () => {
   assert.ok(Math.abs(samples.at(-1).x - 1) < 0.001);
 });
 
+test("zero damping is clamped so the spring still comes to rest", () => {
+  const { settleMs, damping } = springEasing({ mass: 1, stiffness: 180, damping: 0 });
+  assert.ok(damping > 0, `damping ${damping}`);
+  assert.ok(settleMs < 5000, `settles in ${settleMs} ms`);
+});
+
+test("a typical spring comes out at about 25 stops", () => {
+  const stops = springEasing({ mass: 1, stiffness: 180, damping: 12 }).points.length;
+  assert.ok(stops >= 18 && stops <= 32, `${stops} stops`);
+});
+
 test("invalid springs are rejected with the input's name", () => {
   assert.throws(() => simulateSpring({ mass: 0, stiffness: 180, damping: 12 }), /\$motion\.spring\.mass/);
   assert.throws(() => simulateSpring({ mass: 1, stiffness: -5, damping: 12 }), /\$motion\.spring\.stiffness/);

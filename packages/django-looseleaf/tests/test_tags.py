@@ -91,3 +91,13 @@ def test_messages_render_nothing_when_there_are_none():
     request = RequestFactory().get("/")
     request._messages = CookieStorage(request)
     assert Template("{% load looseleaf %}{% ll_messages %}").render(RequestContext(request, {})).strip() == ""
+
+
+def test_html_attrs_opt_in_to_sounds(settings):
+    render = lambda: Template("{% load looseleaf %}<html{% looseleaf_html_attrs %}>").render(Context())
+    settings.LOOSELEAF_SOUNDS = None
+    assert render() == "<html>"
+    settings.LOOSELEAF_SOUNDS = True
+    assert render() == "<html data-sound>"
+    settings.LOOSELEAF_SOUNDS = "sounds"
+    assert render() == '<html data-sound data-sound-src="/static/sounds/">'
