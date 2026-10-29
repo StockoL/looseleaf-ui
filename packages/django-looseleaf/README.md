@@ -49,7 +49,9 @@ That is the whole setup. Every class in the [LooseLeaf README](https://github.co
 
 Give the project its own colours, type scale, spacing, fonts and shapes without a build step:
 
-1. Open the [LooseLeaf configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against the live preview.
+![The LooseLeaf token configurator: controls on the left, a live preview of every block on the right](https://raw.githubusercontent.com/StockoL/looseleaf-ui/main/docs/images/configurator-overview.png)
+
+1. Open the [LooseLeaf configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against the live preview. The [configurator walkthrough](https://github.com/StockoL/looseleaf-ui/blob/main/docs/CONFIGURATOR.md) explains every control.
 2. Choose **Export → Theme bundle**.
 3. Unzip `looseleaf-theme.zip` into an app's `static/theme/` folder (or any `STATICFILES_DIRS` entry).
 4. Set `LOOSELEAF_THEME = "theme"` in settings.
