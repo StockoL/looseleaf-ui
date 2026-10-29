@@ -16,14 +16,7 @@
   const HASH_PREFIX = "#draft=";
   const PALETTE_GROUPS = ["neutral", "action", "accent", ...lib.STATUS_NAMES];
 
-  // Modern Font Stacks (modernfontstacks.com)
-  const FONT_STACKS = [
-    { label: "System UI", stack: "system-ui, sans-serif" },
-    { label: "Humanist", stack: "Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif" },
-    { label: "Transitional", stack: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif" },
-    { label: "Geometric humanist", stack: "Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif" },
-    { label: "Monospace", stack: "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace" },
-  ];
+  const { FONT_STACKS } = lib; // Modern Font Stacks, shared with the CLI
 
   const EASINGS = [
     { label: "Standard", value: "cubic-bezier(0.4, 0, 0.2, 1)" },
@@ -451,30 +444,10 @@
   /* ------------------------------------------------------------------------
      5. FONTS
      ------------------------------------------------------------------------ */
-  function parseFont(value = "") {
-    for (const { stack } of FONT_STACKS) {
-      if (value === stack) return { stack, family: "" };
-      const match = value.match(/^\s*(['"])(.+?)\1\s*,\s*(.+)$/);
-      if (match && match[3] === stack) return { stack, family: match[2] };
-    }
-    return { stack: value, family: "" };
-  }
-
-  function composeFont(family, stack) {
-    return family ? `'${family.replace(/['"]/g, "")}', ${stack}` : stack;
-  }
-
-  function webFonts() {
-    const families = ["body", "heading"].map((role) => parseFont(getToken(["font", role])).family).filter(Boolean);
-    return [...new Set(families)];
-  }
-
-  function fontImport() {
-    const families = webFonts();
-    if (!families.length) return "";
-    const query = families.map((family) => `family=${encodeURIComponent(family).replace(/%20/g, "+")}:wght@400;500;600;700`).join("&");
-    return `@import url("https://fonts.googleapis.com/css2?${query}&display=swap");\n`;
-  }
+  // Shared with the CLI (scripts/tokens-core.mjs), so exports match byte for byte
+  const { parseFont, composeFont } = lib;
+  const webFonts = () => lib.webFonts(draft);
+  const fontImport = () => lib.fontImports(draft);
 
   function buildFonts() {
     const section = dom.section("fonts");
