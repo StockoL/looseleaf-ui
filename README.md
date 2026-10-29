@@ -28,6 +28,7 @@ By decoupling intrinsic macro-layouts from visual block aesthetics and storing d
    - [Tier 1: Global Layer & Reset](#tier-1)
    - [Tier 2: Compositions](#compositions)
    - [Tier 3: Blocks](#blocks)
+   - [Motion layer](#motion)
    - [Tier 4: Utilities](#utilities)
 7. [Behaviours & Theme Scripts](#behaviors)
 8. [Commands](#commands)
@@ -300,7 +301,8 @@ looseleaf-ui/
 │   │                              choice, input-group, badge, accordion, dropdown, card,
 │   │                              navbar, modal, offcanvas, alert, table, prose,
 │   │                              pagination, breadcrumb, marquee, bg-mesh, swatch
-│   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors, animations
+│   ├── 04-utilities/          <-- accessibility, icon, indent, text, colors
+│   ├── 05-motion/             <-- entrances, press, height, page, reveal, stuck, lift
 │   └── scripts/               <-- behaviors.js, theme.js
 ├── dist/                      <-- looseleaf.css, looseleaf.js, theme.js, tokens.resolved.json
 ├── examples/index.html        <-- Living demo (also the configurator's preview)
@@ -311,11 +313,12 @@ looseleaf-ui/
 │   ├── COMPOSITIONS.md        <-- Composition case studies and block guidelines
 │   ├── CONFIGURATOR.md        <-- Configurator walkthrough
 │   ├── images/                <-- Configurator screenshots
+│   ├── SUPPORT.md             <-- Browser tiers and what each enhancement needs
 │   └── TOKENS.md              <-- Generated token reference
 └── packages/django-looseleaf/ <-- Django package
 ```
 
-The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `blocks`, `utilities`.
+The cascade layers run lowest to highest: `reset`, `global`, `compositions`, `blocks`, `motion`, `utilities`.
 
 ---
 
@@ -367,8 +370,8 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.badge` | Status labels | `data-status`: info, success, warning, danger; `[data-placement="floating"]` | — |
 | `.accordion` | Disclosure list on native `<details>` (`.accordion__item`, `.accordion__trigger`, `.accordion__content`, `.accordion__icon`) | `[open]`; a shared `name` makes an exclusive group | none needed |
 | `.dropdown` | Menu inside a native `<details class="dropdown-wrapper">` whose `<summary>` is the trigger (`.dropdown__item`, `.dropdown__divider`); opens without JavaScript | `[open]` on the wrapper; `[data-align="end"]` | optional: Escape, outside click, arrow keys |
-| `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped | — |
-| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[open]` on the toggle | optional: Escape |
+| `.card` | Surface; `.card__body` carries the padding, direct media sits flush | `--card-padding`, `--card-media-ratio`; a floating badge is never clipped; `[data-interactive]` lifts on hover | — |
+| `.navbar` | Site header (`.navbar__brand`, `.navbar__menu`, `.navbar__link`); collapses below 45rem of its own width, where an empty `<details class="navbar__toggle">` before the menu opens it without JavaScript | `[data-sticky]`; `[open]` on the toggle; `--navbar-padding` (on its children) | optional: Escape |
 | `.modal` | Native `<dialog>`, animated in and out | `[open]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.offcanvas` | Drawer on native `<dialog>` | `[data-position="left"]` | `commandfor` with `command="show-modal"` or `"close"` (native; script fallback) |
 | `.alert` | Inline messages with an optional `.alert__close` | `data-status`: info, success, warning, danger; `[data-state="removing"]` | `.alert__close` |
@@ -380,6 +383,24 @@ Blocks care only about internal styling and are purged of external margins. Vari
 | `.bg-mesh` | Ambient drifting wash of the action and accent hues | `--mesh-duration`, `--mesh-strength` | — |
 | `.swatch` | Colour tile with `.swatch__tile`, `.swatch__label`, `.swatch__hex` | `--swatch-color`, `[data-state="overridden"]` | — |
 
+### <a name="motion"></a> Motion layer (src/05-motion/)
+
+Motion is an enhancement: the system is complete without this folder. Its `motion` layer sits between `blocks` and `utilities`, so it can refine any block and utilities still override it. Each file is fenced by `@supports` or the reduced-motion switches, and [docs/SUPPORT.md](docs/SUPPORT.md) lists which browsers get each one and what the rest see instead.
+
+**Two master switches.** Every duration in LooseLeaf is multiplied by `--motion-scale` (`calc(var(--duration-base) * var(--motion-scale))`, and the same for every `--duration-*` token), and `npm run check` rejects any that isn't. The operating system's reduced-motion setting sets `--motion-scale` to 0, and so does `data-motion="reduced"` on `<html>`, for a choice offered on the site. Either one makes all motion instant at once. `--motion-scale` is deliberately not a token, so a theme can never undo it.
+
+| File | What it does | Tokens |
+| --- | --- | --- |
+| `entrances.css` | Menus drop in as they open; dialogs and drawers animate in and out | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
+| `press.css` | Buttons and choices shrink slightly while pressed | `--press-scale` |
+| `height.css` | Accordion items open and close smoothly | `--duration-base` |
+| `page.css` | Same-site page loads cross-fade; a sticky navbar holds still | `--duration-base` |
+| `reveal.css` | `[data-reveal]` elements fade in as they scroll into view (opt-in; never hidden without support) | `--reveal-distance` |
+| `stuck.css` | A sticky navbar tightens once it is stuck to the top | `--navbar-padding` |
+| `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover | `--lift-distance`, `--ease-spring` |
+
+The demo's Motion section shows each one and reports whether the current browser runs it.
+
 ### <a name="utilities"></a> Tier 4: Utilities (src/04-utilities/)
 
 Utilities sit at the top of the layer stack and do one thing each.
@@ -389,7 +410,6 @@ Utilities sit at the top of the layer stack and do one thing each.
 - `.text-center`, `.text-uppercase`, `.truncate`, `.text-small`, `.text-lead`
 - `.text-primary`, `.text-muted`, `.text-danger`, `.bg-surface-base`, `.bg-surface-sunken`, `.bg-primary`, `.bg-gradient`
 - `.indent`: decorative edge accent (`--indent-size`, `--indent-color`)
-- `.anim-lift`: hover elevation on pointer devices
 
 ---
 
@@ -477,7 +497,7 @@ Load it as a blocking script in `<head>` (or inline it) so the saved choice is a
 | `npm run check` | Guardrail linter: no raw colours, radii, shadows, z-indices or durations outside tokens; no `outline: none` or `!important`; no viewport media queries; hover only on hover devices; every documented token and class must exist |
 | `npm test` | Unit tests for the token maths, compiler and ZIP writer |
 | `npm run test:nojs` | The demo with JavaScript disabled at 360 and 1280 px: every nav link and dropdown item reachable, the accordion opens, the form submits, nothing interactive hidden, every dialog link also reachable outside a dialog |
-| `npm run test:browser` | Browser tests with Playwright: axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
+| `npm run test:browser` | Browser tests with Playwright: both reduced-motion switches leave no duration on the demo, axe-core accessibility checks (WCAG 2.2 AA) on the demo and the configurator, and visual regression of the demo at 360, 768 and 1280 px in both schemes. Needs `npx playwright install chromium` once. |
 | `npm run bump -- <version>` | Set the version everywhere it lives, then rebuild (see [Versioning](#versioning)) |
 
 ---
