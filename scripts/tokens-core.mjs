@@ -32,6 +32,7 @@ export const CONTRAST_TARGET = 4.5;
 export const CONTRAST_PAIRS = [
   ["color.text", "color.surface"],
   ["color.text-muted", "color.surface"],
+  ["color.text-muted", "color.surface-sunken"],
   ["color.text", "color.surface-sunken"],
   ["color.action-text", "color.action"],
   ...STATUS_NAMES.map((status) => [`color.status-${status}-text`, `color.status-${status}-surface`]),

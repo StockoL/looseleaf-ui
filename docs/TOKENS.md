@@ -25,6 +25,8 @@ WCAG 2.x ratios for the semantic text/surface pairings. Target: 4.5:1 (AA).
 | `color.text` | `color.surface` | dark | 18.38 | pass |
 | `color.text-muted` | `color.surface` | light | 4.64 | pass |
 | `color.text-muted` | `color.surface` | dark | 7.83 | pass |
+| `color.text-muted` | `color.surface-sunken` | light | 4.24 | **fail** |
+| `color.text-muted` | `color.surface-sunken` | dark | 5.86 | pass |
 | `color.text` | `color.surface-sunken` | light | 16.17 | pass |
 | `color.text` | `color.surface-sunken` | dark | 13.76 | pass |
 | `color.action-text` | `color.action` | light | 4.72 | pass |
