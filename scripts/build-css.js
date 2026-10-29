@@ -4,6 +4,7 @@
  * copies the drop-in scripts to dist/ (no bundling needed):
  *   src/scripts/behaviors.js -> dist/looseleaf.js
  *   src/scripts/theme.js     -> dist/theme.js
+ * Each output opens with the MIT notice, which must stay with the file.
  */
 
 const fs = require("fs");
@@ -14,6 +15,12 @@ const srcDir = path.join(rootDir, "src");
 const distDir = path.join(rootDir, "dist");
 const entryPath = path.join(srcDir, "index.css");
 const cssOutputPath = path.join(distDir, "looseleaf.css");
+
+const { version } = JSON.parse(fs.readFileSync(path.join(rootDir, "package.json"), "utf8"));
+const copyright = fs.readFileSync(path.join(rootDir, "LICENSE"), "utf8").match(/^Copyright .+$/m)[0];
+// "/*!" survives minifiers that strip other comments
+const notice = `/*! LooseLeaf UI v${version} | MIT License | ${copyright} | https://github.com/StockoL/looseleaf-ui */
+`;
 
 const SCRIPTS = [
   { from: "behaviors.js", to: "looseleaf.js" },
@@ -59,7 +66,7 @@ try {
   });
 
   // No build date: rebuilding unchanged sources must not produce a diff.
-  const header = `/* ==========================================================================
+  const header = `${notice}/* ==========================================================================
    AUTO-GENERATED BUNDLE - DO NOT EDIT DIRECTLY
    ==========================================================================
    Source Document: src/index.css
@@ -69,7 +76,7 @@ try {
   fs.writeFileSync(cssOutputPath, header + bundled, "utf8");
 
   for (const { from, to } of SCRIPTS) {
-    fs.writeFileSync(path.join(distDir, to), readSource(path.join(srcDir, "scripts", from)), "utf8");
+    fs.writeFileSync(path.join(distDir, to), notice + readSource(path.join(srcDir, "scripts", from)), "utf8");
   }
 
   console.log("✨ LooseLeaf UI bundled dist/looseleaf.css and copied dist/looseleaf.js, dist/theme.js");
