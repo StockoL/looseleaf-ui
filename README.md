@@ -49,7 +49,7 @@ The same files are attached to every [GitHub release](https://github.com/StockoL
 
 Then compose with the classes below. [examples/index.html](examples/index.html) is the living documentation: one section per composition and block, built with nothing but the shipped files.
 
-Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade layers, container queries, `:has()`, `color-mix()` and `@starting-style` are used freely.
+Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade layers, container queries, `:has()`, `color-mix()` and `@starting-style` are used freely. On Apple devices that means **iOS and iPadOS 17.4 or later**; iOS 16 and earlier are not supported (exclusive `<details name>` accordions need Safari 17.2, and dialog and drawer animations need 17.4).
 
 ### Django
 
@@ -325,9 +325,12 @@ The npm package and `django-looseleaf` share one version and follow [semantic ve
 - **Minor**: new tokens, blocks, compositions or exceptions.
 - **Patch**: visual refinements within the existing tokens, and fixes.
 
-Theme bundles record the version they were exported from. `django-looseleaf` warns (`looseleaf.W004`) when a theme comes from a different major version; within a major, any token a theme doesn't know falls back to its default, so older themes keep working.
+Theme bundles record the version they were exported from (`$version` in both JSON files). What that means across releases:
 
-To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three, reruns CI, attaches the built files to a GitHub release and publishes `django-looseleaf` to PyPI with trusted publishing.
+- **Same major (2.0 → 2.4):** the theme keeps working. Tokens added after it was exported fall back to their defaults until you re-export.
+- **New major (2.x → 3.0):** token names may have changed, and a renamed token in an old `looseleaf-tokens.css` simply stops applying, so the new default shows through in that spot. `django-looseleaf` warns about this (`looseleaf.W004`); plain-HTML sites get no warning, so keep the CDN version and the theme's major in step. To move a theme forward, import its `design-tokens.json` into the configurator for the new version and export the bundle again.
+
+To release: `npm run bump -- 2.1.0` writes the version to `package.json`, `pyproject.toml` and `django_looseleaf.__version__` and rebuilds; move the Unreleased notes in [CHANGELOG.md](CHANGELOG.md) under `## [2.1.0] - <date>`; commit, then push the tag `v2.1.0`. The release workflow refuses a tag that doesn't match all three versions or has no changelog entry, reruns CI, creates the GitHub release with the changelog section as its notes and the built files attached, and publishes `django-looseleaf` to PyPI with trusted publishing.
 
 ---
 
