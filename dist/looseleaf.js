@@ -276,6 +276,456 @@
 })();
 
 /**
+ * LooseLeaf UI - Tabs
+ * Why script: no native element shows one panel at a time with a tab list's
+ * semantics: roles, aria-selected, a roving tabindex, and arrow, Home and End
+ * keys between tabs.
+ * Without it: the list is a jump list of in-page links and every panel shows.
+ * Hooks: .tabs > .tabs__list > a.tabs__tab[href="#panel-id"], .tabs > .tabs__panel[id]
+ *        The block gets [data-js] once enhanced; the active panel gets [data-state="active"].
+ */
+
+(() => {
+  "use strict";
+
+  const GUARD = Symbol.for("looseleaf.tabs");
+  if (window[GUARD]) return;
+  window[GUARD] = true;
+
+  let uid = 0;
+  const tabsOf = (block) =>
+    [...block.querySelectorAll(":scope > .tabs__list .tabs__tab")].filter((tab) => panelOf(block, tab));
+  const panelOf = (block, tab) => {
+    const id = decodeURIComponent((tab.getAttribute("href") || "").slice(1));
+    const panel = id && document.getElementById(id);
+    return panel && panel.parentElement === block ? panel : null;
+  };
+
+  function select(block, chosen, focus) {
+    for (const tab of tabsOf(block)) {
+      const active = tab === chosen;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      const panel = panelOf(block, tab);
+      if (active) panel.dataset.state = "active";
+      else delete panel.dataset.state;
+    }
+    if (focus) chosen.focus();
+  }
+
+  function enhance(block) {
+    if (block.hasAttribute("data-js")) return;
+    const tabs = tabsOf(block);
+    if (!tabs.length) return;
+    block.querySelector(":scope > .tabs__list").setAttribute("role", "tablist");
+    for (const tab of tabs) {
+      const panel = panelOf(block, tab);
+      tab.id ||= `ll-tab-${++uid}`;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", panel.id);
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tab.id);
+      panel.tabIndex = 0;
+    }
+    const fromHash = tabs.find((tab) => tab.hash && tab.hash === location.hash);
+    const marked = tabs.find((tab) => panelOf(block, tab).dataset.state === "active");
+    select(block, fromHash || marked || tabs[0], false);
+    block.setAttribute("data-js", "");
+  }
+
+  document.addEventListener("click", (event) => {
+    const tab = event.target instanceof Element && event.target.closest(".tabs[data-js] > .tabs__list .tabs__tab");
+    if (!tab) return;
+    event.preventDefault();
+    select(tab.closest(".tabs"), tab, true);
+  });
+
+  // Arrow keys move between tabs and select as they go; Home and End jump to the ends
+  document.addEventListener("keydown", (event) => {
+    const tab = event.target instanceof Element && event.target.closest(".tabs[data-js] > .tabs__list .tabs__tab");
+    if (!tab) return;
+    const block = tab.closest(".tabs");
+    const tabs = tabsOf(block);
+    const index = tabs.indexOf(tab);
+    const last = tabs.length - 1;
+    const rtl = getComputedStyle(block).direction === "rtl";
+    const forward = rtl ? "ArrowLeft" : "ArrowRight";
+    const back = rtl ? "ArrowRight" : "ArrowLeft";
+    const next = { [forward]: index < last ? index + 1 : 0, [back]: index > 0 ? index - 1 : last, Home: 0, End: last }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    select(block, tabs[next], true);
+  });
+
+  // A link to a panel (from elsewhere on the page, or the address bar) selects its tab
+  window.addEventListener("hashchange", () => {
+    for (const block of document.querySelectorAll(".tabs[data-js]")) {
+      const tab = tabsOf(block).find((candidate) => candidate.hash === location.hash);
+      if (tab) select(block, tab, false);
+    }
+  });
+
+  const start = () => document.querySelectorAll(".tabs").forEach(enhance);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+
+/**
+ * LooseLeaf UI - Toasts
+ * Why script: a queue, auto-dismissal that pauses while the pointer or focus
+ * is on a toast, and raising toasts above an open dialog all need script. So
+ * does creating a toast in response to something that happened on the page.
+ * Without it: server-rendered toasts sit in the page where their region is,
+ * readable like alerts.
+ * Hooks: .toast-region > .toast (data-status, data-duration in ms, 0 = stays)
+ *        [data-toast="message"] buttons (data-toast-status, data-toast-duration)
+ *        document.dispatchEvent(new CustomEvent("looseleaf:toast", { detail: { message, status, duration } }))
+ */
+
+(() => {
+  "use strict";
+
+  const GUARD = Symbol.for("looseleaf.toast");
+  if (window[GUARD]) return;
+  window[GUARD] = true;
+
+  const DURATION = 5000;
+  const VISIBLE = 3;
+  const timers = new WeakMap(); // toast -> { remaining, started, timeout }
+  let paused = false;
+
+  function region() {
+    let found = document.querySelector(".toast-region");
+    if (!found) {
+      found = document.createElement("div");
+      found.className = "toast-region";
+      found.setAttribute("aria-live", "polite");
+      document.body.append(found);
+    }
+    if (!found.hasAttribute("data-js")) {
+      found.setAttribute("data-js", "");
+      found.setAttribute("popover", "manual");
+      found.addEventListener("pointerenter", () => pause(found, true));
+      found.addEventListener("pointerleave", () => pause(found, found.contains(document.activeElement)));
+      found.addEventListener("focusin", () => pause(found, true));
+      found.addEventListener("focusout", (event) => pause(found, found.matches(":hover") || found.contains(event.relatedTarget)));
+    }
+    return found;
+  }
+
+  // The newest popover sits on top: re-showing the region lifts it above a dialog opened since.
+  // A modal dialog makes the rest of the page inert (no clicks, hidden from screen readers),
+  // so while one is open the region moves inside it; the top layer keeps its position.
+  function raise(container) {
+    if (typeof container.showPopover !== "function") return;
+    const modal = [...document.querySelectorAll("dialog[open]")].filter((dialog) => dialog.matches(":modal")).pop();
+    const home = modal || document.body;
+    if (container.parentElement !== home) home.append(container);
+    if (container.matches(":popover-open")) container.hidePopover();
+    container.showPopover();
+  }
+
+  // close doesn't bubble: capture it, and bring the region back out of a closing dialog
+  document.addEventListener(
+    "close",
+    (event) => {
+      const container = document.querySelector(".toast-region[data-js]");
+      if (container && event.target instanceof HTMLDialogElement && event.target.contains(container)) raise(container);
+    },
+    true,
+  );
+
+  function closeButton() {
+    const button = document.createElement("button");
+    button.className = "toast__close";
+    button.type = "button";
+    button.setAttribute("aria-label", "Dismiss");
+    button.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>';
+    return button;
+  }
+
+  function start(toast) {
+    const duration = Number(toast.dataset.duration ?? (toast.dataset.status === "danger" ? 0 : DURATION));
+    if (!(duration > 0)) return;
+    timers.set(toast, { remaining: duration, started: 0, timeout: 0 });
+    if (!paused) resume(toast);
+  }
+
+  function resume(toast) {
+    const timer = timers.get(toast);
+    if (!timer) return;
+    timer.started = Date.now();
+    timer.timeout = setTimeout(() => dismiss(toast), timer.remaining);
+  }
+
+  function pause(container, on) {
+    if (paused === on) return;
+    paused = on;
+    for (const toast of container.querySelectorAll(":scope > .toast:not([data-state])")) {
+      const timer = timers.get(toast);
+      if (!timer) continue;
+      if (on) {
+        clearTimeout(timer.timeout);
+        timer.remaining = Math.max(0, timer.remaining - (Date.now() - timer.started));
+      } else {
+        resume(toast);
+      }
+    }
+  }
+
+  // Shows queued toasts while there is room
+  function fill(container) {
+    const showing = container.querySelectorAll(":scope > .toast:not([data-state])").length;
+    const queued = [...container.querySelectorAll(':scope > .toast[data-state="queued"]')];
+    queued.slice(0, Math.max(0, VISIBLE - showing)).forEach((toast) => {
+      delete toast.dataset.state;
+      start(toast);
+    });
+  }
+
+  function enhance(toast) {
+    if (!toast.querySelector(".toast__close")) toast.append(closeButton());
+    if (toast.dataset.status === "danger") toast.setAttribute("role", "alert");
+    toast.dataset.state = "queued";
+  }
+
+  function dismiss(toast) {
+    if (toast.dataset.state === "removing") return;
+    clearTimeout(timers.get(toast)?.timeout);
+    const container = toast.parentElement;
+    let removed = false;
+    const remove = () => {
+      if (removed) return;
+      removed = true;
+      toast.remove();
+      if (container) fill(container);
+    };
+    toast.dataset.state = "removing";
+    // With motion off every duration is 0 and no transitionend will come
+    if (getComputedStyle(toast).transitionDuration.split(",").every((d) => parseFloat(d) === 0)) return remove();
+    toast.addEventListener("transitionend", remove, { once: true });
+    setTimeout(remove, 1000);
+  }
+
+  function show({ message, status, duration } = {}) {
+    if (!message) return;
+    const container = region();
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    if (status) toast.dataset.status = status;
+    if (duration !== undefined && duration !== null && duration !== "") toast.dataset.duration = String(duration);
+    const text = document.createElement("p");
+    text.className = "toast__message";
+    text.textContent = message;
+    toast.append(text);
+    enhance(toast);
+    container.append(toast);
+    raise(container);
+    fill(container);
+  }
+
+  document.addEventListener("looseleaf:toast", (event) => show(event.detail));
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const close = event.target.closest(".toast__close");
+    if (close) {
+      const toast = close.closest(".toast");
+      if (toast) dismiss(toast);
+      return;
+    }
+    const trigger = event.target.closest("[data-toast]");
+    if (trigger) show({ message: trigger.dataset.toast, status: trigger.dataset.toastStatus, duration: trigger.dataset.toastDuration });
+  });
+
+  // Toasts rendered by the server: float them and start their timers
+  function init() {
+    const existing = document.querySelector(".toast-region");
+    if (!existing) return;
+    const container = region();
+    container.querySelectorAll(":scope > .toast").forEach(enhance);
+    raise(container);
+    fill(container);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
+})();
+
+/**
+ * LooseLeaf UI - Form feedback
+ * Why script: native validation shows its message in a browser bubble that
+ * vanishes, only when the form is submitted, and leaves the field unmarked for
+ * styles and assistive technology. Script writes the message into the field's
+ * .field__error, marks the control aria-invalid as soon as the visitor leaves
+ * it, and on submit moves focus to the first problem. Counting characters
+ * against maxlength needs script too.
+ * Without it: native validation bubbles on submit; server-side errors render as usual.
+ * Hooks: controls in a .field inside a <form> (forms with novalidate are left
+ *        alone: they validate on the server); [data-maxlength-counter] on a control with maxlength
+ */
+
+(() => {
+  "use strict";
+
+  const GUARD = Symbol.for("looseleaf.form-feedback");
+  if (window[GUARD]) return;
+  window[GUARD] = true;
+
+  const CONTROL = ".field :is(input, select, textarea):not([type=hidden], [type=submit], [type=button], [type=reset])";
+  const touched = new WeakSet();
+  const focusing = new WeakSet(); // forms whose first invalid control is being focused this submit
+  let uid = 0;
+
+  const managed = (control) => control.matches(CONTROL) && control.form && !control.form.noValidate;
+
+  function describe(control, element) {
+    element.id ||= `ll-field-${++uid}`;
+    const ids = (control.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+    if (!ids.includes(element.id)) control.setAttribute("aria-describedby", [...ids, element.id].join(" "));
+  }
+
+  function errorFor(control) {
+    const field = control.closest(".field");
+    let error = field.querySelector(".field__error");
+    if (!error) {
+      error = document.createElement("p");
+      error.className = "field__error";
+      error.hidden = true;
+      field.append(error);
+    }
+    describe(control, error);
+    return error;
+  }
+
+  function show(control) {
+    const field = control.closest(".field");
+    const error = errorFor(control);
+    if (control.validity.valid) {
+      if (control.getAttribute("aria-invalid") === "true") control.removeAttribute("aria-invalid");
+      delete field.dataset.status;
+      error.textContent = "";
+      error.hidden = true;
+    } else {
+      control.setAttribute("aria-invalid", "true");
+      field.dataset.status = "danger";
+      error.textContent = control.validationMessage;
+      error.hidden = false;
+    }
+  }
+
+  // Changing a value marks it touched; once marked invalid, it re-checks as you type
+  document.addEventListener("input", (event) => {
+    const control = event.target;
+    if (!(control instanceof Element) || !managed(control)) return;
+    touched.add(control);
+    if (control.getAttribute("aria-invalid") === "true") show(control);
+  });
+
+  // Leaving a control you changed checks it
+  document.addEventListener("focusout", (event) => {
+    const control = event.target;
+    if (control instanceof Element && managed(control) && touched.has(control)) show(control);
+  });
+
+  // On submit the browser fires invalid on each failing control: show inline
+  // messages instead of the bubble, and focus the first failing control
+  document.addEventListener(
+    "invalid",
+    (event) => {
+      const control = event.target;
+      if (!(control instanceof Element) || !managed(control)) return;
+      event.preventDefault();
+      touched.add(control);
+      show(control);
+      const form = control.form;
+      if (focusing.has(form)) return;
+      focusing.add(form);
+      control.focus();
+      setTimeout(() => focusing.delete(form));
+    },
+    true,
+  );
+
+  /* Character counter: "12 characters left" */
+  function count(control) {
+    const max = Number(control.getAttribute("maxlength"));
+    if (!(max > 0)) return;
+    let counter = control.closest(".field")?.querySelector("[data-counter]");
+    if (!counter) {
+      counter = document.createElement("p");
+      counter.className = "field__hint";
+      counter.setAttribute("data-counter", "");
+      control.closest(".field")?.append(counter);
+      describe(control, counter);
+    }
+    const left = max - control.value.length;
+    counter.textContent = `${left} character${left === 1 ? "" : "s"} left`;
+  }
+
+  document.addEventListener("input", (event) => {
+    if (event.target instanceof Element && event.target.matches("[data-maxlength-counter]")) count(event.target);
+  });
+
+  const start = () => document.querySelectorAll("[data-maxlength-counter]").forEach(count);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+
+/**
+ * LooseLeaf UI - Password reveal
+ * Why script: no attribute lets a visitor see what they typed in a password
+ * field; it means switching the input's type.
+ * Without it: an ordinary password field. The button is added by this script,
+ * so there is never a button that does nothing.
+ * Hooks: .input-group > input[type=password][data-reveal-password]
+ */
+
+(() => {
+  "use strict";
+
+  const GUARD = Symbol.for("looseleaf.password-reveal");
+  if (window[GUARD]) return;
+  window[GUARD] = true;
+
+  let uid = 0;
+
+  function enhance(input) {
+    if (input.dataset.revealReady !== undefined) return;
+    input.dataset.revealReady = "";
+    input.id ||= `ll-password-${++uid}`;
+    const button = document.createElement("button");
+    button.className = "button";
+    button.type = "button";
+    button.textContent = "Show";
+    button.setAttribute("aria-label", "Show password");
+    button.setAttribute("aria-pressed", "false");
+    button.setAttribute("aria-controls", input.id);
+    button.dataset.revealFor = input.id;
+    input.after(button);
+  }
+
+  document.addEventListener("click", (event) => {
+    const button = event.target instanceof Element && event.target.closest("[data-reveal-for]");
+    const input = button && document.getElementById(button.dataset.revealFor);
+    if (!input) return;
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    // The label stays "Show" (it must contain the visible text); aria-pressed carries the state
+    button.setAttribute("aria-pressed", String(reveal));
+  });
+
+  // Back to a password field before the form submits, so browsers offer to save it
+  document.addEventListener("submit", (event) => {
+    event.target.querySelectorAll?.("input[data-reveal-password]").forEach((input) => (input.type = "password"));
+  });
+
+  const start = () => document.querySelectorAll("input[type=password][data-reveal-password]").forEach(enhance);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+  else start();
+})();
+
+/**
  * LooseLeaf UI - 2.0 markup (deprecated in 2.1, removed in 3.0)
  * Why script: the 2.0 dropdown, navbar toggle and dialog triggers were driven
  * entirely by script. This keeps them working through 2.x and logs one console
