@@ -492,6 +492,28 @@
     slider(section, { label: "Control radius", unit: "px", min: 0, max: 24, step: 1, ...unitToken(["radius", "control"], "px") });
     slider(section, { label: "Surface radius", unit: "px", min: 0, max: 32, step: 1, ...unitToken(["radius", "surface"], "px") });
     section.append(el("p", { class: "field__hint" }, "Pill is fixed at 999px."));
+
+    heading(section, "Shadows");
+    section.append(el("p", { class: "field__hint" }, "Layered shadows, tinted with the neutral hue, for three elevations: raised (cards), floating (menus, toasts) and overlay (dialogs)."));
+    slider(section, { label: "Shadow strength", min: 0, max: 1, step: 0.05, read: () => shapeView().strength, write: (value) => (shapeDraft().strength = value) });
+    slider(section, { label: "Shadow softness", min: 0, max: 1, step: 0.05, read: () => shapeView().softness, write: (value) => (shapeDraft().softness = value) });
+    segmented(section, {
+      legend: "Light from",
+      options: lib.SHADOW_ANGLES.map((angle) => ({ value: angle, label: capitalise(angle.replace("-", " ")) })),
+      read: () => shapeView().angle,
+      write: (value) => (shapeDraft().angle = value),
+    });
+  }
+
+  // A draft from before $shape keeps its hand-written shadows until the sliders are first used
+  const SHADOW_DEFAULTS = { strength: 0.6, softness: 0.5, angle: "top-left" };
+  const shapeView = () => ({ ...SHADOW_DEFAULTS, ...draft.$shape?.shadow });
+  function shapeDraft() {
+    if (!draft.$shape?.shadow) {
+      draft.$shape = { ...draft.$shape, shadow: { ...SHADOW_DEFAULTS } };
+      deletePath(["shadow"]);
+    }
+    return draft.$shape.shadow;
   }
 
   /* ------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.2.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.3.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - 2.0 markup (deprecated in 2.1, removed in 3.0)
  * Why script: the 2.0 dropdown, navbar toggle and dialog triggers were driven

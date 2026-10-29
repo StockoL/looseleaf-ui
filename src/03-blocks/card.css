@@ -6,10 +6,10 @@
 
 .card {
   position: relative;
-  overflow: hidden; /* clips flush media to the radius */
   background-color: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 .card__body {
@@ -31,15 +31,20 @@
 }
 
 /*
- * CUBE Exception: a floating badge straddles the top edge, so the card must
- * not clip it. Leading media then rounds its own top corners instead.
+ * The card never clips (a floating badge straddles its edge, and a lifted
+ * card's shadow sits outside it), so flush media rounds its own corners:
+ * leading media its top corners, trailing media its bottom ones.
  */
-.card:has(.badge[data-placement="floating"]) {
-  overflow: visible;
-}
-
-.card:has(.badge[data-placement="floating"])
-  > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
+.card > :is(img, picture, video):nth-child(1 of :not(.badge[data-placement="floating"])) {
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
+}
+
+.card > :is(img, picture, video):last-child {
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}
+
+.card > picture > img {
+  border-radius: inherit;
 }

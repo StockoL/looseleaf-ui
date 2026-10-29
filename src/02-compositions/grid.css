@@ -14,3 +14,15 @@
     minmax(min(var(--grid-min-item-size, 15rem), 100%), 1fr)
   );
 }
+
+/*
+ * CUBE Exception: each item spans --subgrid-rows rows of the grid and takes
+ * them as its own (subgrid), so the parts of every item in a row line up:
+ * titles with titles, footers with footers, however long the text.
+ */
+.grid[data-subgrid] > * {
+  display: grid;
+  grid-row: span var(--subgrid-rows, 3);
+  grid-template-rows: subgrid;
+  row-gap: var(--subgrid-space, var(--space-2xs));
+}

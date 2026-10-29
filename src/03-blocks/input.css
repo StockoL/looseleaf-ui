@@ -30,6 +30,7 @@
 /* The global :focus-visible ring is the focus indicator; the border follows it */
 :is(.input, .select, .textarea):focus-visible {
   --control-border: var(--color-focus);
+  box-shadow: var(--shadow-raised);
 }
 
 @media (hover: hover) {

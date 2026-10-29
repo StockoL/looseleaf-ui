@@ -39,7 +39,7 @@
     <!-- ==================================================================
          NAVBAR (Block) inside WRAPPER (macro section container)
          ================================================================== -->
-    <header class="navbar">
+    <header class="navbar" data-sticky data-glass>
       <div class="wrapper">
         <div class="cluster" style="--cluster-justify: space-between;">
           <a href="#main" class="navbar__brand">LooseLeaf UI</a>
@@ -49,13 +49,16 @@
           </details>
 
           <nav id="primary-nav" class="navbar__menu">
-            <a href="#design-tokens" class="navbar__link">Tokens</a>
-            <a href="#compositions" class="navbar__link">Compositions</a>
-            <a href="#blocks" class="navbar__link">Blocks</a>
-            <a href="#motion" class="navbar__link">Motion</a>
-            <a href="#utilities" class="navbar__link">Utilities</a>
+            <a href="#design-tokens" class="navbar__link" data-underline="slide">Tokens</a>
+            <a href="#compositions" class="navbar__link" data-underline="slide">Compositions</a>
+            <a href="#blocks" class="navbar__link" data-underline="slide">Blocks</a>
+            <a href="#motion" class="navbar__link" data-underline="slide">Motion</a>
+            <a href="#utilities" class="navbar__link" data-underline="slide">Utilities</a>
             <button class="button" type="button" data-variant="ghost" data-theme-toggle>
-              <svg class="icon" aria-hidden="true"><use href="#icon-moon" /></svg>
+              <span data-theme-icons aria-hidden="true">
+                <svg class="icon" data-theme-icon="light"><use href="#icon-sun" /></svg>
+                <svg class="icon" data-theme-icon="dark"><use href="#icon-moon" /></svg>
+              </span>
               <span data-theme-label>Auto</span>
             </button>
             <button class="button" type="button" data-variant="primary">Get Started</button>
@@ -503,7 +506,10 @@
             <span class="badge" data-status="success">Success</span>
             <span class="badge" data-status="warning">Warning</span>
             <span class="badge" data-status="danger">Danger</span>
+            <span class="badge" data-status="info" data-pulse>Live</span>
+            <span class="badge" data-status="success" data-bump>3 new</span>
           </div>
+          <p class="text-muted"><code>data-pulse</code> sends out a ring; <code>data-bump</code> pops on the spring whenever the badge is rendered again (when a count changes, say).</p>
         </div>
       </section>
 
@@ -582,6 +588,25 @@
                 <h4>With .anim-lift</h4>
                 <p class="text-muted">Hover to lift (pointer devices only).</p>
               </div>
+            </article>
+          </div>
+
+          <h4 id="subgrid-title">Aligned with <code>.grid[data-subgrid]</code></h4>
+          <div class="grid" data-subgrid style="--grid-min-item-size: 14rem;" aria-labelledby="subgrid-title">
+            <article class="card">
+              <div class="card__body"><h4>Short title</h4></div>
+              <div class="card__body"><p>A short description.</p></div>
+              <div class="card__body"><a class="button" data-size="small" href="#subgrid-title">Read more</a></div>
+            </article>
+            <article class="card">
+              <div class="card__body"><h4>A much longer title that wraps onto two lines</h4></div>
+              <div class="card__body"><p>Titles, bodies and links line up across the row, however long each one is.</p></div>
+              <div class="card__body"><a class="button" data-size="small" href="#subgrid-title">Read more</a></div>
+            </article>
+            <article class="card">
+              <div class="card__body"><h4>Third</h4></div>
+              <div class="card__body"><p>Each card spans three rows of the grid and takes them as its own.</p></div>
+              <div class="card__body"><a class="button" data-size="small" href="#subgrid-title">Read more</a></div>
             </article>
           </div>
         </div>
@@ -810,6 +835,8 @@
                 <tr><td>Scroll reveal</td><td>The three cards below</td><td><span class="badge" data-motion-check="reveal">Needs JavaScript to check</span></td></tr>
                 <tr><td>Stuck navbar</td><td>A sticky navbar once it is stuck</td><td><span class="badge" data-motion-check="stuck">Needs JavaScript to check</span></td></tr>
                 <tr><td>Lift</td><td>Hover the cards below</td><td><span class="badge" data-motion-check="lift">Needs JavaScript to check</span></td></tr>
+                <tr><td>Glass navbar</td><td>The header, as the page scrolls under it</td><td><span class="badge" data-motion-check="glass">Needs JavaScript to check</span></td></tr>
+                <tr><td>Theme reveal</td><td>The theme button in the header</td><td><span class="badge" data-motion-check="theme">Needs JavaScript to check</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -830,7 +857,7 @@
             <button class="button" type="button" data-variant="ghost" data-motion-toggle>Motion: <span data-motion-label>On</span></button>
           </div>
 
-          <div class="grid" style="--grid-min-item-size: 14rem;">
+          <div class="grid" style="--grid-min-item-size: 14rem;" data-reveal-stagger>
             <article class="card" data-interactive data-reveal>
               <div class="card__body flow">
                 <h4>Reveal and lift</h4>
@@ -863,6 +890,8 @@
               reveal: supports("animation-timeline: view()") ? "Yes" : "No: cards are simply visible",
               stuck: supports("container-type: scroll-state") ? "Yes" : "No: the navbar keeps its size",
               lift: matchMedia("(hover: hover)").matches ? "Yes" : "No: this device doesn't hover",
+              glass: supports("backdrop-filter: blur(1px)") || supports("-webkit-backdrop-filter: blur(1px)") ? "Yes" : "No: the header stays opaque",
+              theme: typeof document.startViewTransition === "function" ? "Yes" : "No: the theme changes at once",
             };
             const motionOff = () => getComputedStyle(document.documentElement).getPropertyValue("--motion-scale").trim() === "0";
             document.querySelectorAll("[data-motion-check]").forEach((badge) => {

@@ -67,6 +67,8 @@
 @import "05-motion/reveal.css" layer(motion);
 @import "05-motion/stuck.css" layer(motion);
 @import "05-motion/lift.css" layer(motion);
+@import "05-motion/glass.css" layer(motion);
+@import "05-motion/micro.css" layer(motion);
 
 /* --------------------------------------------------------------------------
    LAYER 5: UTILITIES (Single-Purpose Overrides)

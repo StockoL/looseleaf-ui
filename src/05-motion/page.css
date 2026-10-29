@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MOTION: PAGE TRANSITIONS
+   MOTION: PAGE TRANSITIONS AND THEME REVEAL
    Same-origin page loads cross-fade (cross-document view transitions,
    Chrome 126+, Safari 18.2+). A sticky navbar is its own transition group,
    so it holds still while the page changes underneath it. Off for reduced
@@ -19,7 +19,30 @@
     animation-timing-function: var(--ease-standard);
   }
 
-  .navbar[data-sticky] {
+  /* Not a glass navbar: a view-transition-name makes it a backdrop root, and its blur would see nothing */
+  .navbar[data-sticky]:not([data-glass]) {
     view-transition-name: navbar;
+  }
+
+  /*
+   * Theme reveal: theme.js changes the theme inside a view transition and
+   * marks <html> with data-theme-transition. The new theme grows as a circle
+   * from the toggle (--reveal-x, --reveal-y) over the old one.
+   */
+  :root[data-theme-transition]::view-transition-old(root) {
+    animation: none;
+  }
+
+  :root[data-theme-transition]::view-transition-new(root) {
+    animation: ll-theme-reveal calc(var(--duration-slow) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-theme-reveal {
+  from {
+    clip-path: circle(0 at var(--reveal-x, 50%) var(--reveal-y, 0));
+  }
+  to {
+    clip-path: circle(150% at var(--reveal-x, 50%) var(--reveal-y, 0));
   }
 }

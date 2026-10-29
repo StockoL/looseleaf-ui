@@ -1,0 +1,141 @@
+/* ==========================================================================
+   MOTION: MICRO-INTERACTIONS
+   Small details, each opt-in by attribute or tied to one block. Every
+   duration goes through --motion-scale.
+   ========================================================================== */
+
+/* --- .badge[data-pulse]: a ring that expands and fades, then rests --- */
+.badge[data-pulse] {
+  position: relative;
+}
+
+.badge[data-pulse]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--badge-text);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  animation: ll-pulse calc(var(--duration-slow) * var(--motion-scale) * 5) var(--ease-standard) infinite;
+}
+
+@keyframes ll-pulse {
+  0% {
+    opacity: 0.6;
+    scale: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    scale: 1.5 1.9;
+  }
+}
+
+/* --- .badge[data-bump]: pops and settles on the spring when (re)inserted --- */
+.badge[data-bump] {
+  animation: ll-bump calc(var(--duration-slow) * var(--motion-scale)) var(--ease-spring);
+}
+
+@keyframes ll-bump {
+  from {
+    scale: 0.6;
+  }
+}
+
+/* --- [data-underline="slide"]: the bar slides in from the left and out to the right --- */
+:is(.navbar__link, a)[data-underline="slide"] {
+  position: relative;
+  text-decoration: none;
+}
+
+:is(.navbar__link, a)[data-underline="slide"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--underline-inset, 0);
+  inset-block-end: 0;
+  block-size: 2px;
+  background-color: var(--color-action);
+  scale: 0 1;
+  transform-origin: right;
+  transition: scale calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard);
+}
+
+.navbar__link[data-underline="slide"] {
+  --underline-inset: var(--space-2xs);
+}
+
+:is(.navbar__link, a)[data-underline="slide"]:focus-visible::after,
+:is(.navbar__link, a)[data-underline="slide"][aria-current="page"]::after {
+  scale: 1 1;
+  transform-origin: left;
+}
+
+@media (hover: hover) {
+  :is(.navbar__link, a)[data-underline="slide"]:hover::after {
+    scale: 1 1;
+    transform-origin: left;
+  }
+}
+
+/* --- [data-reveal-stagger]: revealed children follow one another --- */
+/* Scroll-driven animations ignore time delays, so each child starts a little later in the scroll range instead */
+[data-reveal-stagger] > [data-reveal] {
+  --reveal-order: var(--i, 0);
+
+  animation-range: entry calc(var(--reveal-order) * 5%) entry calc(40% + var(--reveal-order) * 5%);
+}
+
+@supports (z-index: sibling-index()) {
+  [data-reveal-stagger] > [data-reveal] {
+    --reveal-order: calc(sibling-index() - 1);
+  }
+}
+
+/* --- Focus: the ring arrives rather than appears --- */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion="reduced"]) :focus-visible {
+    animation: ll-ring calc(var(--duration-quick) * var(--motion-scale)) var(--ease-standard);
+  }
+}
+
+@keyframes ll-ring {
+  from {
+    outline-offset: 0;
+  }
+}
+
+/* --- [data-dropped]: settles on the spring after a drag (any drag library) --- */
+[data-dropped] {
+  animation: ll-settle calc(var(--duration-slow) * var(--motion-scale)) var(--ease-spring);
+}
+
+@keyframes ll-settle {
+  from {
+    scale: 1.04;
+  }
+}
+
+/* --- Theme toggle: sun and moon trade places with a turn --- */
+/* --scheme-dark is a token: 0 in the light scheme, 1 in the dark, however it was chosen */
+/* <span data-theme-icons><svg data-theme-icon="light">…</svg><svg data-theme-icon="dark">…</svg></span> */
+[data-theme-icons] {
+  display: inline-grid;
+}
+
+[data-theme-icons] > [data-theme-icon] {
+  grid-area: 1 / 1;
+  transition:
+    opacity calc(var(--duration-base) * var(--motion-scale)) var(--ease-standard),
+    rotate calc(var(--duration-base) * var(--motion-scale)) var(--ease-spring);
+}
+
+[data-theme-icons] > [data-theme-icon="light"] {
+  opacity: calc(1 - var(--scheme-dark));
+  rotate: calc(var(--scheme-dark) * 90deg);
+}
+
+[data-theme-icons] > [data-theme-icon="dark"] {
+  opacity: var(--scheme-dark);
+  rotate: calc((1 - var(--scheme-dark)) * -90deg);
+}
