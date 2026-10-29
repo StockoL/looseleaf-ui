@@ -4,6 +4,26 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+### Added
+
+- A **Motion** panel in the configurator, replacing the motion half of "Shape and motion":
+  - Calm, Snappy and Playful presets.
+  - A spring designer: mass, stiffness and damping sliders with a live curve plot and a swatch that bounces along the curve.
+  - Durations, standard easing, press scale and lift distance.
+  - Switches for scroll reveal, page transitions and the compact sticky navbar.
+  - It exports tokens only, never scripts.
+- `$motion` in `design-tokens.json`, an input like `$utopia` and `$palette`. `--duration-quick`, `-base` and `-slow`, `--ease-spring`, `--press-scale` and `--lift-distance` are derived from it, as are three new tokens:
+  - `--duration-spring`: the spring's settle time.
+  - `--duration-page`: `0ms` with page transitions off.
+  - `--reveal-animation` and `--navbar-stuck-padding`: carry the other two switches.
+- `scripts/spring.mjs`: simulates a damped spring and emits it as a CSS `linear()` easing of at most 40 points.
+- A Motion playground in the demo: a button to press, a menu, a dialog and a badge that lifts.
+
+### Changed
+
+- `--ease-spring` is a `linear()` spring curve instead of a `cubic-bezier()`.
+- A theme without `$motion` (exported from 2.1 or earlier) keeps its explicit motion tokens; the configurator moves them into `$motion` the first time the Motion panel is used.
+
 ## [2.1.0] - 2026-10-29
 
 ### Added

@@ -9,7 +9,7 @@ The token configurator is where a LooseLeaf theme is made. You adjust the design
 ## The screen at a glance
 
 - **Toolbar** (top): the colour scheme of the preview (Light, Dark, Auto), the preview's viewport width, and **Import**, **Export**, **Copy link** and **Reset**.
-- **Controls** (left): eight sections, one open at a time. Every value has a slider and a number field; type in the field for an exact value.
+- **Controls** (left): nine sections, one open at a time. Every value has a slider and a number field; type in the field for an exact value.
 - **Preview** (right): the real LooseLeaf demo page, with every composition and block, rendered with your draft tokens. What you see here is exactly what your project will get.
 
 The tool's own interface always uses the default LooseLeaf look and follows your system's light or dark setting, so a draft with unreadable colours can never make the tool itself unusable.
@@ -64,18 +64,38 @@ Choose a **stack** for body text and for headings. The stacks come from [Modern 
 
 To use a web font, type its name (for example `Inter`) in the optional family field. It must be a [Google Fonts](https://fonts.google.com/) family. The preview loads it straight away, and the exported theme CSS imports it, falling back to the stack you chose.
 
-## 6. Shape and motion
+## 6. Shape
 
 - **Radius**: corner rounding for controls (buttons, inputs) and surfaces (cards, dialogs). Badges are always fully rounded.
-- **Duration**: the quick, base and slow animation speeds, in milliseconds.
-- **Easing**: the standard and spring animation curves, chosen from presets.
 
-## 7. Layout
+## 7. Motion
+
+![Motion controls: presets, the spring curve and its bouncing swatch, and the mass, stiffness and damping sliders](images/configurator-motion.png)
+
+- **Preset**: **Calm**, **Snappy** or **Playful** sets the spring and the three durations together. Changing any of them afterwards makes the preset custom.
+- **Spring**: movement in LooseLeaf (menus dropping in, cards lifting, the accordion's chevron) follows a spring. Three sliders shape it:
+  - **Mass**: heavier springs move more slowly and swing further.
+  - **Stiffness**: stiffer springs are quicker and snappier.
+  - **Damping**: less damping means more bounce. At 0 it never settles.
+
+  The plot shows the spring's path from start to rest, with the dashed line marking where it ends up, and the line under it says how long it takes to settle and how far it overshoots. The swatch below bounces along the same curve each time the spring changes, or when you press **Play**. If your system asks for reduced motion, it only moves when you press **Play**. The spring exports as `--ease-spring`, a CSS `linear()` curve.
+- **Durations**: the quick, base and slow speeds, in milliseconds. **Standard easing** is the curve for colour and opacity changes.
+- **Press scale**: how far buttons and choices shrink while pressed. 1 turns it off.
+- **Lift distance**: how far `.anim-lift` and interactive cards rise on hover.
+- **Enhancements**: switch **Scroll reveal**, **Page transitions** and **Compact sticky navbar** on or off for the whole site.
+
+Try the result in the preview's **Motion** section, which has a playground (a button to press, a menu, a dialog, cards to hover) and says which effects the current browser supports.
+
+Visitors who ask their device for reduced motion get none of this: every duration in LooseLeaf drops to zero for them. A site can offer the same choice with `data-motion="reduced"` on `<html>`.
+
+The configurator only ever exports tokens, never scripts. A script copied into your project would miss every fix in later LooseLeaf releases, which is exactly the drift the theme mechanism exists to prevent: your theme sets the values, and the library's own files supply the behaviour.
+
+## 8. Layout
 
 - **Measure**: the comfortable reading width for running text, in characters (`ch`).
 - **Wrapper max**: the widest a page section grows, in `rem`.
 
-## 8. Defaults
+## 9. Defaults
 
 ![Defaults: the default button style and when links are underlined](images/configurator-defaults.png)
 

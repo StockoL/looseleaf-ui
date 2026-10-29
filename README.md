@@ -246,6 +246,7 @@ To maintain a true Single Source of Truth across the entire tech stack (includin
 
 - `$utopia` holds the [Utopia](https://utopia.fyi/) settings (viewports, base sizes, ratios, space multipliers). The fluid `--step-*` type scale and `--space-*` scale are derived from them at build time.
 - `$palette` holds OKLCH hues and chromas. The `--neutral-*` ramp, the `--action-*` and `--accent-*` steps and every status colour (light and dark) are derived from it.
+- `$motion` holds a spring (mass, stiffness, damping), three durations, the press scale, the lift distance and three switches. `--ease-spring` is simulated from the spring as a CSS `linear()` curve, and the `--duration-*`, `--press-scale`, `--lift-distance`, `--reveal-animation` and `--navbar-stuck-padding` tokens are derived from the rest.
 - Everything else is a semantic token named by purpose. Colour roles carry a light and a dark value, and `{group.key}` references another token.
 
 ```json
@@ -263,7 +264,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion (with a spring designer) and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -284,6 +285,7 @@ looseleaf-ui/
 ├── scripts/
 │   ├── tokens-core.mjs        <-- Pure token compiler (shared with the configurator)
 │   ├── utopia.mjs             <-- Pure fluid type and space maths
+│   ├── spring.mjs             <-- Pure spring simulation, emitted as a linear() easing
 │   ├── color.mjs              <-- Pure OKLCH and WCAG contrast maths
 │   ├── zip.mjs                <-- Pure store-only ZIP writer (theme bundles)
 │   ├── build-tokens.js        <-- Writes variables.css, tokens.resolved.json, TOKENS.md
