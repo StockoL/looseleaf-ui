@@ -55,15 +55,105 @@ Baseline browsers are Chrome 117+, Safari 17.4+ and Firefox 129+, so cascade lay
 
 Django projects use the `django-looseleaf` package in [packages/django-looseleaf/](packages/django-looseleaf/README.md). One `INSTALLED_APPS` entry ships the CSS and JS, template tags for the head and the theme, and a form renderer that outputs LooseLeaf markup from `{{ form }}`. A theme bundle drops into `static/` and is switched on with one setting, `LOOSELEAF_THEME`. See its README for setup.
 
-### <a name="theming"></a> Theming
+### <a name="theming"></a> Theming: from the configurator to your project
 
-Every project gets its own colours, type scale, spacing, fonts and shapes without touching this repository or running a build:
+Every project gets its own colours, type scale, spacing, fonts and shapes without cloning this repository. The configurator does the compiling in your browser, so for most projects there is no build step at all. Pick the route that matches your project.
 
-1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/) and adjust the tokens against a live preview of every block, in light and dark, at any viewport width. A live contrast table flags any text that drops below WCAG AA.
-2. Choose **Export → Theme bundle** to download `looseleaf-theme.zip`: the compiled `looseleaf-tokens.css`, `tokens.resolved.json`, and your `design-tokens.json` for re-importing later.
-3. Load `looseleaf-tokens.css` after `looseleaf.css` (plain HTML), or unzip the bundle into `static/theme/` and set `LOOSELEAF_THEME = "theme"` (Django).
+#### Step 1 (everyone): make a theme
 
-The theme's tokens live in the same cascade layer as the defaults, so loading them second is the whole mechanism.
+1. Open the hosted [token configurator](https://stockol.github.io/looseleaf-ui/). It previews every block live, in light and dark, at any viewport width, and the contrast table flags any text that drops below WCAG AA.
+2. Adjust the type scale, spacing, palette hues, fonts, radii and defaults until the preview looks like your site.
+3. **Export → Theme bundle** downloads `looseleaf-theme.zip` containing three files:
+
+   | File | What it is | Who reads it |
+   | --- | --- | --- |
+   | `looseleaf-tokens.css` | Your tokens compiled, wrapped in `@layer global` | the browser |
+   | `tokens.resolved.json` | Every token's final light and dark value | `django-looseleaf` (meta tags, `ll_token`) |
+   | `design-tokens.json` | The source: your inputs and overrides | the configurator, when you re-import to keep editing |
+
+   Keep all three in the project and commit them. `design-tokens.json` is the only one you ever edit, and only through the configurator (**Import**, change, **Export** again).
+
+#### Route A: Django
+
+```bash
+pip install django-looseleaf
+```
+
+Unzip the bundle into any app's `static/theme/` (or a `STATICFILES_DIRS` entry), then:
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    "django.forms",
+    "django_looseleaf",
+]
+FORM_RENDERER = "django_looseleaf.renderers.LooseLeafFormRenderer"
+LOOSELEAF_THEME = "theme"   # the static prefix you unzipped into
+```
+
+```django
+{# templates/base.html #}
+{% load looseleaf %}<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    {% looseleaf_meta %}     {# viewport with safe areas, color-scheme, theme-color from YOUR tokens #}
+    <title>{% block title %}My site{% endblock %}</title>
+    {% looseleaf_theme %}    {# applies the stored light/dark choice before first paint #}
+    {% looseleaf_css %}      {# looseleaf.css, then theme/looseleaf-tokens.css #}
+    {% looseleaf_js %}
+  </head>
+  <body>
+    {% ll_messages %}
+    {% block content %}{% endblock %}
+  </body>
+</html>
+```
+
+`python manage.py check` confirms the theme is wired (`looseleaf.E002` if the CSS can't be found, `W003` if the JSON is missing). `{{ form }}` now renders LooseLeaf markup. Full tag and renderer reference: [packages/django-looseleaf/README.md](packages/django-looseleaf/README.md).
+
+#### Route B: plain HTML or any other backend
+
+Put `looseleaf-tokens.css` wherever you serve static files and load it **after** the base stylesheet:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.css" />
+<link rel="stylesheet" href="/css/looseleaf-tokens.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.0.0/dist/looseleaf.js" defer></script>
+```
+
+Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
+
+#### Route C: you only have `design-tokens.json`
+
+If you exported **Tokens source** rather than the bundle, or want the compile step in your own pipeline (CI, a monorepo, a watch task), compile it with the same code the configurator and this repo use:
+
+```bash
+npx looseleaf-ui compile design-tokens.json --out static/theme/
+```
+
+That writes `looseleaf-tokens.css` and `tokens.resolved.json` into the folder, and you continue with Route A or B. Node 20+ is the only requirement. For the same `design-tokens.json`, the CSS is byte-identical to the configurator's export; the JSON differs only in its `$generated` timestamp.
+
+The `looseleaf-ui` npm package is published from the next release on. Until then, run the same command straight from GitHub: `npx github:StockoL/looseleaf-ui compile design-tokens.json --out static/theme/`.
+
+#### Updating a theme later
+
+Open the configurator, **Import** your `design-tokens.json`, change what you need, **Export** the bundle again and replace the three files. Upgrading LooseLeaf (`pip install -U django-looseleaf`, or bumping the jsDelivr tag) never touches your theme; within a major version any token your theme doesn't know falls back to the default, and across majors `django-looseleaf` warns (`W004`) so you know to re-export.
+
+#### Changing this repository's defaults (maintainers)
+
+The repo's own `design-tokens.json` is a theme like any other. Export **Tokens source** from the configurator, save it over the file at the repo root, then:
+
+```bash
+npm run build          # recompiles variables.css, dist/, the Django package's static copies and docs/TOKENS.md
+npm run bump -- 2.0.1  # when it's ready to ship; then commit and push the tag
+```
+
+`npm run check` and the Django package's `test_build_sync` fail if the committed build output is out of date, so a forgotten build can't ship.
 
 ---
 
