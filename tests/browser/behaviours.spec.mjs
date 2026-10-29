@@ -102,7 +102,10 @@ test.describe("toast", () => {
     await expect(page.locator(".toast", { hasText: "Second" })).toHaveCount(0);
     await page.keyboard.press("Escape");
     await expect(page.locator("#demo-modal")).not.toHaveAttribute("open", "");
-    expect(await page.locator(".toast-region").evaluate((el) => el.parentElement === document.body && el.matches(":popover-open"))).toBe(true);
+    // The dialog's close event, which brings the region back, fires a task after open is removed
+    await expect
+      .poll(() => page.locator(".toast-region").evaluate((el) => el.parentElement === document.body && el.matches(":popover-open")))
+      .toBe(true);
     await expect(toast).toBeVisible();
   });
 });
