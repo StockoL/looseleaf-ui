@@ -297,6 +297,10 @@ window.LooseLeafCurrentTokens = {
     "$value": "{space.s}",
     "$purpose": "How far a [data-reveal] element travels as it scrolls into view."
   },
+  "sound-volume": {
+    "$value": "0.3",
+    "$purpose": "Volume of the opt-in interface sounds (sound.js), from 0 to 1."
+  },
   "layer": {
     "$purpose": "Stacking order. Dialogs use the top layer and need no token.",
     "raised": 10,
