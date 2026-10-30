@@ -14,7 +14,7 @@ const rootDir = path.join(__dirname, "..");
 const outputPath = path.join(rootDir, "tools", "tokens-lib.js");
 
 // Dependency order: each module may only import from those before it.
-const MODULES = ["utopia.mjs", "color.mjs", "spring.mjs", "tokens-core.mjs", "zip.mjs"];
+const MODULES = ["utopia.mjs", "color.mjs", "spring.mjs", "tokens-core.mjs", "harmony.mjs", "solver.mjs", "zip.mjs"];
 
 const importPattern = /^import\s*\{([^}]+)\}\s*from\s*"\.\/([\w.-]+\.mjs)";[ \t]*$/gm;
 const exportPattern = /^export\s+((?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*))/gm;

@@ -1,5 +1,5 @@
 {
-  "$version": "2.4.0",
+  "$version": "2.5.0",
   "neutral.0": {
     "name": "--neutral-0",
     "tier": 1,
@@ -108,6 +108,15 @@
     "overridden": false,
     "purpose": "Raw grayscale ramp, derived from $palette.neutral. Never used directly by blocks."
   },
+  "action.400": {
+    "name": "--action-400",
+    "tier": 1,
+    "light": "#5aa3ff",
+    "dark": "#5aa3ff",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Raw action hue (500, a lighter 400 and a darker 600), derived from $palette.action."
+  },
   "action.500": {
     "name": "--action-500",
     "tier": 1,
@@ -115,7 +124,7 @@
     "dark": "#0072dd",
     "themed": false,
     "overridden": false,
-    "purpose": "Raw action hue (500 and its 600 hover step), derived from $palette.action."
+    "purpose": "Raw action hue (500, a lighter 400 and a darker 600), derived from $palette.action."
   },
   "action.600": {
     "name": "--action-600",
@@ -124,7 +133,16 @@
     "dark": "#0051a0",
     "themed": false,
     "overridden": false,
-    "purpose": "Raw action hue (500 and its 600 hover step), derived from $palette.action."
+    "purpose": "Raw action hue (500, a lighter 400 and a darker 600), derived from $palette.action."
+  },
+  "accent.400": {
+    "name": "--accent-400",
+    "tier": 1,
+    "light": "#b483ff",
+    "dark": "#b483ff",
+    "themed": false,
+    "overridden": false,
+    "purpose": "Raw accent hue (500, a lighter 400 and a darker 600), derived from $palette.accent."
   },
   "accent.500": {
     "name": "--accent-500",
@@ -133,7 +151,7 @@
     "dark": "#894ed6",
     "themed": false,
     "overridden": false,
-    "purpose": "Raw accent hue (500 and its 600 hover step), derived from $palette.accent."
+    "purpose": "Raw accent hue (500, a lighter 400 and a darker 600), derived from $palette.accent."
   },
   "accent.600": {
     "name": "--accent-600",
@@ -142,7 +160,7 @@
     "dark": "#6724ad",
     "themed": false,
     "overridden": false,
-    "purpose": "Raw accent hue (500 and its 600 hover step), derived from $palette.accent."
+    "purpose": "Raw accent hue (500, a lighter 400 and a darker 600), derived from $palette.accent."
   },
   "success.base": {
     "name": "--success-base",

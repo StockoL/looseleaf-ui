@@ -65,19 +65,21 @@ Raw grayscale ramp, derived from $palette.neutral. Never used directly by blocks
 
 ### action
 
-Raw action hue (500 and its 600 hover step), derived from $palette.action.
+Raw action hue (500, a lighter 400 and a darker 600), derived from $palette.action.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
+| `--action-400` | Raw | `#5aa3ff` |  | derived |
 | `--action-500` | Raw | `#0072dd` |  | derived |
 | `--action-600` | Raw | `#0051a0` |  | derived |
 
 ### accent
 
-Raw accent hue (500 and its 600 hover step), derived from $palette.accent.
+Raw accent hue (500, a lighter 400 and a darker 600), derived from $palette.accent.
 
 | Token | Tier | Light | Dark | Notes |
 | --- | --- | --- | --- | --- |
+| `--accent-400` | Raw | `#b483ff` |  | derived |
 | `--accent-500` | Raw | `#894ed6` |  | derived |
 | `--accent-600` | Raw | `#6724ad` |  | derived |
 

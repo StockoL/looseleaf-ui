@@ -49,10 +49,10 @@ Load the release files from jsDelivr, always pinned to a tag (never `@main`), an
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.js" defer></script>
 ```
 
 The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
@@ -140,10 +140,10 @@ Put `looseleaf-tokens.css` wherever you serve static files and load it **after**
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.js" defer></script>
 ```
 
 Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
@@ -265,7 +265,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion (with a spring designer) and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion (with a spring designer) and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. It can also generate a whole palette, from scratch or from a brand colour, and repair it so every contrast pair meets AA. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -287,6 +287,8 @@ looseleaf-ui/
 │   ├── tokens-core.mjs        <-- Pure token compiler (shared with the configurator)
 │   ├── utopia.mjs             <-- Pure fluid type and space maths
 │   ├── spring.mjs             <-- Pure spring simulation, emitted as a linear() easing
+│   ├── harmony.mjs            <-- Pure palette generator (hue bands, harmonies, seeded)
+│   ├── solver.mjs             <-- Pure contrast repair for generated palettes
 │   ├── color.mjs              <-- Pure OKLCH and WCAG contrast maths
 │   ├── zip.mjs                <-- Pure store-only ZIP writer (theme bundles)
 │   ├── build-tokens.js        <-- Writes variables.css, tokens.resolved.json, TOKENS.md
@@ -433,7 +435,7 @@ An enhancement, not a dependency: every menu, link and form already works withou
 `looseleaf.js` joins all of them and is the recommended single include: 36.4 KB as shipped, 10.1 KB gzipped, about a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.4.0/dist/behaviours/tabs.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/behaviours/tabs.js"></script>
 ```
 
 | Module | Why it needs JavaScript | Without it | Hooks |

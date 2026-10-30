@@ -23,7 +23,7 @@ import { oklchToHex, isHex, contrast } from "./color.mjs";
 import { springEasing } from "./spring.mjs";
 
 export const RAMP_KEYS = ["0", "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"];
-export const BRAND_KEYS = ["500", "600"];
+export const BRAND_KEYS = ["400", "500", "600"];
 export const STATUS_NAMES = ["success", "warning", "danger", "info"];
 export const RAW_GROUPS = ["neutral", "action", "accent", ...STATUS_NAMES, "step", "space"];
 
@@ -178,7 +178,7 @@ export function deriveGroups(json) {
       const { hue, chroma } = palette[name];
       groups.push({
         name,
-        purpose: `Raw ${name} hue (500 and its 600 hover step), derived from $palette.${name}.`,
+        purpose: `Raw ${name} hue (500, a lighter 400 and a darker 600), derived from $palette.${name}.`,
         entries: BRAND_KEYS.map((key) => ({ key, value: oklchToHex(lightness(key), chroma, hue) })),
       });
     }
