@@ -4,6 +4,25 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+### Added
+
+- A palette generator at the top of the configurator's Palette panel:
+  - **Generate** (or Space on the slot list) rerolls every unlocked slot: neutral, action, accent and the four statuses.
+  - Harmony modes (analogous, complementary, split-complementary, triadic, random) and one vividness for every chroma.
+  - Status hues stay inside their colour families.
+  - A padlock per slot, Lock all and Unlock all.
+  - **Start from a colour** for a brand hex, with **Use exact hex anyway**.
+  - A history of the last ten palettes.
+- Contrast repair for generated palettes:
+  - Every failing pair is fixed by adjusting lightness, then chroma, then a status hue, never breaking a pair that passed.
+  - Each adjustment is listed with an undo button, and anything unfixable is shown as "best available".
+- `scripts/harmony.mjs` and `scripts/solver.mjs`, pure modules bundled into the configurator, with tests.
+- `--action-400` and `--accent-400`: a lighter step of each brand hue. The generator moves dark-scheme links onto `--action-400` when white text on buttons needs action darker than a dark-page link can be.
+
+### Changed
+
+- The configurator saves the generator's settings, locks and history in the draft (so Copy link carries them) under `$generator`, which every export leaves out.
+
 ## [2.4.0] - 2026-10-29
 
 ### Added

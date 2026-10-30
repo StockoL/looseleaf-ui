@@ -265,7 +265,7 @@ To change a derived value, change its input. An explicit value inside a derived 
 
 ### 2. The Configurator (tools/configure.html)
 
-Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion (with a spring designer) and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
+Use it [hosted on GitHub Pages](https://stockol.github.io/looseleaf-ui/), or open `tools/configure.html` by double-clicking it (no server needed). It previews the real demo page in a resizable frame while you adjust the Utopia scales, palette hues, fonts, radii, motion (with a spring designer) and default styles, and shows a live WCAG contrast table for both schemes. **Export** offers a theme bundle for projects (see [Theming](#theming)), the `design-tokens.json` source, or the compiled tokens CSS on the clipboard. To change this repository's defaults, save the source over `design-tokens.json` and run `npm run build`. The preview uses the same compiler as the build, so what you see is exactly what you get. It can also generate a whole palette, from scratch or from a brand colour, and repair it so every contrast pair meets AA. The [walkthrough](docs/CONFIGURATOR.md) covers each control with screenshots.
 
 ### 3. The Compiler (scripts/build-tokens.js)
 
@@ -287,6 +287,8 @@ looseleaf-ui/
 │   ├── tokens-core.mjs        <-- Pure token compiler (shared with the configurator)
 │   ├── utopia.mjs             <-- Pure fluid type and space maths
 │   ├── spring.mjs             <-- Pure spring simulation, emitted as a linear() easing
+│   ├── harmony.mjs            <-- Pure palette generator (hue bands, harmonies, seeded)
+│   ├── solver.mjs             <-- Pure contrast repair for generated palettes
 │   ├── color.mjs              <-- Pure OKLCH and WCAG contrast maths
 │   ├── zip.mjs                <-- Pure store-only ZIP writer (theme bundles)
 │   ├── build-tokens.js        <-- Writes variables.css, tokens.resolved.json, TOKENS.md

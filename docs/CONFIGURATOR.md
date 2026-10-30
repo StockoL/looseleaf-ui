@@ -33,6 +33,30 @@ Spacing is fluid too, and uses the same viewports. Set the base space (usually e
 
 ## 3. Palette
 
+### Generating a palette
+
+![The palette generator: seven colour slots with padlocks, Generate, harmony and vividness controls, a brand colour field, the adjustments it made and a history of palettes](images/configurator-generator.png)
+
+The top of the Palette panel can make a whole palette for you, quickly. It picks a hue for each role (neutral, action, accent and the four statuses) rather than five arbitrary colours, and the lightness of every text, surface and border is already fixed by the palette's recipes, so what it produces is coherent from the start. Its job is to make it good, and to keep the contrast table green.
+
+- **Generate** rerolls every slot that isn't locked. With the slot list focused, **Space** does the same.
+- **Padlocks** keep a slot as it is. **Lock all** and **Unlock all** do every slot at once.
+- **Harmony** sets how the accent relates to the action colour: analogous, complementary, split-complementary, triadic, or random (which picks one of those).
+- **Vividness** is one colourfulness for action and accent, with the statuses at 0.8 of it and the neutral barely tinted. Matching saturation is most of what makes a palette look designed.
+- Status colours always stay in their families: danger red-ish, warning amber, success green-ish, info blue-ish, at the point nearest the harmony. Otherwise alerts would be misread.
+
+After every palette, the generator checks every pair in the contrast table in both schemes, and fixes any that fall short of WCAG AA. It changes the lightness behind the colour first, then lowers its chroma, then nudges a status hue towards the edge of its band. A change is kept only if it doesn't break another pair. Each one is listed under **Adjusted to meet AA** with an undo button. Anything it still can't fix is listed as **Best available**, with its ratio. A locked slot never changes hue, though its lightness or chroma may, and the list says so.
+
+Links and buttons share the action colour, and pull it in opposite directions: white text on a button wants it dark, a link on the dark page wants it light. When that bites, the generator moves dark-scheme links to the lighter action step (`--action-400`), so both pass.
+
+**Start from a colour** takes a hex code, a brand colour, say. It becomes the locked action colour, and everything else follows from it. If white text can't sit on it, the panel says how far it moved the colour to make it pass (a hard yellow like `#ffd500` becomes a darker gold). **Use exact hex anyway** keeps your colour exactly and switches the text on it to dark instead.
+
+**History** keeps the last ten palettes; click one to bring it back. The generator's settings, locks and history are saved with your draft and travel in a **Copy link**, but they stay out of every export: the theme gets only the palette itself.
+
+Harmony rules are heuristics. The generator is for exploring quickly; looking at the preview is still the decision. It doesn't pull colours from photos; that's a different tool.
+
+### Hues and chroma by hand
+
 ![Palette controls: neutral hue and chroma, with the generated neutral ramp as swatches](images/configurator-palette.png)
 
 Colours are chosen as a **hue** (0 to 360 degrees around the colour wheel) and a **chroma** (how colourful), in the perceptual OKLCH colour space. The tool generates each ramp from those two numbers, so the steps stay evenly spaced in lightness and every colour is checked to fit within what screens can show.
