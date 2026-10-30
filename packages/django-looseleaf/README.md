@@ -73,7 +73,7 @@ The bundle also contains `design-tokens.json`: import it back into the configura
 | Tag | Output |
 | --- | --- |
 | `{% looseleaf_css %}` | `<link>` to `looseleaf/looseleaf.css` |
-| `{% looseleaf_js %}` | Deferred `<script>` for `looseleaf/looseleaf.js` (dropdowns, navbar toggle, dialogs, alerts, copy buttons) |
+| `{% looseleaf_js %}` | Deferred `<script>` for `looseleaf/looseleaf.js`. Everything works without it; it adds keyboard and closing behaviour to menus, the dialog fallback, alert dismissal, copy buttons, tabs, toasts, form feedback, password reveal, the done state and opt-in sounds. The modules are also in `looseleaf/behaviours/` to load one by one. |
 | `{% looseleaf_theme %}` | The theme script, inlined so the saved light/dark choice applies before first paint and any `[data-theme-toggle]` button works. Use `inline=False` for a blocking `<script src>` under a strict Content Security Policy. |
 | `{% looseleaf_html_attrs %}` | Attributes for `<html>`: `<html lang="en"{% looseleaf_html_attrs %}>`. With `LOOSELEAF_SOUNDS = True` it opts the site in to the synthesised interface sounds; with a static prefix (`LOOSELEAF_SOUNDS = "sounds"`) it plays your own `click.mp3`, `toggle.mp3` and `success.mp3` from there. Visitors still turn sounds on themselves with a `[data-sound-toggle]` button. Off by default. |
 | `{% looseleaf_meta %}` | Viewport (with `viewport-fit=cover` for notched phones), `color-scheme`, and light and dark `theme-color` from the `color.surface` token. Optional `title="…"` and `icon="path/in/static.png"` add the iOS home-screen title and icon. |
