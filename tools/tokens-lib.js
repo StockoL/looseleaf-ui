@@ -421,7 +421,7 @@ function statusEntries({ hue, chroma = DEFAULT_STATUS_CHROMA }, recipes) {
 
 function motionGroups(motion) {
   const preset = MOTION_PRESETS.snappy;
-  const { spring = preset.spring, durations = {}, press = 0.97, lift = "3xs", reveal = true, pageTransition = true, stuck = true } = motion;
+  const { spring = preset.spring, durations = {}, press = 0.97, lift = "3xs", reveal = true, pageTransition = false, stuck = true } = motion;
   const { easing, settleMs } = springEasing(spring);
 
   const ms = DURATION_KEYS.map((key) => {
@@ -589,6 +589,27 @@ function walk(node, path, context, out) {
   }
 }
 
+/*
+ * Token names and values are written straight into CSS, and a draft can come
+ * from a shared link or an imported file. A name, or a value with ; { } < > or a
+ * comment, could close the declaration and add rules of its own (to the preview,
+ * and to every theme exported from it), so they are refused here.
+ */
+const SAFE_NAME = /^[\w-]+$/;
+const UNSAFE_VALUE = /[;{}<>]|\/\*|\*\//;
+
+function assertSafe({ path, light, dark }) {
+  const name = path.join(".");
+  for (const segment of path) {
+    if (!SAFE_NAME.test(segment)) throw new Error(`Token name "${name}" may only use letters, digits, - and _`);
+  }
+  for (const value of [light, dark]) {
+    if (value !== undefined && UNSAFE_VALUE.test(value.replace(REFERENCE, ""))) {
+      throw new Error(`Token ${name} has a value CSS can't hold safely (it contains ; { } < > or a comment): ${value.slice(0, 60)}`);
+    }
+  }
+}
+
 function collectEntries(json) {
   const entries = [];
   const derived = deriveGroups(json);
@@ -619,7 +640,10 @@ function collectEntries(json) {
     walk(node, [key], { tier: raw ? 1 : 2, purpose: undefined, derived: false, overridden: raw }, entries);
   }
 
-  return entries.map((entry) => ({ ...entry, name: `--${entry.path.join("-")}` }));
+  return entries.map((entry) => {
+    assertSafe(entry);
+    return { ...entry, name: `--${entry.path.join("-")}` };
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -671,7 +695,21 @@ function declarations(tokens, valueOf, indent) {
   return lines.join("\n");
 }
 
-function renderCss(tokens) {
+/*
+ * Cross-document page transitions are opt-in ($motion.pageTransition): in
+ * Chromium a form that submits back to its own page can leave the transition
+ * unfinished and the page unclickable. A theme that opts in carries the rule.
+ */
+const PAGE_TRANSITIONS = `
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+`;
+
+function renderCss(tokens, { pageTransitions = false } = {}) {
   const darkTokens = tokens.filter((token) => token.darkValue !== undefined);
   const darkBody = (indent) => `${indent}color-scheme: dark;\n\n${declarations(darkTokens, (t) => t.darkValue, indent)}`;
 
@@ -692,7 +730,7 @@ ${darkBody("    ")}
 :root[data-theme="dark"] {
 ${darkBody("  ")}
 }
-`;
+${pageTransitions ? PAGE_TRANSITIONS : ""}`;
 }
 
 /* --------------------------------------------------------------------------
@@ -727,7 +765,7 @@ function compile(json) {
     };
   });
 
-  return { css: renderCss(tokens), tokens };
+  return { css: renderCss(tokens, { pageTransitions: json.$motion?.pageTransition === true }), tokens };
 }
 
 /* --------------------------------------------------------------------------
@@ -1309,5 +1347,5 @@ function zip(files, date = new Date()) {
   return { crc32, zip };
   })();
 
-  global.LooseLeafTokens = Object.assign({ VERSION: "2.5.0" }, modules["utopia.mjs"], modules["color.mjs"], modules["spring.mjs"], modules["tokens-core.mjs"], modules["harmony.mjs"], modules["solver.mjs"], modules["zip.mjs"]);
+  global.LooseLeafTokens = Object.assign({ VERSION: "2.5.1" }, modules["utopia.mjs"], modules["color.mjs"], modules["spring.mjs"], modules["tokens-core.mjs"], modules["harmony.mjs"], modules["solver.mjs"], modules["zip.mjs"]);
 })(typeof window !== "undefined" ? window : globalThis);

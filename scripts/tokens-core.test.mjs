@@ -167,7 +167,7 @@ test("$motion derives the motion tokens as tier 2", () => {
 });
 
 test("$motion switches become token values the motion layer reads", () => {
-  const on = byName(compile({ space, duration: {}, $motion: {} }).tokens);
+  const on = byName(compile({ space, duration: {}, $motion: { pageTransition: true } }).tokens);
   assert.equal(on["--reveal-animation"].value, "ll-reveal");
   assert.equal(on["--duration-page"].value, "var(--duration-base)");
   assert.equal(on["--navbar-stuck-padding"].value, "var(--space-2xs)");
@@ -235,4 +235,27 @@ test("invalid $shape.shadow values are rejected with their path", () => {
   assert.throws(() => compile(shape({ strength: 2 })), /\$shape\.shadow\.strength/);
   assert.throws(() => compile(shape({ softness: -1 })), /\$shape\.shadow\.softness/);
   assert.throws(() => compile(shape({ angle: "below" })), /\$shape\.shadow\.angle/);
+});
+
+test("values and names that could break out of the CSS are refused", () => {
+  for (const value of [
+    "white; background: url(https://example.invalid/t.png)",
+    'white } body::after { content: "x"',
+    "white /* the rest is a comment",
+    "</style><script>",
+  ]) {
+    assert.throws(() => compile({ color: { surface: value } }), /can't hold safely/, value);
+  }
+  assert.throws(() => compile({ color: { "surface: red; --x": "white" } }), /may only use letters/);
+  assert.throws(() => compile({ color: { surface: { light: "white", dark: "black; color: red" } } }), /can't hold safely/);
+  // Ordinary values, references and the generated ones all still pass
+  const { tokens } = compile({ space: { s: "1rem" }, gutter: "{space.s}", ease: { x: "linear(0, 0.5 40%, 1)" }, font: { body: "'Inter', system-ui, sans-serif" } });
+  assert.equal(tokens.find((t) => t.name === "--gutter").value, "var(--space-s)");
+});
+
+test("page transitions are opt-in: only a theme that turns them on carries the rule", () => {
+  assert.doesNotMatch(compile({ space, $motion: {} }).css, /@view-transition/);
+  const css = compile({ space, $motion: { pageTransition: true } }).css;
+  assert.match(css, /@media \(prefers-reduced-motion: no-preference\) \{\n  @view-transition \{\n    navigation: auto;/);
+  assert.equal(byName(compile({ space, $motion: {} }).tokens)["--duration-page"].value, "0ms");
 });

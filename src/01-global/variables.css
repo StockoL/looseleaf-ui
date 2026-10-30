@@ -99,7 +99,7 @@
   --duration-base: 250ms;
   --duration-slow: 400ms;
   --duration-spring: 1132ms;
-  --duration-page: var(--duration-base);
+  --duration-page: 0ms;
   --duration-enter: var(--duration-base);
   --duration-exit: var(--duration-quick);
 

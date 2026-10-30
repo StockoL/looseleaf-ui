@@ -938,7 +938,7 @@
               entrances: supports("transition-behavior: allow-discrete") ? "Yes" : "Menus only",
               press: "Yes",
               height: supports("interpolate-size: allow-keywords") ? "Yes (interpolate-size)" : supports("selector(::details-content)") ? "Yes (grid fallback)" : "No: opens instantly",
-              page: "CSSViewTransitionRule" in window ? "Yes" : "No: pages load as usual",
+              page: !("CSSViewTransitionRule" in window) ? "No: pages load as usual" : [...document.styleSheets].some((sheet) => { try { return [...sheet.cssRules].some(function find(rule) { return rule instanceof CSSViewTransitionRule || [...(rule.cssRules ?? [])].some(find); }); } catch { return false; } }) ? "Yes" : "Supported, but this theme leaves it off",
               reveal: supports("animation-timeline: view()") ? "Yes" : "No: cards are simply visible",
               stuck: supports("container-type: scroll-state") ? "Yes" : "No: the navbar keeps its size",
               lift: matchMedia("(hover: hover)").matches ? "Yes" : "No: this device doesn't hover",

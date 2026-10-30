@@ -1,4 +1,4 @@
-/*! LooseLeaf UI v2.5.0 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
+/*! LooseLeaf UI v2.5.1 | MIT License | Copyright (c) 2026 Louis Stockton | https://github.com/StockoL/looseleaf-ui */
 /**
  * LooseLeaf UI - Password reveal
  * Why script: no attribute lets a visitor see what they typed in a password

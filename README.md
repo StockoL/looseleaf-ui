@@ -49,10 +49,10 @@ Load the release files from jsDelivr, always pinned to a tag (never `@main`), an
 <meta name="color-scheme" content="light dark" />
 
 <!-- Blocking on purpose: applies the stored light/dark choice before first paint -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" /> <!-- your theme (optional) -->
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/looseleaf.js" defer></script>
 ```
 
 The same files are attached to every [GitHub release](https://github.com/StockoL/looseleaf-ui/releases) if you'd rather host them yourself. Without a theme you get the default tokens; see [Theming](#theming) to make your own.
@@ -140,10 +140,10 @@ Put `looseleaf-tokens.css` wherever you serve static files and load it **after**
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/theme.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.css" />
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/theme.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/looseleaf.css" />
 <link rel="stylesheet" href="/css/looseleaf-tokens.css" />
-<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/looseleaf.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/looseleaf.js" defer></script>
 ```
 
 Order is the whole mechanism: both stylesheets declare the `global` layer, and later wins inside a layer. `tokens.resolved.json` is optional here; use it if your templating needs a literal colour (an email, an SVG fill, a `theme-color` meta).
@@ -404,7 +404,7 @@ Motion is an enhancement: the system is complete without this folder. Its `motio
 | `entrances.css` | Alerts, toasts and menus come in on partial keyframes (menus grow from their trigger); dialogs and drawers animate in and out with `@starting-style` | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
 | `press.css` | Buttons, choices and `.badge[data-interactive]` shrink slightly while pressed | `--press-scale` |
 | `height.css` | Accordion items open and close smoothly | `--duration-base` |
-| `page.css` | Same-site page loads cross-fade (a sticky, non-glass navbar holds still); a theme change grows as a circle from the toggle | `--duration-page`, `--duration-slow` |
+| `page.css` | A theme change grows as a circle from the toggle. Same-site page loads cross-fade only in a theme that opts in (`$motion.pageTransition`, the Motion panel's Page transitions switch): in Chromium, a form that submits back to its own page can leave such a transition unfinished and the page unclickable. A sticky, non-glass navbar holds still while the page fades | `--duration-page`, `--duration-slow` |
 | `reveal.css` | `[data-reveal]` elements fade in as they scroll into view (opt-in; never hidden without support) | `--reveal-distance` |
 | `stuck.css` | A sticky navbar tightens once it is stuck to the top | `--navbar-padding` |
 | `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover, with standard easing (a hover the pointer cuts short shouldn't spring); a `::after` with `--shadow-floating` fades in, so the layered shadow is never animated | `--lift-distance`, `--shadow-floating` |
@@ -435,7 +435,7 @@ An enhancement, not a dependency: every menu, link and form already works withou
 `looseleaf.js` joins all of them and is the recommended single include: 36.4 KB as shipped, 10.1 KB gzipped, about a quarter of it comments. To take only some, import them one by one from `dist/behaviours/`:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.0/dist/behaviours/tabs.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/StockoL/looseleaf-ui@v2.5.1/dist/behaviours/tabs.js"></script>
 ```
 
 | Module | Why it needs JavaScript | Without it | Hooks |

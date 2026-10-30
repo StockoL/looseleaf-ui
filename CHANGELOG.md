@@ -4,6 +4,25 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-10-30
+
+### Security
+
+- The token compiler refuses token names other than letters, digits, `-` and `_`. It also refuses values containing `;`, `{` or `}` outside a `{token.reference}`, `<`, `>` or a CSS comment. Such a value could end its declaration and add CSS rules of its own: a shared configurator link or an imported file could have injected styles into the preview and into every theme exported from it.
+
+### Added
+
+- Accessibility tests of the configurator with each of its panels open (the existing test only saw it closed).
+- Each GitHub release attaches the individual behaviour modules (`dist/behaviours/*.js`) as well as `looseleaf.js`.
+
+### Changed
+
+- Cross-document page transitions are now opt-in. In Chromium, a form that submits back to its own page could leave the transition unfinished, with nothing on the page clickable; it reproduces with no CSS but the `@view-transition` rule. The rule is gone from `looseleaf.css`, and `$motion.pageTransition` (the Motion panel's Page transitions switch) now defaults to off. A theme that turns it on carries the rule in its own CSS. Themes exported from 2.1 to 2.5 relied on the shared rule, so their page transitions stop until they are re-exported with the switch on. The theme reveal is unaffected.
+
+### Fixed
+
+- The `django-looseleaf` README described `{% looseleaf_js %}` as running dropdowns, the navbar toggle and dialogs, which have worked without it since 2.1.
+
 ## [2.5.0] - 2026-10-30
 
 ### Added
@@ -190,7 +209,8 @@ The first release of v2: a ground-up rework into a token-driven foundation, a to
 - A floating badge on a card is no longer clipped.
 - No block removes the focus outline.
 
-[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/StockoL/looseleaf-ui/compare/v2.5.1...HEAD
+[2.5.1]: https://github.com/StockoL/looseleaf-ui/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/StockoL/looseleaf-ui/compare/v2.2.0...v2.3.0

@@ -106,7 +106,7 @@ window.LooseLeafCurrentTokens = {
     "press": 0.97,
     "lift": "3xs",
     "reveal": true,
-    "pageTransition": true,
+    "pageTransition": false,
     "stuck": true
   },
   "$shape": {

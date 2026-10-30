@@ -186,7 +186,7 @@ Motion durations. Quick, base, slow, spring and page are derived from $motion; e
 | `--duration-base` | Semantic | `250ms` |  | derived |
 | `--duration-slow` | Semantic | `400ms` |  | derived |
 | `--duration-spring` | Semantic | `1132ms` |  | derived |
-| `--duration-page` | Semantic | `250ms` |  | derived |
+| `--duration-page` | Semantic | `0ms` |  | derived |
 | `--duration-enter` | Semantic | `250ms` |  |  |
 | `--duration-exit` | Semantic | `150ms` |  |  |
 
