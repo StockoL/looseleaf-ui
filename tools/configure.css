@@ -90,6 +90,56 @@
     cursor: pointer;
   }
 
+  /* Palette generator: seven slots, each with a padlock; history as mini strips */
+  .configurator__strip {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-3xs);
+    border-radius: var(--radius-surface);
+  }
+
+  /* One row per slot: swatch, name, padlock */
+  .configurator__slot {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr auto;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .configurator__slot-colour {
+    block-size: 2.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background-color: var(--slot-colour);
+  }
+
+  .configurator__history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .configurator__mini {
+    display: flex;
+    min-block-size: var(--target-min);
+    align-items: stretch;
+    padding: var(--space-3xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: none;
+    cursor: pointer;
+  }
+
+  .configurator__mini > span {
+    inline-size: 0.9rem;
+    background-color: var(--slot-colour);
+  }
+
+  .configurator__adjustments {
+    margin: 0;
+    padding: 0;
+  }
+
   /* Spring designer: the simulated curve and a swatch that moves along it */
   .configurator__spring-plot {
     display: block;

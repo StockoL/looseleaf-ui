@@ -330,8 +330,254 @@
   const swatchGrids = new Map();
   const swatches = new Map();
 
+  /* ------------------------------------------------------------------------
+     3a. PALETTE GENERATOR
+     Rerolls the unlocked hue slots (harmony.mjs), then repairs contrast
+     (solver.mjs) so the contrast table stays green. Its state lives in
+     draft.$generator, so autosave and Copy link carry it; exports leave it out.
+     ------------------------------------------------------------------------ */
+  const { SLOTS, MODES, VIVIDNESS } = lib;
+  const HISTORY_LENGTH = 10;
+  const GENERATOR_DEFAULTS = { mode: "random", vividness: VIVIDNESS.default, locks: {}, history: [], adjustments: [] };
+  const generatorView = () => ({ ...GENERATOR_DEFAULTS, ...draft.$generator });
+  // The same object every call (callers hold on to it), with any missing defaults filled in
+  function generator() {
+    draft.$generator ??= {};
+    for (const [key, value] of Object.entries(GENERATOR_DEFAULTS)) if (!(key in draft.$generator)) draft.$generator[key] = clone(value);
+    return draft.$generator;
+  }
+  const slotPath = (slot) => (lib.STATUS_NAMES.includes(slot) ? ["$palette", "status", slot] : ["$palette", slot]);
+  const slotToken = (slot) => (lib.STATUS_NAMES.includes(slot) ? `${slot}.base` : slot === "neutral" ? "neutral.500" : `${slot}.500`);
+  const colourOf = (path) => compiled?.tokens.find((token) => token.path === path)?.light;
+
+  // Undo the last repair (newest first) before generating again, so adjustments never pile up
+  function revertAdjustments() {
+    const state = generator();
+    for (const adjustment of [...state.adjustments].reverse()) setPath(adjustment.path, clone(adjustment.from));
+    state.adjustments = [];
+  }
+
+  function repairContrast() {
+    const state = generator();
+    const result = lib.repair(draft, { locks: state.locks, fixed: state.exact ? ["action.500"] : [], swapActionText: Boolean(state.exact) });
+    Object.assign(draft, result.patch);
+    state.adjustments = result.adjustments;
+  }
+
+  function remember(mode, seed) {
+    const state = generator();
+    const snapshot = { mode, seed, $palette: clone(draft.$palette), color: { link: clone(draft.color.link), "action-text": clone(draft.color["action-text"]) }, adjustments: clone(state.adjustments) };
+    for (const slot of SLOTS) if (draft[slot]) snapshot[slot] = clone(draft[slot]);
+    state.history = [snapshot, ...state.history].slice(0, HISTORY_LENGTH);
+  }
+
+  function generatePalette() {
+    const state = generator();
+    revertAdjustments();
+    const seed = Math.floor(Math.random() * 2 ** 31);
+    const { palette, mode } = lib.generate(draft.$palette, { locks: state.locks, mode: state.mode, vividness: state.vividness, seed });
+    draft.$palette = palette;
+    for (const slot of SLOTS) if (!state.locks[slot]) deletePath([slot]); // hand-picked swatches go with an unlocked slot
+    if (!state.locks.action) delete state.source;
+    state.exact = false;
+    state.seed = seed;
+    repairContrast();
+    remember(mode, seed);
+    afterGenerate();
+  }
+
+  function restore(snapshot) {
+    const state = generator();
+    draft.$palette = clone(snapshot.$palette);
+    Object.assign(draft.color, clone(snapshot.color));
+    for (const slot of SLOTS) {
+      if (snapshot[slot]) draft[slot] = clone(snapshot[slot]);
+      else deletePath([slot]);
+    }
+    state.adjustments = clone(snapshot.adjustments);
+    state.seed = snapshot.seed;
+    afterGenerate();
+  }
+
+  function startFrom(hex, exact) {
+    const state = generator();
+    revertAdjustments();
+    const { c, h } = lib.hexToOklch(hex);
+    state.locks = { ...state.locks, action: true };
+    state.source = hex;
+    state.exact = exact;
+    draft.$palette.action = { hue: Math.round(h), chroma: Number(c.toFixed(3)) };
+    draft.action = { "500": hex };
+    if (!exact) {
+      // Everything unlocked derives from the new action hue
+      const seed = Math.floor(Math.random() * 2 ** 31);
+      const { palette, mode } = lib.generate(draft.$palette, { locks: state.locks, mode: state.mode, vividness: state.vividness, seed });
+      draft.$palette = palette;
+      state.seed = seed;
+      repairContrast();
+      remember(mode, seed);
+    } else {
+      repairContrast();
+    }
+    afterGenerate();
+  }
+
+  function afterGenerate() {
+    syncControls();
+    changed();
+  }
+
+  function buildGenerator(section) {
+    heading(section, "Generate a palette");
+    section.append(
+      el("p", { class: "field__hint" }, "Rerolls every unlocked hue and keeps the contrast table green, adjusting lightness, chroma or a status hue where it must. Press Space on the strip to generate. Harmony rules are a starting point; the preview is the decision."),
+    );
+
+    const strip = el("div", { class: "configurator__strip", role: "group", tabindex: 0, "aria-label": "Palette slots. Press Space to generate." });
+    const slots = SLOTS.map((slot) => {
+      const lock = el("button", { class: "button", type: "button", "data-icon-only": true, "data-size": "small", "aria-pressed": "false", "aria-label": `Lock ${slot}` }, icon("unlock"));
+      lock.addEventListener("click", () => {
+        const state = generator();
+        state.locks = { ...state.locks, [slot]: !state.locks[slot] };
+        changed();
+      });
+      const swatch = el("span", { class: "configurator__slot-colour" });
+      strip.append(el("div", { class: "configurator__slot" }, swatch, el("span", {}, capitalise(slot)), lock));
+      return { slot, swatch, lock };
+    });
+    strip.addEventListener("keydown", (event) => {
+      if (event.key === " " && event.target === strip) {
+        event.preventDefault();
+        generatePalette();
+      }
+    });
+
+    const button = (label, onClick, variant) => {
+      const node = el("button", { class: "button", type: "button", "data-variant": variant }, label);
+      node.addEventListener("click", onClick);
+      return node;
+    };
+    const setLocks = (locked) => {
+      generator().locks = Object.fromEntries(SLOTS.map((slot) => [slot, locked]));
+      changed();
+    };
+    section.append(
+      strip,
+      el("div", { class: "cluster", style: "--gutter: var(--space-2xs);" }, button("Generate", generatePalette, "primary"), button("Lock all", () => setLocks(true)), button("Unlock all", () => setLocks(false))),
+    );
+
+    select(section, {
+      label: "Harmony",
+      options: MODES.map((mode) => ({ value: mode, label: capitalise(mode.replace("-", " ")) })),
+      hint: "How the accent relates to the action colour. Statuses stay in their own colour families.",
+      read: () => generatorView().mode,
+      write: (value) => (generator().mode = value),
+    });
+    slider(section, {
+      label: "Vividness",
+      min: VIVIDNESS.min,
+      max: VIVIDNESS.max,
+      step: 0.01,
+      hint: "One chroma for action and accent; statuses at 0.8 of it. Applies on the next Generate.",
+      read: () => generatorView().vividness,
+      write: (value) => (generator().vividness = value),
+    });
+
+    // Start from a colour
+    const brandId = `control-${++uid}`;
+    const brand = el("input", { class: "input", id: brandId, type: "text", placeholder: "#1d4ed8", autocomplete: "off", spellcheck: "false" });
+    const use = button("Use", () => {
+      const hex = brand.value.trim().toLowerCase();
+      if (!lib.isHex(hex)) {
+        report.textContent = "Enter a colour as a hex code, like #1d4ed8.";
+        return;
+      }
+      startFrom(hex, false);
+    });
+    const exact = button("Use exact hex anyway", () => generatorView().source && startFrom(generatorView().source, true));
+    const report = el("p", { class: "field__hint", "aria-live": "polite" });
+    section.append(
+      el("div", { class: "field" }, el("label", { class: "label", for: brandId }, "Start from a colour"), el("div", { class: "input-group" }, brand, use), report, exact),
+    );
+
+    const adjustmentsList = el("ul", { class: "configurator__adjustments flow", role: "list" });
+    const history = el("div", { class: "configurator__history" });
+    heading(section, "Adjusted to meet AA");
+    section.append(adjustmentsList);
+    heading(section, "History");
+    section.append(history);
+
+    renderers.push(() => {
+      const state = generatorView();
+      for (const { slot, swatch, lock } of slots) {
+        swatch.style.setProperty("--slot-colour", colourOf(slotToken(slot)) ?? "transparent");
+        const locked = Boolean(state.locks[slot]);
+        lock.setAttribute("aria-pressed", String(locked));
+        if (locked) lock.dataset.variant = "primary";
+        else delete lock.dataset.variant;
+        lock.replaceChildren(icon(locked ? "lock" : "unlock"));
+      }
+
+      // How far a pasted colour moved
+      const moved = state.adjustments.find((a) => a.path.join(".") === "action.500");
+      exact.hidden = !(state.source && moved && !state.exact);
+      if (!state.source) report.textContent = "";
+      else if (state.exact) report.textContent = `Kept ${state.source} exactly. ${state.adjustments.some((a) => a.role === "action-text") ? "Text on action switched to the dark end to meet AA." : ""}`;
+      else if (moved) {
+        const shift = lib.hexToOklch(moved.to).l - lib.hexToOklch(moved.from).l;
+        report.textContent = `Moved ${moved.from} to ${moved.to} (lightness ${shift > 0 ? "+" : "−"}${Math.abs(shift).toFixed(2)}) so text on it meets AA.`;
+      } else report.textContent = `Used ${state.source} exactly: it meets AA as it is.`;
+
+      // Adjustments, each revertible, then whatever still fails
+      const failing = compiled ? lib.contrastReport(compiled.tokens).filter((row) => !row.passes) : [];
+      adjustmentsList.replaceChildren(
+        ...state.adjustments.map((adjustment, index) => {
+          const revert = el("button", { class: "button", type: "button", "data-size": "small", "aria-label": `Revert ${adjustment.role} ${adjustment.property}` }, icon("undo"));
+          revert.addEventListener("click", () => {
+            const current = generator();
+            setPath(adjustment.path, clone(adjustment.from));
+            current.adjustments = current.adjustments.filter((_, i) => i !== index);
+            afterGenerate();
+          });
+          const ref = (v) => String(v).replace(/^\{(.+)\}$/, "$1");
+          const value = (v) => (v && typeof v === "object" ? `light ${ref(v.light)}, dark ${ref(v.dark)}` : ref(v));
+          return el(
+            "li",
+            { class: "cluster", style: "--cluster-justify: space-between; --cluster-align: center;" },
+            el("span", { class: "text-small" }, `${capitalise(adjustment.role)}: ${adjustment.property}, ${value(adjustment.from)} → ${value(adjustment.to)}, for ${adjustment.reason}${adjustment.locked ? " (locked slot: hue kept)" : ""}.`),
+            revert,
+          );
+        }),
+        ...failing.map((row) =>
+          el("li", {}, el("span", { class: "badge", "data-status": "warning" }, `Best available: ${row.foreground.replace("color.", "")} on ${row.background.replace("color.", "")}, ${row.ratio.toFixed(2)}:1 (${row.scheme})`)),
+        ),
+      );
+      if (!state.adjustments.length && !failing.length) adjustmentsList.replaceChildren(el("li", { class: "text-small text-muted" }, "Nothing to adjust: every pair meets AA."));
+
+      history.replaceChildren(
+        ...state.history.map((snapshot, index) => {
+          const item = el("button", { class: "configurator__mini", type: "button", "aria-label": `Restore palette ${index + 1} (${snapshot.mode})` });
+          for (const slot of SLOTS) {
+            const p = getPathIn(snapshot, slotPath(slot));
+            const hex = p ? lib.oklchToHex(0.6, p.chroma ?? 0.15, p.hue) : "transparent";
+            const chip = el("span");
+            chip.style.setProperty("--slot-colour", hex);
+            item.append(chip);
+          }
+          item.addEventListener("click", () => restore(snapshot));
+          return item;
+        }),
+      );
+      if (!state.history.length) history.replaceChildren(el("p", { class: "text-small text-muted" }, "Generated palettes appear here."));
+    });
+  }
+
+  const getPathIn = (object, path) => path.reduce((node, key) => (node == null ? undefined : node[key]), object);
+
   function buildPalette() {
     const section = dom.section("palette");
+    buildGenerator(section);
+
     const hue = (path, name) => ({ label: `${name} hue`, unit: "°", min: 0, max: 360, step: 1, ...input([...path, "hue"]) });
 
     heading(section, "Neutral");
@@ -877,7 +1123,7 @@
   }
 
   function sourceJson(meta) {
-    const { $version, $generated, ...rest } = clone(draft);
+    const { $version, $generated, $generator, ...rest } = clone(draft); // the generator's state is the tool's, not the theme's
     const output = { ...meta, ...rest };
     const families = webFonts();
     if (families.length) {
