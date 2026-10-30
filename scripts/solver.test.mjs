@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { repair } from "./solver.mjs";
+import { repair, repairBrand } from "./solver.mjs";
 import { generate } from "./harmony.mjs";
 import { compile, contrastReport } from "./tokens-core.mjs";
 
@@ -88,4 +88,33 @@ test("a pasted hard yellow passes by moving the colour, and says how far", () =>
   const moved = result.adjustments.find((a) => a.role === "action");
   assert.ok(moved && moved.from === "#ffd500" && moved.to !== "#ffd500", "the colour moved, and the move is recorded");
   assert.deepEqual(failing(apply(draft, result)), []);
+});
+
+test("a big move keeps the brand hex and switches the text on it; a small one moves the colour", () => {
+  const yellow = repairBrand(draftWith({ action: { 500: "#ffd500" } }), "#ffd500");
+  assert.equal(yellow.exact, true);
+  assert.ok(Math.abs(yellow.shift) > 0.15, `shift ${yellow.shift}`);
+  assert.equal(yellow.patch.action["500"], "#ffd500");
+  assert.equal(yellow.patch.color["action-text"], "{neutral.950}");
+
+  const moveAnyway = repairBrand(draftWith({ action: { 500: "#ffd500" } }), "#ffd500", { prefer: "move" });
+  assert.equal(moveAnyway.exact, false);
+  assert.notEqual(moveAnyway.patch.action["500"], "#ffd500");
+
+  for (const hex of ["#1d4ed8", "#dc2626", "#2563eb"]) {
+    const result = repairBrand(draftWith({ action: { 500: hex } }), hex);
+    assert.equal(result.exact, false, `${hex} keeps white text`);
+    assert.ok(Math.abs(result.shift) <= 0.15, `${hex} shift ${result.shift}`);
+  }
+});
+
+test("a hundred generated palettes, every mode and vividness, all come out passing", () => {
+  const modes = ["analogous", "complementary", "split-complementary", "triadic", "random"];
+  for (let seed = 1; seed <= 100; seed++) {
+    const { palette } = generate(tokens.$palette, { seed, mode: modes[seed % 5], vividness: 0.08 + (seed % 9) * 0.02 });
+    const draft = draftWith({ $palette: palette });
+    const result = repair(draft);
+    assert.deepEqual(result.unresolved, [], `seed ${seed}`);
+    assert.deepEqual(failing(apply(draft, result)), [], `seed ${seed}`);
+  }
 });

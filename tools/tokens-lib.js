@@ -1182,7 +1182,30 @@ function repair(draft, { locks = {}, fixed = [], swapActionText = false } = {}) 
   return { patch: work, adjustments, unresolved };
 }
 
-  return { repair };
+/*
+ * A brand colour: how far white text would push it decides what to do. A small
+ * shift is invisible and white text is the convention, so the colour moves. A
+ * big one (yellows, light cyans, limes) would stop it being the brand, so the
+ * hex stays exact and the text on it switches to the dark end instead.
+ */
+const BRAND_MOVE_LIMIT = 0.15;
+
+/**
+ * repairBrand(draft, hex, { locks, prefer }) -> repair()'s result plus { exact, shift }
+ * The draft carries the brand colour as action.500. prefer: "exact" or "move" to
+ * override the threshold; omitted, BRAND_MOVE_LIMIT decides. shift is the lightness
+ * move white text would need (0 if none), reported either way.
+ */
+function repairBrand(draft, hex, { locks = {}, prefer } = {}) {
+  const moved = repair(draft, { locks });
+  const move = moved.adjustments.find((a) => a.path.join(".") === "action.500");
+  const shift = move ? hexToOklch(move.to).l - hexToOklch(hex).l : 0;
+  const exact = prefer === "exact" || (prefer !== "move" && Math.abs(shift) > BRAND_MOVE_LIMIT);
+  if (!exact) return { ...moved, exact: false, shift };
+  return { ...repair(draft, { locks, fixed: ["action.500"], swapActionText: true }), exact: true, shift };
+}
+
+  return { repair, BRAND_MOVE_LIMIT, repairBrand };
   })();
 
   modules["zip.mjs"] = (() => {
