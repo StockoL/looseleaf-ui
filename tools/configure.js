@@ -799,7 +799,7 @@
       press: number(["press-scale"], 0.97),
       lift: LIFT_SIZES.includes(lift) ? lift : "3xs",
       reveal: true,
-      pageTransition: true,
+      pageTransition: false,
       stuck: true,
     };
   }
@@ -979,8 +979,8 @@
     });
     toggle(section, {
       label: "Page transitions",
-      hint: "Pages on the same site cross-fade as they load.",
-      read: () => motionView().pageTransition !== false,
+      hint: "Pages on the same site cross-fade as they load. Off by default: in Chromium, a form that submits back to its own page can leave the page stuck mid-transition.",
+      read: () => motionView().pageTransition === true,
       write: (value) => (motionDraft().pageTransition = value),
     });
     toggle(section, {
