@@ -357,11 +357,15 @@
     state.adjustments = [];
   }
 
+  // With a locked brand colour, repairBrand decides (or follows state.prefer): move it, or keep it and switch the text on it
   function repairContrast() {
     const state = generator();
-    const result = lib.repair(draft, { locks: state.locks, fixed: state.exact ? ["action.500"] : [], swapActionText: Boolean(state.exact) });
+    const brand = state.source && state.locks.action;
+    const result = brand ? lib.repairBrand(draft, state.source, { locks: state.locks, prefer: state.prefer }) : lib.repair(draft, { locks: state.locks });
     Object.assign(draft, result.patch);
     state.adjustments = result.adjustments;
+    state.exact = brand ? result.exact : false;
+    state.shift = brand ? result.shift : 0;
   }
 
   function remember(mode, seed) {
@@ -378,8 +382,10 @@
     const { palette, mode } = lib.generate(draft.$palette, { locks: state.locks, mode: state.mode, vividness: state.vividness, seed });
     draft.$palette = palette;
     for (const slot of SLOTS) if (!state.locks[slot]) deletePath([slot]); // hand-picked swatches go with an unlocked slot
-    if (!state.locks.action) delete state.source;
-    state.exact = false;
+    if (!state.locks.action) {
+      delete state.source;
+      delete state.prefer;
+    }
     state.seed = seed;
     repairContrast();
     remember(mode, seed);
@@ -399,16 +405,18 @@
     afterGenerate();
   }
 
-  function startFrom(hex, exact) {
+  // prefer: undefined (the threshold decides), "exact" or "move"
+  function startFrom(hex, prefer) {
     const state = generator();
+    const fresh = hex !== state.source;
     revertAdjustments();
     const { c, h } = lib.hexToOklch(hex);
     state.locks = { ...state.locks, action: true };
     state.source = hex;
-    state.exact = exact;
+    state.prefer = prefer;
     draft.$palette.action = { hue: Math.round(h), chroma: Number(c.toFixed(3)) };
     draft.action = { "500": hex };
-    if (!exact) {
+    if (fresh) {
       // Everything unlocked derives from the new action hue
       const seed = Math.floor(Math.random() * 2 ** 31);
       const { palette, mode } = lib.generate(draft.$palette, { locks: state.locks, mode: state.mode, vividness: state.vividness, seed });
@@ -492,12 +500,16 @@
         report.textContent = "Enter a colour as a hex code, like #1d4ed8.";
         return;
       }
-      startFrom(hex, false);
+      startFrom(hex);
     });
-    const exact = button("Use exact hex anyway", () => generatorView().source && startFrom(generatorView().source, true));
+    // The other choice: keep the exact hex, or move the colour to keep white text
+    const alternative = button("", () => {
+      const state = generatorView();
+      if (state.source) startFrom(state.source, state.exact ? "move" : "exact");
+    });
     const report = el("p", { class: "field__hint", "aria-live": "polite" });
     section.append(
-      el("div", { class: "field" }, el("label", { class: "label", for: brandId }, "Start from a colour"), el("div", { class: "input-group" }, brand, use), report, exact),
+      el("div", { class: "field" }, el("label", { class: "label", for: brandId }, "Start from a colour"), el("div", { class: "input-group" }, brand, use), report, alternative),
     );
 
     const adjustmentsList = el("ul", { class: "configurator__adjustments flow", role: "list" });
@@ -518,15 +530,17 @@
         lock.replaceChildren(icon(locked ? "lock" : "unlock"));
       }
 
-      // How far a pasted colour moved
+      // What happened to a pasted colour, and the other choice
       const moved = state.adjustments.find((a) => a.path.join(".") === "action.500");
-      exact.hidden = !(state.source && moved && !state.exact);
+      const shift = `${state.shift > 0 ? "+" : "−"}${Math.abs(state.shift ?? 0).toFixed(2)}`;
+      const darkText = state.adjustments.some((a) => a.role === "action-text");
+      alternative.hidden = !state.source || (!state.exact && !moved);
+      alternative.textContent = state.exact ? "Move the colour to keep white text" : "Use exact hex anyway";
       if (!state.source) report.textContent = "";
-      else if (state.exact) report.textContent = `Kept ${state.source} exactly. ${state.adjustments.some((a) => a.role === "action-text") ? "Text on action switched to the dark end to meet AA." : ""}`;
-      else if (moved) {
-        const shift = lib.hexToOklch(moved.to).l - lib.hexToOklch(moved.from).l;
-        report.textContent = `Moved ${moved.from} to ${moved.to} (lightness ${shift > 0 ? "+" : "−"}${Math.abs(shift).toFixed(2)}) so text on it meets AA.`;
-      } else report.textContent = `Used ${state.source} exactly: it meets AA as it is.`;
+      else if (state.exact && state.prefer === "exact") report.textContent = `Kept ${state.source} exactly.${darkText ? " Text on action switched to the dark end to meet AA." : ""}`;
+      else if (state.exact) report.textContent = `Kept ${state.source} exactly: white text on it would have needed a lightness change of ${shift}, enough to change the colour.${darkText ? " Text on action switched to the dark end instead." : ""}`;
+      else if (moved) report.textContent = `Moved ${moved.from} to ${moved.to} (lightness ${shift}) so white text on it meets AA.`;
+      else report.textContent = `Used ${state.source} exactly: it meets AA as it is.`;
 
       // Adjustments, each revertible, then whatever still fails
       const failing = compiled ? lib.contrastReport(compiled.tokens).filter((row) => !row.passes) : [];
