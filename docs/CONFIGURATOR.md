@@ -112,7 +112,7 @@ To use a web font, type its name (for example `Inter`) in the optional family fi
 - **Durations**: the quick, base and slow speeds, in milliseconds. **Standard easing** is the curve for colour and opacity changes.
 - **Press scale**: how far buttons and choices shrink while pressed. 1 turns it off.
 - **Lift distance**: how far `.anim-lift` and interactive cards rise on hover.
-- **Enhancements**: switch **Scroll reveal**, **Page transitions** and **Compact sticky navbar** on or off for the whole site.
+- **Enhancements**: switch **Scroll reveal**, **Page transitions** and **Compact sticky navbar** on or off for the whole site. Page transitions start off: in Chromium, a form that submits back to its own page can leave the page stuck mid-transition, so turn them on only if your site doesn't do that (or you've tested it). A theme with them on carries the rule in its own CSS.
 
 Try the result in the preview's **Motion** section, which has a playground (a button to press, a menu, a dialog, cards to hover) and says which effects the current browser supports.
 

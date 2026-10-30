@@ -404,7 +404,7 @@ Motion is an enhancement: the system is complete without this folder. Its `motio
 | `entrances.css` | Alerts, toasts and menus come in on partial keyframes (menus grow from their trigger); dialogs and drawers animate in and out with `@starting-style` | `--duration-enter`, `--duration-exit`, `--ease-out-expo` |
 | `press.css` | Buttons, choices and `.badge[data-interactive]` shrink slightly while pressed | `--press-scale` |
 | `height.css` | Accordion items open and close smoothly | `--duration-base` |
-| `page.css` | Same-site page loads cross-fade (a sticky, non-glass navbar holds still); a theme change grows as a circle from the toggle | `--duration-page`, `--duration-slow` |
+| `page.css` | A theme change grows as a circle from the toggle. Same-site page loads cross-fade only in a theme that opts in (`$motion.pageTransition`, the Motion panel's Page transitions switch): in Chromium, a form that submits back to its own page can leave such a transition unfinished and the page unclickable. A sticky, non-glass navbar holds still while the page fades | `--duration-page`, `--duration-slow` |
 | `reveal.css` | `[data-reveal]` elements fade in as they scroll into view (opt-in; never hidden without support) | `--reveal-distance` |
 | `stuck.css` | A sticky navbar tightens once it is stuck to the top | `--navbar-padding` |
 | `lift.css` | `.anim-lift` and `.card[data-interactive]` rise on hover, with standard easing (a hover the pointer cuts short shouldn't spring); a `::after` with `--shadow-floating` fades in, so the layered shadow is never animated | `--lift-distance`, `--shadow-floating` |

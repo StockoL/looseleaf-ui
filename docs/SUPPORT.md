@@ -18,7 +18,7 @@ First version with support, by engine. "No" means no stable release supports it 
 | Dialog entrances and exits (`entrances.css`) | `@starting-style` with `transition-behavior: allow-discrete` | 117 | 17.5 | 129 | Dialogs open and close instantly. Menus keep their keyframe entrance, which is Baseline. |
 | Press feedback (`press.css`) | `scale` transition on `:active` | Baseline | Baseline | Baseline | (always available) |
 | Accordion height (`height.css`) | `interpolate-size: allow-keywords` | 129 | No | No | The 0fr to 1fr grid trick on `::details-content` (Chrome 131, Safari 18.4, Firefox 143). Older browsers open and close instantly. |
-| Page transitions (`page.css`) | Cross-document view transitions, `@view-transition` | 126 | 18.2 | No | Pages load as usual. |
+| Page transitions (opt-in, `$motion.pageTransition`) | Cross-document view transitions, `@view-transition` | 126 | 18.2 | No | Pages load as usual. Off by default: in Chromium, a form that submits back to its own page can leave the transition unfinished and the page unclickable, so a theme turns it on knowingly. |
 | Scroll reveal (`reveal.css`, opt-in with `[data-reveal]`) | Scroll-driven animations, `animation-timeline: view()` | 115 | 26 | Behind a setting | The element is simply visible; it is never hidden by default. |
 | Stuck navbar (`stuck.css`) | `scroll-state(stuck: top)` container queries | 133 | No | No | The sticky navbar keeps its size. |
 | Lift (`lift.css`) | `translate` transition on `:hover` | Baseline | Baseline | Baseline | Only on devices that hover. |
