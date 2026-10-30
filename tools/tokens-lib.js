@@ -589,6 +589,27 @@ function walk(node, path, context, out) {
   }
 }
 
+/*
+ * Token names and values are written straight into CSS, and a draft can come
+ * from a shared link or an imported file. A name, or a value with ; { } < > or a
+ * comment, could close the declaration and add rules of its own (to the preview,
+ * and to every theme exported from it), so they are refused here.
+ */
+const SAFE_NAME = /^[\w-]+$/;
+const UNSAFE_VALUE = /[;{}<>]|\/\*|\*\//;
+
+function assertSafe({ path, light, dark }) {
+  const name = path.join(".");
+  for (const segment of path) {
+    if (!SAFE_NAME.test(segment)) throw new Error(`Token name "${name}" may only use letters, digits, - and _`);
+  }
+  for (const value of [light, dark]) {
+    if (value !== undefined && UNSAFE_VALUE.test(value.replace(REFERENCE, ""))) {
+      throw new Error(`Token ${name} has a value CSS can't hold safely (it contains ; { } < > or a comment): ${value.slice(0, 60)}`);
+    }
+  }
+}
+
 function collectEntries(json) {
   const entries = [];
   const derived = deriveGroups(json);
@@ -619,7 +640,10 @@ function collectEntries(json) {
     walk(node, [key], { tier: raw ? 1 : 2, purpose: undefined, derived: false, overridden: raw }, entries);
   }
 
-  return entries.map((entry) => ({ ...entry, name: `--${entry.path.join("-")}` }));
+  return entries.map((entry) => {
+    assertSafe(entry);
+    return { ...entry, name: `--${entry.path.join("-")}` };
+  });
 }
 
 /* --------------------------------------------------------------------------

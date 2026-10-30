@@ -236,3 +236,19 @@ test("invalid $shape.shadow values are rejected with their path", () => {
   assert.throws(() => compile(shape({ softness: -1 })), /\$shape\.shadow\.softness/);
   assert.throws(() => compile(shape({ angle: "below" })), /\$shape\.shadow\.angle/);
 });
+
+test("values and names that could break out of the CSS are refused", () => {
+  for (const value of [
+    "white; background: url(https://example.invalid/t.png)",
+    'white } body::after { content: "x"',
+    "white /* the rest is a comment",
+    "</style><script>",
+  ]) {
+    assert.throws(() => compile({ color: { surface: value } }), /can't hold safely/, value);
+  }
+  assert.throws(() => compile({ color: { "surface: red; --x": "white" } }), /may only use letters/);
+  assert.throws(() => compile({ color: { surface: { light: "white", dark: "black; color: red" } } }), /can't hold safely/);
+  // Ordinary values, references and the generated ones all still pass
+  const { tokens } = compile({ space: { s: "1rem" }, gutter: "{space.s}", ease: { x: "linear(0, 0.5 40%, 1)" }, font: { body: "'Inter', system-ui, sans-serif" } });
+  assert.equal(tokens.find((t) => t.name === "--gutter").value, "var(--space-s)");
+});
