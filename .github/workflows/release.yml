@@ -43,6 +43,7 @@ jobs:
           dist/looseleaf.js
           dist/theme.js
           dist/tokens.resolved.json
+          dist/behaviours/*.js
           tools/tokens-lib.js
         env:
           GH_TOKEN: ${{ github.token }}
