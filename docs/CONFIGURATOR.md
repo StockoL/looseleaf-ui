@@ -49,7 +49,12 @@ After every palette, the generator checks every pair in the contrast table in bo
 
 Links and buttons share the action colour, and pull it in opposite directions: white text on a button wants it dark, a link on the dark page wants it light. When that bites, the generator moves dark-scheme links to the lighter action step (`--action-400`), so both pass.
 
-**Start from a colour** takes a hex code, a brand colour, say. It becomes the locked action colour, and everything else follows from it. If white text can't sit on it, the panel says how far it moved the colour to make it pass (a hard yellow like `#ffd500` becomes a darker gold). **Use exact hex anyway** keeps your colour exactly and switches the text on it to dark instead.
+**Start from a colour** takes a hex code, a brand colour, say. It becomes the locked action colour, and everything else follows from it. If white text can't sit on it at AA, what happens depends on how far the colour would have to move:
+
+- **A small shift** (up to 0.15 in lightness, which covers most blues and reds) is invisible, and white text is the convention, so the colour moves. The panel says by how much, and **Use exact hex anyway** keeps it exact with dark text instead.
+- **A big shift** (yellows, light cyans and limes) would stop it being your colour, so the hex stays exactly as you pasted it and the text on buttons switches to dark. **Move the colour to keep white text** does the opposite.
+
+Either way the panel reports what it did and why, and the choice holds as you keep generating.
 
 **History** keeps the last ten palettes; click one to bring it back. The generator's settings, locks and history are saved with your draft and travel in a **Copy link**, but they stay out of every export: the theme gets only the palette itself.
 

@@ -11,7 +11,10 @@ All notable changes to LooseLeaf UI and `django-looseleaf`, which share one vers
   - Harmony modes (analogous, complementary, split-complementary, triadic, random) and one vividness for every chroma.
   - Status hues stay inside their colour families.
   - A padlock per slot, Lock all and Unlock all.
-  - **Start from a colour** for a brand hex, with **Use exact hex anyway**.
+  - **Start from a colour** for a brand hex.
+    - If white text would need the colour to shift by more than 0.15 in lightness (yellows, light cyans, limes), the hex stays exact and button text switches to dark.
+    - A smaller shift moves the colour and keeps white text.
+    - Either choice can be swapped for the other, and the panel says which it made.
   - A history of the last ten palettes.
 - Contrast repair for generated palettes:
   - Every failing pair is fixed by adjusting lightness, then chroma, then a status hue, never breaking a pair that passed.
