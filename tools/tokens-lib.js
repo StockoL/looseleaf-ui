@@ -421,7 +421,7 @@ function statusEntries({ hue, chroma = DEFAULT_STATUS_CHROMA }, recipes) {
 
 function motionGroups(motion) {
   const preset = MOTION_PRESETS.snappy;
-  const { spring = preset.spring, durations = {}, press = 0.97, lift = "3xs", reveal = true, pageTransition = true, stuck = true } = motion;
+  const { spring = preset.spring, durations = {}, press = 0.97, lift = "3xs", reveal = true, pageTransition = false, stuck = true } = motion;
   const { easing, settleMs } = springEasing(spring);
 
   const ms = DURATION_KEYS.map((key) => {
@@ -695,7 +695,21 @@ function declarations(tokens, valueOf, indent) {
   return lines.join("\n");
 }
 
-function renderCss(tokens) {
+/*
+ * Cross-document page transitions are opt-in ($motion.pageTransition): in
+ * Chromium a form that submits back to its own page can leave the transition
+ * unfinished and the page unclickable. A theme that opts in carries the rule.
+ */
+const PAGE_TRANSITIONS = `
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+`;
+
+function renderCss(tokens, { pageTransitions = false } = {}) {
   const darkTokens = tokens.filter((token) => token.darkValue !== undefined);
   const darkBody = (indent) => `${indent}color-scheme: dark;\n\n${declarations(darkTokens, (t) => t.darkValue, indent)}`;
 
@@ -716,7 +730,7 @@ ${darkBody("    ")}
 :root[data-theme="dark"] {
 ${darkBody("  ")}
 }
-`;
+${pageTransitions ? PAGE_TRANSITIONS : ""}`;
 }
 
 /* --------------------------------------------------------------------------
@@ -751,7 +765,7 @@ function compile(json) {
     };
   });
 
-  return { css: renderCss(tokens), tokens };
+  return { css: renderCss(tokens, { pageTransitions: json.$motion?.pageTransition === true }), tokens };
 }
 
 /* --------------------------------------------------------------------------

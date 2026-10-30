@@ -1,18 +1,14 @@
 /* ==========================================================================
    MOTION: PAGE TRANSITIONS AND THEME REVEAL
-   Same-origin page loads cross-fade (cross-document view transitions,
-   Chrome 126+, Safari 18.2+). A sticky navbar is its own transition group,
-   so it holds still while the page changes underneath it. Off for reduced
-   motion; the visitor's switch zeroes the duration through --motion-scale.
+   Cross-document page transitions are opt-in: a theme with
+   $motion.pageTransition carries the @view-transition rule itself (in
+   Chromium, a form that submits back to its own page can otherwise leave the
+   transition unfinished and the page unclickable). These rules time them and
+   keep a sticky, non-glass navbar still. The theme reveal is a same-document
+   transition and always available.
    ========================================================================== */
 
 @supports (view-transition-name: none) {
-  @media (prefers-reduced-motion: no-preference) {
-    @view-transition {
-      navigation: auto;
-    }
-  }
-
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: calc(var(--duration-page) * var(--motion-scale));

@@ -660,8 +660,8 @@
   "duration.page": {
     "name": "--duration-page",
     "tier": 2,
-    "light": "250ms",
-    "dark": "250ms",
+    "light": "0ms",
+    "dark": "0ms",
     "themed": false,
     "overridden": false,
     "purpose": "Motion durations. Quick, base, slow, spring and page are derived from $motion; entrances run slower than exits."
